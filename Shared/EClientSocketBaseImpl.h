@@ -29,6 +29,7 @@
 	/* Bad bad, see comments in EPosixClientSocketPlatform.h about strerror */
 	#define EPROTONOSUPPORT EINVAL
 	#define ECONNABORTED EINVAL
+
 #endif
 
 
@@ -300,8 +301,11 @@ void EClientSocketBase::EncodeField<double>(std::ostream& os, double doubleValue
 {
 	char str[128];
 
+	#ifndef _MSC_VER
 	snprintf(str, sizeof(str), "%.10g", doubleValue);
-
+	#else
+	sprintf_s(str, sizeof(str), "%.10g", doubleValue);
+	#endif
 	EncodeField<const char*>(os, str);
 }
 

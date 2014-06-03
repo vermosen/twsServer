@@ -4,7 +4,9 @@
 #ifndef eposixclientsocketcommon_def
 #define eposixclientsocketcommon_def
 
+#ifndef _MSC_VER
 #include "config.h"
+#endif
 
 #ifdef _WIN32
 	// Windows
@@ -16,6 +18,7 @@
 		#include <ws2tcpip.h>
 	# endif
 
+	#include <WS2tcpip.h>
 	#include <winsock2.h>
 	#include <time.h>
 

@@ -3,7 +3,10 @@
 
 #include "EPosixClientSocket.h"
 
+#ifndef _MSC_VER
 #include "config.h"
+#endif
+
 #include "EPosixClientSocketPlatform.h"
 #include "TwsSocketClientErrors.h"
 #include "EWrapper.h"
@@ -37,8 +40,11 @@ static int resolveHost( const char *host, unsigned int port, int family,
 
 	char strport[32];
 	/* Convert the port number into a string. */
+	#ifdef _MSC_VER
+	sprintf_s(strport, sizeof strport, "%u", port);
+	#else
 	snprintf(strport, sizeof strport, "%u", port);
-
+	#endif
 	int s = getaddrinfo(host, strport, &hints, res);
 	return s;
 }

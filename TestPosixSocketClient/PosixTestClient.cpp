@@ -12,7 +12,10 @@
 #include "Order.h"
 
 #include <time.h>
+
+#ifndef _MSC_VER
 #include <sys/time.h>
+#endif
 
 #if defined __INTEL_COMPILER
 # pragma warning (disable:869)
