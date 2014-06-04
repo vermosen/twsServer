@@ -29,7 +29,7 @@ int main(int argc, char** argv)
 		IB::PosixTestClient client;
 
 		// WARNING : TRIES TO PLACE AN ORDER IN MSFT, only run in simulation mode
-		/*client.connect( host, port, clientId);
+		client.connect( host, port, clientId);
 
 		while( client.isConnected()) {
 			client.processMessages();
@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 		}
 
 		printf( "Sleeping %u seconds before next attempt\n", SLEEP_TIME);
-		sleep( SLEEP_TIME);*/
+		sleep( SLEEP_TIME);
 	}
 
 	printf ( "End of POSIX Socket Client Test\n");

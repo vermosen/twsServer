@@ -35,13 +35,9 @@ PosixTestClient::PosixTestClient()
 	: m_pClient(new EPosixClientSocket(this))
 	, m_state(ST_CONNECT)
 	, m_sleepDeadline(0)
-	, m_orderId(0)
-{
-}
+	, m_orderId(0) {}
 
-PosixTestClient::~PosixTestClient()
-{
-}
+PosixTestClient::~PosixTestClient() {}
 
 bool PosixTestClient::connect(const char *host, unsigned int port, int clientId)
 {

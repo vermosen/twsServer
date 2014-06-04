@@ -5,9 +5,10 @@
 #define historical_request_client
 
 #include "EWrapper.h"
+#include "contract.h"
 
 #include <memory>
-#include <stdio.h> //printf()
+#include <stdio.h>																		//printf()
 
 #include <boost/shared_ptr.hpp>
 #include <thOth/time/DateTime.hpp>
@@ -16,8 +17,9 @@
 namespace IB {
 
 	class EPosixClientSocket;
+	class Contract;
 
-	struct historicalQuoteDetails {
+	struct historicalQuoteDetails {														// data structure for historical request
 
 		TickerId id_;
 		double open_;
@@ -31,20 +33,26 @@ namespace IB {
 
 	};
 
-	enum hState {
-
-		ST_CONNECT,
-		ST_PING,
-		ST_PING_ACK,
-		ST_IDLE
-	
-	};
-
 	class historicalRequestClient : public EWrapper {
 
 	public:
 
-		historicalRequestClient();														// ctor
+		enum State {
+
+			ST_CONNECT,
+			ST_REQUEST,
+			ST_REQUEST_ACK,
+			ST_PING,
+			ST_PING_ACK,
+			ST_IDLE
+
+		};
+
+	public:
+
+		historicalRequestClient(const Contract &,
+								const thOth::dateTime &);								// ctor
+
 		~historicalRequestClient();														// destructor
 
 		historicalRequestClient & operator =(const historicalRequestClient &);			// assignement operator
@@ -71,23 +79,27 @@ namespace IB {
 	protected:
 
 		thOth::dateTime convertDateTime(const IBString &) const;					// parse a date string into some dateTime
+		IBString convertDateTime(const thOth::dateTime &) const;
+		void requestHistoricalData();												// request data
 
 	protected:
 
 		bool endOfHistoricalData_;
 		bool errorForRequest_;
 		int marketDataType_;
-
+		Contract contract_;															// the contract definition
+		thOth::dateTime endDate_;													// the end date
 		thOth::TimeSeries<historicalQuoteDetails> ts_;								// timeseries object
 
 	private:
 
 		boost::shared_ptr<EPosixClientSocket> m_pClient;
-		hState m_state;
+		State m_state;
 		time_t m_sleepDeadline;
 
 	public:
 
+		// Ewrapper implentation
 		void tickPrice(TickerId tickerId, TickType field, double price, int canAutoExecute);
 		void tickSize(TickerId tickerId, TickType field, int size);
 		void tickOptionComputation(TickerId tickerId, TickType tickType, double impliedVol, double delta,

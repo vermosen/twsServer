@@ -32,10 +32,18 @@ namespace IB {
 
 	///////////////////////////////////////////////////////////
 	// member funcs
-	historicalRequestClient::historicalRequestClient()
-		: m_pClient(new EPosixClientSocket(this))
-		, m_state(ST_CONNECT)
-		, m_sleepDeadline(0) {}
+	historicalRequestClient::historicalRequestClient(
+		const Contract & ct,
+		const thOth::dateTime & dt)
+
+		: m_pClient(new EPosixClientSocket(this)),
+		  m_state(ST_CONNECT),
+		  m_sleepDeadline(0),
+		  endDate_(dt) {
+	
+		contract_ = ct;
+	
+	}
 
 	historicalRequestClient::~historicalRequestClient() {}
 
@@ -76,6 +84,24 @@ namespace IB {
 
 	}
 
+	void historicalRequestClient::requestHistoricalData() {
+	
+		// generates an id
+		TickerId id = 12;
+		// call the EClientSocketBase method
+		m_pClient->reqHistoricalData(
+			id,												// request id
+			contract_,										// contract
+			convertDateTime(endDate_),						// date
+			IBString("1 D"),									// whole day
+			IBString("1 min"),								// 1 min bar
+			IBString("TRADES"),								// only trades
+			1,												// only data with regular trading hours
+			1);												// date format: yyyymmdd{ space }{space}hh:mm : dd
+	
+		m_state = ST_REQUEST_ACK;
+	}
+
 	void historicalRequestClient::processMessages() {
 
 		fd_set readSet, writeSet;
@@ -88,6 +114,10 @@ namespace IB {
 
 		switch (m_state) {
 
+		case ST_REQUEST:
+			requestHistoricalData();
+		case ST_REQUEST_ACK:
+			break;
 		case ST_PING:
 			reqCurrentTime();
 			break;
@@ -163,7 +193,11 @@ namespace IB {
 		int remaining, double avgFillPrice, int permId, int parentId,
 		double lastFillPrice, int clientId, const IBString& whyHeld) {}
 
-	void historicalRequestClient::nextValidId(OrderId orderId) {}
+	void historicalRequestClient::nextValidId(OrderId orderId) {
+	
+		m_state = ST_REQUEST;
+	
+	}
 
 	void historicalRequestClient::currentTime(long time) {
 
@@ -182,36 +216,15 @@ namespace IB {
 
 		if (id == -1 && errorCode == 1100)					// if "Connectivity between IB and TWS has been lost"
 			disconnect();
+		else
+			std::cout
+				<< "error has occured: "
+				<< std::endl
+				<< errorString;
 
 	}
 
-	void historicalRequestClient::historicalData(
-		TickerId reqId, 
-		const IBString& date, 
-		double open, 
-		double high,
-		double low, 
-		double close, 
-		int volume, 
-		int barCount, 
-		double WAP, 
-		int hasGaps) {
 
-		//if (IsEndOfHistoricalData(date)) {				// TODO : test for eof
-
-		//	endOfHistoricalData_ = true;
-		//	return;
-
-		//}
-
-		// copy the current date in the container
-		ts_.insert(std::pair<thOth::dateTime, historicalQuoteDetails>(				
-			convertDateTime(date),
-			historicalQuoteDetails{ reqId, open, high,
-			low, close, volume,
-			barCount, WAP, hasGaps }));
-
-	}
 
 	thOth::dateTime historicalRequestClient::convertDateTime(const IBString & dtStr) const {
 
@@ -224,6 +237,48 @@ namespace IB {
 			thOth::dateTime::Seconds(boost::lexical_cast<int>(dtStr.substr(16, 2))));
 
 	};
+
+	IBString historicalRequestClient::convertDateTime(const thOth::dateTime & date) const {
+	
+		std::stringstream stream;							
+		boost::posix_time::time_facet* facet = new boost::posix_time::time_facet();
+		facet->format("%Y%m%d  %H:%M:%S");
+		stream.imbue(std::locale(std::locale::classic(), facet));
+		stream << date;
+		
+		IBString ib(stream.str());
+
+		return ib;
+
+	};
+
+	void historicalRequestClient::historicalData(
+		TickerId reqId, 
+		const IBString& date, 
+		double open, 
+		double high, 
+		double low, 
+		double close, 
+		int volume, 
+		int barCount, 
+		double WAP, 
+		int hasGaps) {
+
+		// control for EoF
+		//if (IsEndOfHistoricalData(date)) {
+
+		//	endOfHistoricalData_ = true;
+		//	return;
+
+		//}
+
+		ts_.insert(std::pair<thOth::dateTime, IB::historicalQuoteDetails>(			// copy the current date in the container
+			this->convertDateTime(date),
+			IB::historicalQuoteDetails{ reqId, open, high,
+			low, close, volume,
+			barCount, WAP, hasGaps }));
+
+	}
 
 	void historicalRequestClient::tickPrice(TickerId tickerId, TickType field, double price, int canAutoExecute) {}
 	void historicalRequestClient::tickSize(TickerId tickerId, TickType field, int size) {}
