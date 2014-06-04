@@ -12,6 +12,8 @@ life you should include the needed headers from your system. */
 
 #include <time.h>
 
+#include <thOth/time/timeseries.hpp>
+
 #ifndef _MSC_VER
 #include <sys/time.h>
 #endif
@@ -155,21 +157,13 @@ namespace IB {
 
 	}
 
-	void historicalRequestClient::placeOrder() {}
-	void historicalRequestClient::cancelOrder() {}
-
 	///////////////////////////////////////////////////////////////////
 	// events
 	void historicalRequestClient::orderStatus(OrderId orderId, const IBString &status, int filled,
 		int remaining, double avgFillPrice, int permId, int parentId,
 		double lastFillPrice, int clientId, const IBString& whyHeld) {}
 
-	void historicalRequestClient::nextValidId(OrderId orderId) {
-
-		m_orderId = orderId;
-		m_state = ST_PLACEORDER;
-	
-	}
+	void historicalRequestClient::nextValidId(OrderId orderId) {}
 
 	void historicalRequestClient::currentTime(long time) {
 
@@ -203,16 +197,17 @@ namespace IB {
 		double WAP, 
 		int hasGaps) {
 
-		if (IsEndOfHistoricalData(date)) {
+		//if (IsEndOfHistoricalData(date)) {				// TODO : test for eof
 
-			endOfHistoricalData_ = true;
-			return;
+		//	endOfHistoricalData_ = true;
+		//	return;
 
-		}
+		//}
 
-		ts_.insert(std::pair<thOth::dateTime, TwsApi::historicalQuoteDetails>(			// copy the current date in the container
-			this->convertDateTime(date),
-			TwsApi::historicalQuoteDetails{ reqId, open, high,
+		// copy the current date in the container
+		ts_.insert(std::pair<thOth::dateTime, historicalQuoteDetails>(				
+			convertDateTime(date),
+			historicalQuoteDetails{ reqId, open, high,
 			low, close, volume,
 			barCount, WAP, hasGaps }));
 
@@ -220,7 +215,7 @@ namespace IB {
 
 	thOth::dateTime historicalRequestClient::convertDateTime(const IBString & dtStr) const {
 
-		return thOth::dateTime(															// smallest increments is second
+		return thOth::dateTime(								// smallest increments is second
 			thOth::dateTime::Years(boost::lexical_cast<int>(dtStr.substr(0, 4))),
 			thOth::dateTime::Months(boost::lexical_cast<int>(dtStr.substr(4, 2))),
 			thOth::dateTime::Days(boost::lexical_cast<int>(dtStr.substr(6, 2))),

@@ -10,7 +10,7 @@
 
 #include "historicalRequestClient/historicalRequestClient.hpp"
 
-const unsigned MAX_ATTEMPTS = 1;
+const unsigned MAX_ATTEMPTS = 5;
 const unsigned SLEEP_TIME = 10;
 
 int main(int argc, char** argv)
@@ -29,7 +29,7 @@ int main(int argc, char** argv)
 		IB::historicalRequestClient client;
 
 		// WARNING : TRIES TO PLACE AN ORDER IN MSFT, only run in simulation mode
-		/*client.connect( host, port, clientId);
+		client.connect( host, port, clientId);
 
 		while( client.isConnected()) {
 		client.processMessages();
@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 		}
 
 		printf( "Sleeping %u seconds before next attempt\n", SLEEP_TIME);
-		sleep( SLEEP_TIME);*/
+		sleep( SLEEP_TIME);
 	}
 
 	printf("End of POSIX Socket Client Test\n");

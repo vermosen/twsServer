@@ -10,6 +10,7 @@
 #include <stdio.h> //printf()
 
 #include <boost/shared_ptr.hpp>
+#include <thOth/time/DateTime.hpp>
 #include <thOth/time/timeseries.hpp>
 
 namespace IB {
@@ -30,7 +31,7 @@ namespace IB {
 
 	};
 
-	enum State {
+	enum hState {
 
 		ST_CONNECT,
 		ST_PING,
@@ -43,15 +44,15 @@ namespace IB {
 
 	public:
 
-		historicalRequestClient();
-		~historicalRequestClient();
+		historicalRequestClient();														// ctor
+		~historicalRequestClient();														// destructor
 
 		historicalRequestClient & operator =(const historicalRequestClient &);			// assignement operator
 
 		// accessors
 		bool endOfHistoricalData() const { return endOfHistoricalData_; };				// end of data (public ?)
 		bool errorForRequest() const { return errorForRequest_; };						// error
-		thOth::TimeSeries<IB::historicalQuoteDetails> timeSeries() const{			// the time series
+		thOth::TimeSeries<historicalQuoteDetails> timeSeries() const{					// the time series
 			return ts_;
 		};
 
@@ -66,13 +67,10 @@ namespace IB {
 	private:
 
 		void reqCurrentTime();
-		void placeOrder();
-		void cancelOrder();
 
 	protected:
 
-		// parse a date string into some dateTime
-		thOth::dateTime convertDateTime(const IBString &) const;
+		thOth::dateTime convertDateTime(const IBString &) const;					// parse a date string into some dateTime
 
 	protected:
 
@@ -80,17 +78,16 @@ namespace IB {
 		bool errorForRequest_;
 		int marketDataType_;
 
-		thOth::TimeSeries<IB::historicalQuoteDetails> ts_;							// timeseries object
+		thOth::TimeSeries<historicalQuoteDetails> ts_;								// timeseries object
 
 	private:
 
 		boost::shared_ptr<EPosixClientSocket> m_pClient;
-		State m_state;
+		hState m_state;
 		time_t m_sleepDeadline;
 
 	public:
 
-		// events
 		void tickPrice(TickerId tickerId, TickType field, double price, int canAutoExecute);
 		void tickSize(TickerId tickerId, TickType field, int size);
 		void tickOptionComputation(TickerId tickerId, TickType tickType, double impliedVol, double delta,

@@ -24,9 +24,8 @@ enum State {
 	ST_IDLE
 };
 
+class PosixTestClient : public EWrapper {
 
-class PosixTestClient : public EWrapper
-{
 public:
 
 	PosixTestClient();
