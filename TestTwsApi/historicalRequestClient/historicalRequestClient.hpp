@@ -6,6 +6,7 @@
 
 #include "EWrapper.h"
 #include "contract.h"
+#include "utilities/factory/barSizeFactory/barSizeFactory.hpp"
 
 #include <memory>
 #include <stdio.h>																		//printf()
@@ -17,7 +18,7 @@
 namespace IB {
 
 	class EPosixClientSocket;
-	class Contract;
+	struct Contract;
 
 	struct historicalQuoteDetails {														// data structure for historical request
 
@@ -35,9 +36,11 @@ namespace IB {
 
 	class historicalRequestClient : public EWrapper {
 
-	public:
+	private:
 
-		enum State {
+		const std::map<IB::barSize, IBString> barSizeMap_;									// barSize map
+
+		enum state {																		// client states
 
 			ST_CONNECT,
 			ST_REQUEST,
@@ -84,9 +87,9 @@ namespace IB {
 
 	protected:
 
-		bool endOfHistoricalData_;
-		bool errorForRequest_;
-		int marketDataType_;
+		bool endOfHistoricalData_;													// indicate whether the file has been read
+		bool errorForRequest_;														// error on the request
+		int marketDataType_;														// 
 		Contract contract_;															// the contract definition
 		thOth::dateTime endDate_;													// the end date
 		thOth::TimeSeries<historicalQuoteDetails> ts_;								// timeseries object
@@ -94,7 +97,7 @@ namespace IB {
 	private:
 
 		boost::shared_ptr<EPosixClientSocket> m_pClient;
-		State m_state;
+		state m_state;
 		time_t m_sleepDeadline;
 
 	public:

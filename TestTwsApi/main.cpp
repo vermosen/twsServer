@@ -16,43 +16,81 @@
 const unsigned MAX_ATTEMPTS = 1;
 const unsigned SLEEP_TIME = 10;
 
-int main(int argc, char** argv)
-{
-	const char* host = argc > 1 ? argv[1] : "";
-	unsigned int port = argc > 2 ? atoi(argv[2]) : 7496;
-	int clientId = 0;
+int main(int argc, char** argv) {
 
-	unsigned attempt = 0;
-	printf("Start of POSIX Socket Client Test %u\n", attempt);
+	try {
+	
+		const char* host = argc > 1 ? argv[1] : "";
+		unsigned int port = argc > 2 ? atoi(argv[2]) : 7496;
+		
+		int clientId = 0;											// request Id
+		unsigned attempt = 0;
 
-	// the contract
-	IB::Contract contract;
-	contract.symbol = "MSFT";
-	contract.secType = "STK";
-	contract.exchange = "SMART";
-	contract.currency = "USD";
+		std::cout
+			<< "Start of POSIX Socket Client Test "
+			<< attempt
+			<< std::endl;
 
-	// the date to request
-	thOth::dateTime dt(2014, 6, 3);
+		IB::Contract contract;										// contract to request
+		contract.symbol = "MSFT";
+		contract.secType = "STK";
+		contract.exchange = "SMART";
+		contract.currency = "USD";
+		contract.primaryExchange = "NASDAQ";
 
-	for (;;) {
-		++attempt;
-		printf("Attempt %u of %u\n", attempt, MAX_ATTEMPTS);
+		thOth::dateTime dt(2014, 6, 3);								// the date requested
 
-		IB::historicalRequestClient client(contract, dt);
+		for (;;) {
+			++attempt;
+			
+			std::cout
+				<< "Attempt "
+				<< attempt
+				<< " of "
+				<< MAX_ATTEMPTS
+				<< std::endl;
 
-		client.connect( host, port, clientId);
+			IB::historicalRequestClient client(contract, dt);		// creates the client
 
-		while( client.isConnected()) {
-		client.processMessages();
+			client.connect(host, port, clientId);
+
+			while (client.isConnected()) client.processMessages();
+
+			if (attempt >= MAX_ATTEMPTS) break;
+
+			std::cout
+				<< "Sleeping "
+				<< SLEEP_TIME
+				<< " seconds before next attempt"
+				<< std::endl;
+
+			sleep(SLEEP_TIME);
+
 		}
-
-		if( attempt >= MAX_ATTEMPTS) break;
-
-		printf( "Sleeping %u seconds before next attempt\n", SLEEP_TIME);
-		sleep( SLEEP_TIME);
+	
 	}
+	catch (std::exception & e) {
+	
+		std::cout
+			<< "an error occured: "
+			<< std::endl
+			<< e.what()
+			<< std::endl;
+	
+	}
+	catch (...) {
+	
+		std::cout
+			<< "an unknown error occured..."
+			<< std::endl;
 
-	printf("End of POSIX Socket Client Test\n");
+	}
+	
+	std::cout 
+		<< "End of POSIX Socket Client Test\n"
+		<< std::endl;
+
+	system("pause");
+
 }
 

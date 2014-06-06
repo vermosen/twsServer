@@ -21,9 +21,18 @@
     <ClCompile Include="historicalRequestClient\historicalRequestClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="utilities\factory\barSizeFactory\barSizeFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="historicalRequestClient\historicalRequestClient.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\factory\barSizeFactory\barSizeFactory.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\type\barSize.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

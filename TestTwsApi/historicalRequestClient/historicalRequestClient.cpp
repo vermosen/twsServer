@@ -39,11 +39,8 @@ namespace IB {
 		: m_pClient(new EPosixClientSocket(this)),
 		  m_state(ST_CONNECT),
 		  m_sleepDeadline(0),
-		  endDate_(dt) {
-	
-		contract_ = ct;
-	
-	}
+		  endDate_(dt),
+		  barSizeMap_(barPairs_, barPairs_ + sizeof(barPairs_) / sizeof(barPairs_[0])) {}
 
 	historicalRequestClient::~historicalRequestClient() {}
 
@@ -93,8 +90,8 @@ namespace IB {
 			id,												// request id
 			contract_,										// contract
 			convertDateTime(endDate_),						// date
-			IBString("1 D"),									// whole day
-			IBString("1 min"),								// 1 min bar
+			IBString("1 D"),								// whole day
+			IB::utilities::barSizeFactory()(oneDay),	    // 1 min bar
 			IBString("TRADES"),								// only trades
 			1,												// only data with regular trading hours
 			1);												// date format: yyyymmdd{ space }{space}hh:mm : dd
@@ -265,12 +262,12 @@ namespace IB {
 		int hasGaps) {
 
 		// control for EoF
-		//if (IsEndOfHistoricalData(date)) {
+		if (m_pClient->fd) {
 
-		//	endOfHistoricalData_ = true;
-		//	return;
+			endOfHistoricalData_ = true;
+			return;
 
-		//}
+		}
 
 		ts_.insert(std::pair<thOth::dateTime, IB::historicalQuoteDetails>(			// copy the current date in the container
 			this->convertDateTime(date),
