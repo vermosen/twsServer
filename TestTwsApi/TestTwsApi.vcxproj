@@ -162,16 +162,20 @@
     <ClCompile Include="historicalRequestClient\historicalRequestClient.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="utilities\factory\barSizeFactory\barSizeFactory.cpp" />
+    <ClCompile Include="utilities\factory\dataDurationFactory\dataDurationFactory.cpp" />
     <ClCompile Include="utilities\factory\dataTypeFactory\dataTypeFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="historicalRequestClient\historicalRequestClient.hpp" />
     <ClInclude Include="utilities\factory\barSizeFactory\barSizeFactory.hpp" />
     <ClInclude Include="utilities\factory\barSizeFactory\register_barSize.hpp" />
+    <ClInclude Include="utilities\factory\dataDurationFactory\dataDurationFactory.hpp" />
+    <ClInclude Include="utilities\factory\dataDurationFactory\register_dataDuration.hpp" />
     <ClInclude Include="utilities\factory\dataTypeFactory\dataTypeFactory.hpp" />
     <ClInclude Include="utilities\factory\dataTypeFactory\register_dataType.hpp" />
     <ClInclude Include="utilities\factory\registerAll.hpp" />
     <ClInclude Include="utilities\type\barSize.hpp" />
+    <ClInclude Include="utilities\type\dataDuration.hpp" />
     <ClInclude Include="utilities\type\dataType.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

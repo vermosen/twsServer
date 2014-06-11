@@ -27,6 +27,9 @@
     <ClCompile Include="utilities\factory\dataTypeFactory\dataTypeFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="utilities\factory\dataDurationFactory\dataDurationFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="historicalRequestClient\historicalRequestClient.hpp">
@@ -51,6 +54,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utilities\factory\dataTypeFactory\register_dataType.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\type\dataDuration.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\factory\dataDurationFactory\dataDurationFactory.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\factory\dataDurationFactory\register_dataDuration.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

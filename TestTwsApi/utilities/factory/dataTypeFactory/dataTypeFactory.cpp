@@ -25,9 +25,7 @@ namespace IB {
 			}
 			else {
 
-				std::ostringstream oss;
-				oss << "unregistered bond selection rule : " << str;
-				throw std::exception(oss.str().c_str());
+				return IB::unknownType;
 
 			}
 		
@@ -42,7 +40,7 @@ namespace IB {
 
 		void dataTypeFactory::registerType(const std::string & str, void * o) {
 		
-			ObjectHandler::RegistryManager<IB::barSize, ObjectHandler::EnumTypeRegistry>::registerType(str, o);
+			ObjectHandler::RegistryManager<IB::dataType, ObjectHandler::EnumTypeRegistry>::registerType(str, o);
 		
 		}
 

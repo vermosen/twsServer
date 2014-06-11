@@ -1,5 +1,5 @@
-#ifndef bar_size_factory
-#define bar_size_factory
+#ifndef bar_size_factory_hpp
+#define bar_size_factory_hpp
 
 #include <oh/enumerations/typefactory.hpp>
 #include <IBString.h>

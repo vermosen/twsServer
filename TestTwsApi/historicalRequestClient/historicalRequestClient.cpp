@@ -89,14 +89,14 @@ namespace IB {
 
 		// call the corresponding EClientSocketBase method
 		m_pClient->reqHistoricalData(
-			id,												// request id
-			contract_,										// contract
-			convertDateTime(endDate_),						// date
-			IBString("1 D"),								// whole day
-			IB::utilities::barSizeFactory()(oneDay),	    // 1 min bar
-			IB::utilities::dataTypeFactory()(trades),		// dataType: only trades
-			1,												// only data with regular trading hours
-			1);												// date format: yyyymmdd{ space }{space}hh:mm : dd
+			id,											  // request id
+			contract_,									  // contract
+			convertDateTime(endDate_),					  // date
+			IB::utilities::dataDurationFactory()(day, 1), // whole day
+			IB::utilities::barSizeFactory     ()(oneDay), // 1 min bar
+			IB::utilities::dataTypeFactory    ()(trades), // dataType: only trades
+			1,											  // only data with regular trading hours
+			1);											  // date format: yyyymmdd{ space }{space}hh:mm : dd
 	
 		m_state = ST_REQUEST_ACK;
 	}

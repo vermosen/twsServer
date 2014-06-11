@@ -25,9 +25,7 @@ namespace IB {
 			}
 			else {
 
-				std::ostringstream oss;
-				oss << "unregistered bond selection rule : " << str;
-				throw std::exception(oss.str().c_str());
+				return IB::unknownSize;
 
 			}
 		

@@ -8,6 +8,7 @@
 #include "contract.h"
 #include "utilities/factory/barSizeFactory/barSizeFactory.hpp"
 #include "utilities/factory/dataTypeFactory/dataTypeFactory.hpp"
+#include "utilities/factory/dataDurationFactory/dataDurationFactory.hpp"
 
 #include <memory>
 #include <stdio.h>																		//printf()

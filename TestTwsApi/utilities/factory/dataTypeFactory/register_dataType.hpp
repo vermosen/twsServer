@@ -7,18 +7,18 @@ namespace IB {
 
 	namespace utilities {
 
-		void registerBarSize() {
+		void registerDataType() {
 
-			dataTypeFactory createBarSize;
+			dataTypeFactory factory;
 
-			createBarSize.registerType("TRADES", new IB::dataType(IB::trades));
-			createBarSize.registerType("MIDPOINT", new IB::dataType(IB::midPoint));
-			createBarSize.registerType("BID", new IB::dataType(IB::bid));
-			createBarSize.registerType("ASK", new IB::dataType(IB::ask));
-			createBarSize.registerType("BID_ASK", new IB::dataType(IB::bidAsk));
-			createBarSize.registerType("HISTORICAL_VOLATILITY", new IB::dataType(IB::historicalVolatility));
-			createBarSize.registerType("OPTION_IMPLIED_VOLATILITY", new IB::dataType(IB::optionImpliedVolatility));
-			createBarSize.registerType("unkown size", new IB::dataType(IB::unknownType));
+			factory.registerType("TRADES"				    , new IB::dataType(IB::trades				  ));
+			factory.registerType("MIDPOINT"				    , new IB::dataType(IB::midPoint				  ));
+			factory.registerType("BID"					    , new IB::dataType(IB::bid					  ));
+			factory.registerType("ASK"					    , new IB::dataType(IB::ask					  ));
+			factory.registerType("BID_ASK"				    , new IB::dataType(IB::bidAsk				  ));
+			factory.registerType("HISTORICAL_VOLATILITY"    , new IB::dataType(IB::historicalVolatility   ));
+			factory.registerType("OPTION_IMPLIED_VOLATILITY", new IB::dataType(IB::optionImpliedVolatility));
+			factory.registerType("unkown size"              , new IB::dataType(IB::unknownType            ));
 
 		};
 
