@@ -1,12 +1,13 @@
 /* Copyright (C) 2013 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
 * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-#ifndef historical_request_client
-#define historical_request_client
+#ifndef historical_request_client_hpp
+#define historical_request_client_hpp
 
 #include "EWrapper.h"
 #include "contract.h"
 #include "utilities/factory/barSizeFactory/barSizeFactory.hpp"
+#include "utilities/factory/dataTypeFactory/dataTypeFactory.hpp"
 
 #include <memory>
 #include <stdio.h>																		//printf()
@@ -38,8 +39,6 @@ namespace IB {
 
 	private:
 
-		const std::map<IB::barSize, IBString> barSizeMap_;									// barSize map
-
 		enum state {																		// client states
 
 			ST_CONNECT,
@@ -63,6 +62,7 @@ namespace IB {
 		// accessors
 		bool endOfHistoricalData() const { return endOfHistoricalData_; };				// end of data (public ?)
 		bool errorForRequest() const { return errorForRequest_; };						// error
+		
 		thOth::TimeSeries<historicalQuoteDetails> timeSeries() const{					// the time series
 			return ts_;
 		};

@@ -1,5 +1,7 @@
-#ifndef bar_size
-#define bar_size
+#ifndef bar_size_hpp
+#define bar_size_hpp
+
+#include <IBString.h>
 
 namespace IB {
 	
@@ -22,24 +24,25 @@ namespace IB {
 	};
 
 	// conversion into the corresponding IB strings
-	inline const IB::IBString ToString(barSize v) {
+	inline const IBString ToString(barSize v) {
 
 		switch (v) {
 
-			case oneSecond:      return "1 sec"      ;
-			case fiveSeconds:    return "5 secs"     ;
+			case oneSecond     : return "1 sec"      ;
+			case fiveSeconds   : return "5 secs"     ;
 			case fifteenSeconds: return "15 secs"    ;
-			case thirtySeconds:  return "30 secs"    ;
-			case oneMinute:      return "1 min"      ;
-			case twoMinutes:     return "2 mins"     ;
-			case threeMinutes:   return "3 mins"     ;
-			case fiveMinutes:    return "5 mins"     ;
+			case thirtySeconds : return "30 secs"    ;
+			case oneMinute     : return "1 min"      ;
+			case twoMinutes    : return "2 mins"     ;
+			case threeMinutes  : return "3 mins"     ;
+			case fiveMinutes   : return "5 mins"     ;
 			case fifteenMinutes: return "15 mins"    ;
-			case thirtyMinutes:  return "30 mins"    ;
-			case oneHour:        return "1 hour"     ;
-			case oneDay:         return "1 day"      ;
-			case unknownSize:    return "unkown size";
-			default:             return "unkown size";
+			case thirtyMinutes : return "30 mins"    ;
+			case oneHour       : return "1 hour"     ;
+			case oneDay        : return "1 day"      ;
+			case unknownSize   : return "unkown size";
+
+			default            : return "unkown size";
 		
 		}
 	}

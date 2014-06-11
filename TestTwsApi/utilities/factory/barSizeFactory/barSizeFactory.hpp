@@ -15,8 +15,9 @@ namespace IB {
 
 		public:
 
-			barSizeFactory();
-			~barSizeFactory();
+			barSizeFactory() {};
+			barSizeFactory(const barSizeFactory &) {};
+			~barSizeFactory() {};
 
 			barSizeFactory & operator =(const barSizeFactory &);
 

@@ -39,28 +39,29 @@ namespace IB {
 		: m_pClient(new EPosixClientSocket(this)),
 		  m_state(ST_CONNECT),
 		  m_sleepDeadline(0),
-		  endDate_(dt),
-		  barSizeMap_(barPairs_, barPairs_ + sizeof(barPairs_) / sizeof(barPairs_[0])) {}
+		  endDate_(dt) {}
 
 	historicalRequestClient::~historicalRequestClient() {}
 
 	historicalRequestClient & historicalRequestClient::operator = (const historicalRequestClient & o) {
 	
+		// member copy
 		if (this != &o) {
 		
-			ts_ = o.ts_;
+			ts_                  = o.ts_                 ;
 			endOfHistoricalData_ = o.endOfHistoricalData_;
-			errorForRequest_ = o.errorForRequest_;
-			marketDataType_ = o.marketDataType_;
-			m_pClient = o.m_pClient;
-			m_state = o.m_state;
-			m_sleepDeadline = o.m_sleepDeadline;
+			errorForRequest_     = o.errorForRequest_    ;
+			marketDataType_      = o.marketDataType_     ;
+			m_pClient            = o.m_pClient           ;
+			m_state              = o.m_state             ;
+			m_sleepDeadline      = o.m_sleepDeadline     ;
 		
 		}
 	
 		return *this;
 	
 	};
+
 	bool historicalRequestClient::connect(const char *host, unsigned int port, int clientId) {
 
 		// trying to connect
@@ -83,16 +84,17 @@ namespace IB {
 
 	void historicalRequestClient::requestHistoricalData() {
 	
-		// generates an id
+		// generates an id -> guid generator ?
 		TickerId id = 12;
-		// call the EClientSocketBase method
+
+		// call the corresponding EClientSocketBase method
 		m_pClient->reqHistoricalData(
 			id,												// request id
 			contract_,										// contract
 			convertDateTime(endDate_),						// date
 			IBString("1 D"),								// whole day
 			IB::utilities::barSizeFactory()(oneDay),	    // 1 min bar
-			IBString("TRADES"),								// only trades
+			IB::utilities::dataTypeFactory()(trades),		// dataType: only trades
 			1,												// only data with regular trading hours
 			1);												// date format: yyyymmdd{ space }{space}hh:mm : dd
 	
@@ -262,18 +264,25 @@ namespace IB {
 		int hasGaps) {
 
 		// control for EoF
-		if (m_pClient->fd) {
+		//if (m_pClient->fd()) {
 
-			endOfHistoricalData_ = true;
-			return;
+		//	endOfHistoricalData_ = true;
+		//	return;
 
-		}
+		//}
 
 		ts_.insert(std::pair<thOth::dateTime, IB::historicalQuoteDetails>(			// copy the current date in the container
 			this->convertDateTime(date),
-			IB::historicalQuoteDetails{ reqId, open, high,
-			low, close, volume,
-			barCount, WAP, hasGaps }));
+			IB::historicalQuoteDetails{ 
+				reqId, 
+				open, 
+				high,
+				low, 
+				close, 
+				volume,
+				barCount, 
+				WAP, 
+				hasGaps }));
 
 	}
 

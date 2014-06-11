@@ -3,6 +3,7 @@
 
 #include "contract.h"
 #include <thOth/time/DateTime.hpp>
+#include <utilities/factory/registerAll.hpp>
 
 #ifdef _WIN32
 # include <windows.h>
@@ -19,10 +20,17 @@ const unsigned SLEEP_TIME = 10;
 int main(int argc, char** argv) {
 
 	try {
+
+		// register process
+		static ObjectHandler::EnumTypeRegistry enumTypeRegistry;
+		/*static ObjectHandler::EnumClassRegistry enumClassRegistry;
+		static ObjectHandler::EnumPairRegistry enumPairRegistry;*/
+
+		IB::utilities::registerAll();
 	
 		const char* host = argc > 1 ? argv[1] : "";
 		unsigned int port = argc > 2 ? atoi(argv[2]) : 7496;
-		
+
 		int clientId = 0;											// request Id
 		unsigned attempt = 0;
 

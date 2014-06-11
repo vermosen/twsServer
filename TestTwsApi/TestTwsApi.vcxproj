@@ -99,7 +99,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ObjectHandler-vc120-mt-sg-1_2_0.lib;thOth-vc120-mt-sgd.lib;twsapi-vc120-mt-sgd.lib;Ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjectHandler-vc120-mt-sgd-1_2_0.lib;thOth-vc120-mt-sgd.lib;twsapi-vc120-mt-sgd.lib;Ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -135,7 +135,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>thOth-vc120-mt-sg.lib;twsapi-vc120-mt-s.lib;Ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjectHandler-vc120-mt-sg-1_2_0.lib;thOth-vc120-mt-sg.lib;twsapi-vc120-mt-s.lib;Ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -162,11 +162,17 @@
     <ClCompile Include="historicalRequestClient\historicalRequestClient.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="utilities\factory\barSizeFactory\barSizeFactory.cpp" />
+    <ClCompile Include="utilities\factory\dataTypeFactory\dataTypeFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="historicalRequestClient\historicalRequestClient.hpp" />
     <ClInclude Include="utilities\factory\barSizeFactory\barSizeFactory.hpp" />
+    <ClInclude Include="utilities\factory\barSizeFactory\register_barSize.hpp" />
+    <ClInclude Include="utilities\factory\dataTypeFactory\dataTypeFactory.hpp" />
+    <ClInclude Include="utilities\factory\dataTypeFactory\register_dataType.hpp" />
+    <ClInclude Include="utilities\factory\registerAll.hpp" />
     <ClInclude Include="utilities\type\barSize.hpp" />
+    <ClInclude Include="utilities\type\dataType.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

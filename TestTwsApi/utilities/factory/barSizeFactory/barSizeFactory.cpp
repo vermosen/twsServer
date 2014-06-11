@@ -4,9 +4,6 @@ namespace IB {
 
 	namespace utilities {
 
-		barSizeFactory::barSizeFactory() {};
-		barSizeFactory::~barSizeFactory() {};
-
 		barSizeFactory & barSizeFactory::operator = (const barSizeFactory & o) {
 		
 			if (&o != this) {
