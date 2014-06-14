@@ -7,7 +7,7 @@ namespace IB {
 
 	enum dataType : unsigned int{
 
-		trades                  = 0,
+		trade                   = 0,
 		midPoint                = 1,
 		bid                     = 2,
 		ask                     = 3,
@@ -23,7 +23,7 @@ namespace IB {
 
 		switch (v) {
 
-		case trades                 : return "TRADES"                   ;
+		case trade                  : return "TRADES"                   ;
 		case midPoint               : return "MIDPOINT"                 ;
 		case bid                    : return "BID"                      ;
 		case ask                    : return "ASK"                      ;

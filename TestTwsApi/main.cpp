@@ -2,6 +2,8 @@
 * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
 #include "contract.h"
+#include "utilities/type/all.hpp"
+
 #include <thOth/time/DateTime.hpp>
 #include <utilities/factory/registerAll.hpp>
 
@@ -40,6 +42,7 @@ int main(int argc, char** argv) {
 			<< std::endl;
 
 		IB::Contract contract;										// contract to request
+
 		contract.symbol = "MSFT";
 		contract.secType = "STK";
 		contract.exchange = "SMART";
@@ -48,7 +51,16 @@ int main(int argc, char** argv) {
 
 		thOth::dateTime dt(2014, 6, 3);								// the date requested
 
-		for (;;) {
+		IB::historicalRequestClient client(							// creates the client				
+			contract,												// contract 
+			dt,														// startDate of the request
+			IB::barSize::oneSecond,									// bar size
+			1,														// period length
+			IB::dataDuration::week,								    // period type
+			IB::dataType::trades);									// data type
+
+		for (;;) {													// loop over attemps
+
 			++attempt;
 			
 			std::cout
@@ -58,13 +70,11 @@ int main(int argc, char** argv) {
 				<< MAX_ATTEMPTS
 				<< std::endl;
 
-			IB::historicalRequestClient client(contract, dt);		// creates the client
-
 			client.connect(host, port, clientId);
 
 			while (client.isConnected()) client.processMessages();
 
-			if (attempt >= MAX_ATTEMPTS) break;
+			if (attempt >= MAX_ATTEMPTS) break;						// max attemps reached
 
 			std::cout
 				<< "Sleeping "
@@ -75,7 +85,34 @@ int main(int argc, char** argv) {
 			sleep(SLEEP_TIME);
 
 		}
+
+		thOth::TimeSeries<IB::historicalQuoteDetails> ts = client.timeSeries();
 	
+		std::cout
+			<< "data summary: "
+			<< std::endl
+			<< "--------------"
+			<< std::endl;
+
+		for (thOth::TimeSeries<IB::historicalQuoteDetails>::const_iterator It = ts.cbegin(); It != ts.cend(); It++) {
+		
+			std::cout
+				<< It->first
+				<< " p: "
+				<< It->second.close_
+				<< " h: "
+				<< It->second.high_
+				<< " l: "
+				<< It->second.low_
+				<< " v: "
+				<< It->second.volume_
+				<< std::endl;
+		
+		}
+
+		// creating csv file
+
+
 	}
 	catch (std::exception & e) {
 	
@@ -95,7 +132,7 @@ int main(int argc, char** argv) {
 	}
 	
 	std::cout 
-		<< "End of POSIX Socket Client Test\n"
+		<< "End of TWS Api Test\n"
 		<< std::endl;
 
 	system("pause");

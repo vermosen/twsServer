@@ -95,6 +95,7 @@
       <PreprocessorDefinitions>IB_USE_STD_STRING;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <DisableSpecificWarnings>4800;4005</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -174,6 +175,7 @@
     <ClInclude Include="utilities\factory\dataTypeFactory\dataTypeFactory.hpp" />
     <ClInclude Include="utilities\factory\dataTypeFactory\register_dataType.hpp" />
     <ClInclude Include="utilities\factory\registerAll.hpp" />
+    <ClInclude Include="utilities\type\all.hpp" />
     <ClInclude Include="utilities\type\barSize.hpp" />
     <ClInclude Include="utilities\type\dataDuration.hpp" />
     <ClInclude Include="utilities\type\dataType.hpp" />

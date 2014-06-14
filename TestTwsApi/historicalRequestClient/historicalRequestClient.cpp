@@ -32,14 +32,22 @@ namespace IB {
 
 	///////////////////////////////////////////////////////////
 	// member funcs
-	historicalRequestClient::historicalRequestClient(
-		const Contract & ct,
-		const thOth::dateTime & dt)
+	historicalRequestClient::historicalRequestClient(const Contract & ct,
+		const thOth::dateTime & dt,
+		const barSize bar,
+		const int length = 1,
+		const dataDuration dur,
+		const dataType type)
 
 		: m_pClient(new EPosixClientSocket(this)),
 		  m_state(ST_CONNECT),
 		  m_sleepDeadline(0),
-		  endDate_(dt) {}
+		  contract_(ct),
+		  endDate_(dt),
+		  length_(length),
+		  barSize_(bar),
+		  dataDuration_(dur),
+		  dataType_(type) {}
 
 	historicalRequestClient::~historicalRequestClient() {}
 
@@ -52,10 +60,18 @@ namespace IB {
 			endOfHistoricalData_ = o.endOfHistoricalData_;
 			errorForRequest_     = o.errorForRequest_    ;
 			marketDataType_      = o.marketDataType_     ;
+
+			contract_            = o.contract_           ;
+			endDate_             = o.endDate_			 ;
+			length_				 = o.length_			 ;
+			barSize_			 = o.barSize_			 ;
+			dataDuration_		 = o.dataDuration_		 ;
+			dataType_			 = o.dataType_			 ;
+
 			m_pClient            = o.m_pClient           ;
 			m_state              = o.m_state             ;
 			m_sleepDeadline      = o.m_sleepDeadline     ;
-		
+
 		}
 	
 		return *this;
@@ -89,14 +105,14 @@ namespace IB {
 
 		// call the corresponding EClientSocketBase method
 		m_pClient->reqHistoricalData(
-			id,											  // request id
-			contract_,									  // contract
-			convertDateTime(endDate_),					  // date
-			IB::utilities::dataDurationFactory()(day, 1), // whole day
-			IB::utilities::barSizeFactory     ()(oneDay), // 1 min bar
-			IB::utilities::dataTypeFactory    ()(trades), // dataType: only trades
-			1,											  // only data with regular trading hours
-			1);											  // date format: yyyymmdd{ space }{space}hh:mm : dd
+			id,																// request id
+			contract_,														// contract
+			convertDateTime(endDate_),										// date
+			IB::utilities::dataDurationFactory()(dataDuration_, length_),	// whole day
+			IB::utilities::barSizeFactory     ()(barSize_),					// 1 min bar
+			IB::utilities::dataTypeFactory    ()(dataType_),				// dataType: only trades
+			1,																// only data with regular trading hours
+			1);																// date format: yyyymmdd{ space }{space}hh:mm : dd
 	
 		m_state = ST_REQUEST_ACK;
 	}
@@ -115,11 +131,14 @@ namespace IB {
 
 		case ST_REQUEST:
 			requestHistoricalData();
+
 		case ST_REQUEST_ACK:
 			break;
+
 		case ST_PING:
 			reqCurrentTime();
 			break;
+
 		case ST_PING_ACK:
 			if (m_sleepDeadline < now) {
 
@@ -140,8 +159,9 @@ namespace IB {
 			break;
 		}
 
+		// initialize timeout with m_sleepDeadline - now
 		if (m_sleepDeadline > 0)
-			tval.tv_sec = m_sleepDeadline - now;			// initialize timeout with m_sleepDeadline - now
+			tval.tv_sec = static_cast<long>(m_sleepDeadline - now);
 
 		if (m_pClient->fd() >= 0) {
 
@@ -217,9 +237,9 @@ namespace IB {
 			disconnect();
 		else
 			std::cout
-				<< "error has occured: "
-				<< std::endl
-				<< errorString;
+				<< "request information: "
+				<< errorString
+				<< std::endl;
 
 	}
 
@@ -252,36 +272,42 @@ namespace IB {
 	};
 
 	void historicalRequestClient::historicalData(
-		TickerId reqId, 
-		const IBString& date, 
-		double open, 
-		double high, 
-		double low, 
-		double close, 
-		int volume, 
-		int barCount, 
-		double WAP, 
+		TickerId reqId,
+		const IBString& date,
+		double open,
+		double high,
+		double low,
+		double close,
+		int volume,
+		int barCount,
+		double WAP,
 		int hasGaps) {
 
+		if (volume < 1) {
+		
+			int i = 0;
+		
+		}
 		// control for EoF
-		//if (m_pClient->fd()) {
+		if (IsEndOfHistoricalData(date)) {
 
-		//	endOfHistoricalData_ = true;
-		//	return;
+			notifyObservers();
+			disconnect();
+			return;
 
-		//}
+		}
 
-		ts_.insert(std::pair<thOth::dateTime, IB::historicalQuoteDetails>(			// copy the current date in the container
-			this->convertDateTime(date),
-			IB::historicalQuoteDetails{ 
-				reqId, 
-				open, 
+			ts_.insert(std::pair<thOth::dateTime, IB::historicalQuoteDetails>(			// copy the current date in the container
+				this->convertDateTime(date),
+				IB::historicalQuoteDetails{
+				reqId,
+				open,
 				high,
-				low, 
-				close, 
+				low,
+				close,
 				volume,
-				barCount, 
-				WAP, 
+				barCount,
+				WAP,
 				hasGaps }));
 
 	}

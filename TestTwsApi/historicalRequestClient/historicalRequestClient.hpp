@@ -4,18 +4,20 @@
 #ifndef historical_request_client_hpp
 #define historical_request_client_hpp
 
-#include "EWrapper.h"
-#include "contract.h"
-#include "utilities/factory/barSizeFactory/barSizeFactory.hpp"
+#include "EWrapper.h"																	// TWS components
+#include "contract.h"																	
+
+#include "utilities/factory/barSizeFactory/barSizeFactory.hpp"							// factories
 #include "utilities/factory/dataTypeFactory/dataTypeFactory.hpp"
 #include "utilities/factory/dataDurationFactory/dataDurationFactory.hpp"
 
-#include <memory>
-#include <stdio.h>																		//printf()
+//#include <memory>
+#include <stdio.h>																		// printf()
 
 #include <boost/shared_ptr.hpp>
 #include <thOth/time/DateTime.hpp>
 #include <thOth/time/timeseries.hpp>
+#include <thOth/pattern/observable.hpp>
 
 namespace IB {
 
@@ -36,7 +38,7 @@ namespace IB {
 
 	};
 
-	class historicalRequestClient : public EWrapper {
+	class historicalRequestClient : public EWrapper, thOth::observable {
 
 	private:
 
@@ -51,10 +53,20 @@ namespace IB {
 
 		};
 
+	private:																			// private default ctor, cc ctors and assignement
+		historicalRequestClient() {};													// TODO: turn it into a singleton
+		historicalRequestClient(const historicalRequestClient &) {};
+
+		historicalRequestClient & operator =(const historicalRequestClient &) {};
+
 	public:
 
-		historicalRequestClient(const Contract &,
-								const thOth::dateTime &);								// ctor
+		historicalRequestClient(const Contract &,										// public ctor
+								const thOth::dateTime &,
+								const barSize bs = barSize::oneSecond,
+								const int lenght = 1,
+								const dataDuration dur = dataDuration::day,
+								const dataType = dataType::trade);
 
 		~historicalRequestClient();														// destructor
 
@@ -86,13 +98,26 @@ namespace IB {
 		IBString convertDateTime(const thOth::dateTime &) const;
 		void requestHistoricalData();												// request data
 
+		bool IsEndOfHistoricalData(const IBString& Date) {							// check if historical data is finished
+
+			endOfHistoricalData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);
+			return endOfHistoricalData_;
+		
+		}
+
 	protected:
 
 		bool endOfHistoricalData_;													// indicate whether the file has been read
 		bool errorForRequest_;														// error on the request
-		int marketDataType_;														// 
+		int marketDataType_;														// market data type
+		
 		Contract contract_;															// the contract definition
 		thOth::dateTime endDate_;													// the end date
+		int length_;																// lenght of the period
+		barSize barSize_;															// bar size
+		dataDuration dataDuration_;													// data duration
+		dataType dataType_;															// data Type
+
 		thOth::TimeSeries<historicalQuoteDetails> ts_;								// timeseries object
 
 	private:
