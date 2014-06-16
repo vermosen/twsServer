@@ -29,175 +29,95 @@
 #endif
 
 #include "historicalRequestClient/historicalRequestClient.hpp"
+#include "utilities/settings.hpp"
 
 const unsigned MAX_ATTEMPTS = 2;
 const unsigned SLEEP_TIME = 5;
-const char * CSV_PATH = "C://Temp/";
+const char * LOG_PATH = "C://Temp/";
 
 int main(int argc, char** argv) {
 
 	try {
 
 		// register process
-		static ObjectHandler::EnumTypeRegistry enumTypeRegistry;
+		static ObjectHandler::EnumTypeRegistry enumTypeRegistry;	// registry
 
-		IB::utilities::registerAll();
-	
-		const char* host = argc > 1 ? argv[1] : "";
-		unsigned int port = argc > 2 ? atoi(argv[2]) : 7496;
+		IB::utilities::registerAll();								// register the factories
 
-		int clientId = 0;											// request Id
-		unsigned attempt = 0;
+		const char * ibHost = "";									// ip adress of the IB server
+		unsigned int ibPort = 7496;									// remote port
 
-		std::cout													// message
-			<< "Starting POSIX Socket Client Test"
-			<< std::endl;
-
-		IB::Contract contract;										// contract to request
-
-		// initialize mySQL connection
-		MYSQL * connect;											// connection
-		connect = mysql_init(NULL);									// initialize the variable
-
+		if (argc > 1) {												// some arguments added
 		
-		if (!connect)												// fails to initialize mySQL
-			throw std::exception("mySQL initialization failed");
-		
-		connect = mysql_real_connect(								// mySQL real connection
-			connect,
-			SERVER,
-			USER,
-			PASSWORD,
-			DATABASE,
-			PORT,
-			NULL, 0);
-
-		if (!connect) throw std::exception("unable to reach mySQL database");
-
-		mysql_query(												// query to run
-			connect, 
-			"SELECT * FROM table_instrument WHERE instrument_symbol = 'MSFT'");
-
-		// mySQL query result
-		MYSQL_RES * reception = mysql_store_result(connect);		// results
-
-		if (!reception) 
-			throw std::exception("no record found in table_instrument");
-
-		if (mysql_num_rows(reception) == 1) {						// assumed to be a unique record
+			for (int i = 1; i < argc; i++) {					// check whether verbosity has been activated
 			
-			MYSQL_ROW db_row = mysql_fetch_row(reception);
+				std::string arg(argv[i]);
 
-			contract.symbol = "MSFT";
-			contract.secType = db_row[2];
-			contract.exchange = "SMART";
-			contract.currency = db_row[3];
-			contract.primaryExchange = db_row[4];
-		
-		};			// number of rows
+				if (arg.substr(1, 7) == "verbose") {				// expected -verbose=n
+				
+					IB::settings::instance().verbosity(				// set the verbosity
+						boost::lexical_cast<int>(arg.substr(9, 1)));
+				
+				};
 
-		thOth::dateTime dt(2014, 6, 3);								// the date requested
-
-		IB::historicalRequestClient client(							// creates the client				
-			contract,												// contract 
-			dt,														// startDate of the request
-			IB::barSize::thirtySeconds,								// bar size
-			1,														// period length
-			IB::dataDuration::day,								    // period type
-			IB::dataType::trade);									// data type
-
-		thOth::TimeSeries<IB::historicalQuoteDetails> ts;
-
-		for (;;) {													// loop over attemps
-
-			++attempt;
+				// TODO
+				ibHost =
+					(arg.substr(1, 4) == "host" ? "" : false);			// expected -host=xxx.xx.xx.xx
 			
-			std::cout
-				<< "Attempt "
-				<< attempt
-				<< " of "
-				<< MAX_ATTEMPTS
-				<< std::endl;
+				ibPort =
+					(arg.substr(1, 4) == "port" ? 7496 : false);		// expected -port=xxxx
 
-			client.connect(host, port, clientId);
-
-			while (client.isConnected()) client.processMessages();
-
-			if (attempt >= MAX_ATTEMPTS)							// max attemps reached
-				throw std::exception("failed to connect after max attempts");						
-
-			if (client.endOfHistoricalData()) {						// download succedded
-			
-				std::cout
-					<< "download successful, "
-					<< "trying to store results "
-					<< "in the database"
-					<< std::endl;
-
-				ts = client.timeSeries();
-				break;
-
-			} else {			
-
-				std::cout
-					<< "Sleeping "
-					<< SLEEP_TIME
-					<< " seconds before next attempt"
-					<< std::endl;
-
-				sleep(SLEEP_TIME);
-			
 			}
 
 		}
 
-		//verbose
-		for (thOth::TimeSeries<IB::historicalQuoteDetails>::const_iterator It = ts.cbegin(); It != ts.cend(); It++) {
+
+		std::cout													// title
+			<< "Starting POSIX Socket Client server"
+			<< std::endl
+			<< "-----------------------------------"
+			<< std::endl
+			<< std::endl;
+
+		bool end = false;											// is test finished ?
+		while (end == false) {										// main loop
 		
-			std::cout
-				<< It->first
-				<< " p: "
-				<< It->second.close_
-				<< " h: "
-				<< It->second.high_
-				<< " l: "
-				<< It->second.low_
-				<< " v: "
-				<< It->second.volume_
+			std::cout												// select the activity
+				<< "Please select an activity: "
+				<< std::endl
+				<< "1 - historical data request"
+				<< std::endl
+				<< "2 - exit the server"
 				<< std::endl;
+
+			
+			unsigned int res; std::cin >> res;						// user defined test
+
+			switch (res) {
+			
+				case 1:
+				
+					break;
+
+				case 2:
+
+					end = true;										// stop the server
+					break;
+
+				default:
+
+					std::cout
+						<< "invalid test, please try again"
+						<< std::endl;
+
+					break;
+			
+			}
+
+			//test sur la validité
+
+			
 		
-		}
-
-		// creating csv file
-		std::cout << "writing data file..." << std::endl;
-
-		thOth::utilities::csvBuilder csv(								// csv path name
-			std::string(CSV_PATH)
-				.append(contract.symbol)
-				.append("_")
-				.append(boost::posix_time::to_iso_string(
-					boost::posix_time::second_clock::local_time()))
-				.append("_")
-				.append(".csv"));
-
-		csv.add("date_time", 1, 1);										// line headers
-		csv.add("open", 1, 2);
-		csv.add("close", 1, 3);
-		csv.add("high", 1, 4);
-		csv.add("low", 1, 5);
-		csv.add("volume", 1, 6);
-
-		long row = 2;
-		for (thOth::TimeSeries<IB::historicalQuoteDetails>::const_iterator 
-			It = ts.cbegin(); It != ts.cend(); It++, row++) {
-
-			csv.add(boost::lexical_cast<std::string>(It->first), row, 1);
-			csv.add(It->second.open_, row, 2);
-			csv.add(It->second.close_, row, 3);
-			csv.add(It->second.high_, row, 4);
-			csv.add(It->second.low_, row, 5);
-			csv.add(It->second.volume_, row, 6);
-
 		}
 
 	}

@@ -160,6 +160,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="functions\historicalRequest.cpp" />
     <ClCompile Include="historicalRequestClient\historicalRequestClient.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="utilities\factory\barSizeFactory\barSizeFactory.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="utilities\factory\dataTypeFactory\dataTypeFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="functions\historicalRequest.hpp" />
     <ClInclude Include="historicalRequestClient\historicalRequestClient.hpp" />
     <ClInclude Include="utilities\factory\barSizeFactory\barSizeFactory.hpp" />
     <ClInclude Include="utilities\factory\barSizeFactory\register_barSize.hpp" />
@@ -175,6 +177,7 @@
     <ClInclude Include="utilities\factory\dataTypeFactory\dataTypeFactory.hpp" />
     <ClInclude Include="utilities\factory\dataTypeFactory\register_dataType.hpp" />
     <ClInclude Include="utilities\factory\registerAll.hpp" />
+    <ClInclude Include="utilities\settings.hpp" />
     <ClInclude Include="utilities\type\all.hpp" />
     <ClInclude Include="utilities\type\barSize.hpp" />
     <ClInclude Include="utilities\type\dataDuration.hpp" />
