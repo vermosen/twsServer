@@ -67,9 +67,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath);$(BOOST);$(PYTHON)\include\;$(GITHUB)\twsapi\PosixSocketClient\src\;$(GITHUB)\twsapi\shared\;$(GITHUB)\thOth\thOth\;$(GITHUB)/quantlib/objecthandler/;.</IncludePath>
-    <LibraryPath>$(LibraryPath);$(BOOST)\stage\lib;$(PYTHON)\libs\;$(GITHUB)\twsapi\Lib\;$(GITHUB)\thOth\thOth\lib\;$(GITHUB)/quantlib/objecthandler/lib/;</LibraryPath>
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(IncludePath);$(BOOST);$(PYTHON)\include\;$(GITHUB)\twsapi\PosixSocketClient\src\;$(GITHUB)\twsapi\shared\;$(GITHUB)\thOth\thOth\;$(GITHUB)/quantlib/objecthandler/;$(MYSQL)MySQL Server 5.7\include\;$(MYSQL)Connector C++ 1.1.3\include\;.</IncludePath>
+    <LibraryPath>$(LibraryPath);$(BOOST)\stage\lib;$(PYTHON)\libs\;$(GITHUB)\twsapi\Lib\;$(GITHUB)\thOth\thOth\lib\;$(GITHUB)\quantlib\objecthandler\lib\;C:\mysql\libmysql\Debug\;C:\mysql_connector\driver\Debug\</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath);$(BOOST);$(PYTHON)\include\;$(GITHUB)\twsapi\PosixSocketClient\src\;$(GITHUB)\twsapi\shared\;$(GITHUB)\thOth\thOth\;.</IncludePath>
-    <LibraryPath>$(LibraryPath);$(BOOST)\stage\lib;$(PYTHON)\libs\;$(GITHUB)\twsapi\Lib\;$(GITHUB)\thOth\thOth\lib\;</LibraryPath>
+    <IncludePath>$(IncludePath);$(BOOST);$(PYTHON)\include\;$(GITHUB)\twsapi\PosixSocketClient\src\;$(GITHUB)\twsapi\shared\;$(GITHUB)\thOth\thOth\;$(GITHUB)/quantlib/objecthandler/;$(MYSQL)\include\;.</IncludePath>
+    <LibraryPath>$(LibraryPath);$(BOOST)\stage\lib;$(PYTHON)\libs\;$(GITHUB)\twsapi\Lib\;$(GITHUB)\thOth\thOth\lib\;$(MYSQL)\lib\;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -100,7 +100,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ObjectHandler-vc120-mt-sgd-1_2_0.lib;thOth-vc120-mt-sgd.lib;twsapi-vc120-mt-sgd.lib;Ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mysqlcppconn-static.lib;mysqlclient.lib;ObjectHandler-vc120-mt-sgd-1_2_0.lib;thOth-vc120-mt-sgd.lib;twsapi-vc120-mt-sgd.lib;Ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -136,7 +136,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ObjectHandler-vc120-mt-sg-1_2_0.lib;thOth-vc120-mt-sg.lib;twsapi-vc120-mt-s.lib;Ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mysql.lib;ObjectHandler-vc120-mt-sg-1_2_0.lib;thOth-vc120-mt-sg.lib;twsapi-vc120-mt-s.lib;Ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -35,7 +35,7 @@ namespace IB {
 	historicalRequestClient::historicalRequestClient(const Contract & ct,
 		const thOth::dateTime & dt,
 		const barSize bar,
-		const int length = 1,
+		const int length,
 		const dataDuration dur,
 		const dataType type)
 

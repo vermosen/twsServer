@@ -28,7 +28,7 @@ namespace IB {
 
 		switch (v) {
 
-			case oneSecond     : return "1 sec"      ;
+			case oneSecond     : return "1 secs"     ;
 			case fiveSeconds   : return "5 secs"     ;
 			case fifteenSeconds: return "15 secs"    ;
 			case thirtySeconds : return "30 secs"    ;

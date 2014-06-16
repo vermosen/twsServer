@@ -57,7 +57,7 @@ namespace IB {
 		historicalRequestClient() {};													// TODO: turn it into a singleton
 		historicalRequestClient(const historicalRequestClient &) {};
 
-		historicalRequestClient & operator =(const historicalRequestClient &) {};
+		historicalRequestClient & operator =(const historicalRequestClient &);
 
 	public:
 
@@ -69,8 +69,6 @@ namespace IB {
 								const dataType = dataType::trade);
 
 		~historicalRequestClient();														// destructor
-
-		historicalRequestClient & operator =(const historicalRequestClient &);			// assignement operator
 
 		// accessors
 		bool endOfHistoricalData() const { return endOfHistoricalData_; };				// end of data (public ?)
@@ -105,7 +103,7 @@ namespace IB {
 		
 		}
 
-	protected:
+	private:
 
 		bool endOfHistoricalData_;													// indicate whether the file has been read
 		bool errorForRequest_;														// error on the request
@@ -120,11 +118,9 @@ namespace IB {
 
 		thOth::TimeSeries<historicalQuoteDetails> ts_;								// timeseries object
 
-	private:
-
-		boost::shared_ptr<EPosixClientSocket> m_pClient;
-		state m_state;
-		time_t m_sleepDeadline;
+		boost::shared_ptr<EPosixClientSocket> m_pClient;							// posix client
+		state m_state;																// current state
+		time_t m_sleepDeadline;														// sleep deadline
 
 	public:
 
