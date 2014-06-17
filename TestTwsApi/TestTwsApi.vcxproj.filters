@@ -30,7 +30,13 @@
     <ClCompile Include="utilities\factory\dataDurationFactory\dataDurationFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="functions\historicalRequest.cpp">
+    <ClCompile Include="functions\historicalRequest\historicalRequest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="functions\staticDataRequest\staticDataRequest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="staticDataRequestClient\staticDataRequestClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,7 +80,13 @@
     <ClInclude Include="utilities\settings.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="functions\historicalRequest.hpp">
+    <ClInclude Include="functions\historicalRequest\historicalRequest.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="functions\staticDataRequest\staticDataRequest.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="staticDataRequestClient\staticDataRequestClient.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,11 +2,12 @@
 * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
 // database setup
-#define SERVER "macbookwin"
-#define USER "test_user"
+#define SERVER   "macbookwin"
+#define USER     "test_user"
 #define PASSWORD "test01"
 #define DATABASE "tws_server"
-#define PORT 3308
+#define PORT     3308
+#define LOGPATH  "C://Temp/"
 
 // TWS library
 #include "contract.h"
@@ -28,59 +29,66 @@
 # include <unistd.h>
 #endif
 
-#include "historicalRequestClient/historicalRequestClient.hpp"
+#include "functions/historicalRequest/historicalRequest.hpp"
+#include "functions/staticDataRequest/staticDataRequest.hpp"
 #include "utilities/settings.hpp"
-
-const unsigned MAX_ATTEMPTS = 2;
-const unsigned SLEEP_TIME = 5;
-const char * LOG_PATH = "C://Temp/";
 
 int main(int argc, char** argv) {
 
 	try {
 
-		// register process
 		static ObjectHandler::EnumTypeRegistry enumTypeRegistry;	// registry
 
 		IB::utilities::registerAll();								// register the factories
 
-		const char * ibHost = "";									// ip adress of the IB server
-		unsigned int ibPort = 7496;									// remote port
+		// register the default settings
+		IB::settings::instance().verbosity(0       );
+		IB::settings::instance().server   (SERVER  );
+		IB::settings::instance().user     (USER    );
+		IB::settings::instance().password (PASSWORD);
+		IB::settings::instance().dataBase (DATABASE);
+		IB::settings::instance().port     (PORT    );
+		IB::settings::instance().logPath  (LOGPATH );
+		IB::settings::instance().ibPort   (7496    );
 
-		if (argc > 1) {												// some arguments added
-		
-			for (int i = 1; i < argc; i++) {					// check whether verbosity has been activated
+		// deals with optional arguments
+		for (int i = 1; i < argc; i++) {							// check whether verbosity has been activated
 			
-				std::string arg(argv[i]);
+			std::string arg(argv[i]);
 
-				if (arg.substr(1, 7) == "verbose") {				// expected -verbose=n
+			if (arg.substr(1, 7) == "verbose") {					// expected -verbose=n
 				
-					IB::settings::instance().verbosity(				// set the verbosity
-						boost::lexical_cast<int>(arg.substr(9, 1)));
+				IB::settings::instance().verbosity(					// set the verbosity
+					boost::lexical_cast<int>(arg.substr(9, arg.length() - 9)));
 				
-				};
+			};
 
-				// TODO
-				ibHost =
-					(arg.substr(1, 4) == "host" ? "" : false);			// expected -host=xxx.xx.xx.xx
-			
-				ibPort =
-					(arg.substr(1, 4) == "port" ? 7496 : false);		// expected -port=xxxx
+			if (arg.substr(1, 4) == "host") {						// expected -host=xxx.xx.x.xxx
 
-			}
+				IB::settings::instance().ibHost(					// set the host
+					arg.substr(6, arg.length() - 6));
+
+			};
+
+			if (arg.substr(1, 4) == "port") {						// expected -port=xxxx
+
+				IB::settings::instance().ibPort(					// set the host
+					boost::lexical_cast<int>(arg.substr(6, arg.length() - 6)));
+
+			};
 
 		}
 
+		if (IB::settings::instance().verbosity() > 1)
+			std::cout												// title
+				<< "Starting POSIX Socket Client server"
+				<< std::endl
+				<< "-----------------------------------"
+				<< std::endl
+				<< std::endl;
 
-		std::cout													// title
-			<< "Starting POSIX Socket Client server"
-			<< std::endl
-			<< "-----------------------------------"
-			<< std::endl
-			<< std::endl;
-
-		bool end = false;											// is test finished ?
-		while (end == false) {										// main loop
+		// loop over the activities
+		bool end = false; while (end == false) {
 		
 			std::cout												// select the activity
 				<< "Please select an activity: "
@@ -89,7 +97,6 @@ int main(int argc, char** argv) {
 				<< std::endl
 				<< "2 - exit the server"
 				<< std::endl;
-
 			
 			unsigned int res; std::cin >> res;						// user defined test
 
@@ -97,9 +104,15 @@ int main(int argc, char** argv) {
 			
 				case 1:
 				
+					historicalRequest();							// launch historical request process
+					break;
+				
+				case 2:
+
+					staticDataRequest();							// launch static data request process
 					break;
 
-				case 2:
+				case 3:
 
 					end = true;										// stop the server
 					break;
@@ -107,34 +120,30 @@ int main(int argc, char** argv) {
 				default:
 
 					std::cout
-						<< "invalid test, please try again"
+						<< "invalid selection, please try again"
 						<< std::endl;
 
 					break;
 			
 			}
-
-			//test sur la validité
-
-			
 		
 		}
 
-	}
-	catch (std::exception & e) {
+	} catch (std::exception & e) {
+
+		if (IB::settings::instance().verbosity() > 0)
+			std::cout
+				<< "an error occured: "
+				<< std::endl
+				<< e.what()
+				<< std::endl;
 	
-		std::cout
-			<< "an error occured: "
-			<< std::endl
-			<< e.what()
-			<< std::endl;
+	} catch (...) {
 	
-	}
-	catch (...) {
-	
-		std::cout
-			<< "an unknown error occured..."
-			<< std::endl;
+		if (IB::settings::instance().verbosity() > 0)
+			std::cout
+				<< "an unknown error occured..."
+				<< std::endl;
 
 	}
 	
@@ -142,7 +151,8 @@ int main(int argc, char** argv) {
 		<< "End of TWS Api Test\n"
 		<< std::endl;
 
-	system("pause");
+	if (IB::settings::instance().verbosity() > 0)
+		system("pause");
 
 }
 

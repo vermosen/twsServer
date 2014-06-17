@@ -1,4 +1,4 @@
-#include "functions/historicalRequest.hpp"
+#include "functions/historicalRequest/historicalRequest.hpp"
 
 void historicalRequest() {
 
@@ -27,11 +27,11 @@ void historicalRequest() {
 
 	connect = mysql_real_connect(								// mySQL real connection
 		connect,
-		SERVER,
-		USER,
-		PASSWORD,
-		DATABASE,
-		PORT,
+		IB::settings::instance().server  ().c_str(),
+		IB::settings::instance().user    ().c_str(),
+		IB::settings::instance().password().c_str(),
+		IB::settings::instance().dataBase().c_str(),
+		IB::settings::instance().port    (),
 		NULL, 0);
 
 	if (!connect) throw std::exception("unable to reach mySQL database");
@@ -73,18 +73,27 @@ void historicalRequest() {
 
 	thOth::TimeSeries<IB::historicalQuoteDetails> ts;
 
+	if (IB::settings::instance().verbosity() > 0)
+		std::cout
+			<< "connecting to the server..."
+			<< std::endl;
+
 	for (;;) {													// loop over attemps
 
 		++attempt;
 
-		std::cout
-			<< "Attempt "
-			<< attempt
-			<< " out of "
-			<< MAX_ATTEMPTS
-			<< std::endl;
+		if (IB::settings::instance().verbosity() > 0)
+			std::cout
+				<< std::endl
+				<< "Attempt "
+				<< attempt
+				<< " out of "
+				<< MAX_ATTEMPTS
+				<< std::endl;
 
-		client.connect(ibHost, ibPort, clientId);
+		client.connect(
+			IB::settings::instance().ibHost().c_str(),
+			IB::settings::instance().ibPort(), clientId);
 
 		while (client.isConnected()) client.processMessages();
 
@@ -93,11 +102,13 @@ void historicalRequest() {
 
 		if (client.endOfHistoricalData()) {						// download succedded
 
-			std::cout
-				<< "download successful, "
-				<< "trying to store data "
-				<< "in the database"
-				<< std::endl;
+			if (IB::settings::instance().verbosity() > 0)
+				std::cout
+					<< "download successful..."
+					<< std::endl
+					<< "trying to store data "
+					<< "in the database"
+					<< std::endl;
 
 			ts = client.timeSeries();
 			break;
@@ -105,11 +116,12 @@ void historicalRequest() {
 		}
 		else {
 
-			std::cout
-				<< "Sleeping "
-				<< SLEEP_TIME
-				<< " seconds before next attempt"
-				<< std::endl;
+			if (IB::settings::instance().verbosity() > 2)
+				std::cout
+					<< "Sleeping "
+					<< SLEEP_TIME
+					<< " seconds before next attempt"
+					<< std::endl;
 
 			sleep(SLEEP_TIME);
 
@@ -117,35 +129,39 @@ void historicalRequest() {
 
 	}
 
-	//verbose
 	for (thOth::TimeSeries<IB::historicalQuoteDetails>::const_iterator
 		It = ts.cbegin(); It != ts.cend(); It++) {
-
-		std::cout
-			<< It->first
-			<< " p: "
-			<< It->second.close_
-			<< " h: "
-			<< It->second.high_
-			<< " l: "
-			<< It->second.low_
-			<< " v: "
-			<< It->second.volume_
-			<< std::endl;
+		
+		//verbose
+		if (IB::settings::instance().verbosity() > 2)
+			std::cout
+				<< It->first
+				<< " p: "
+				<< It->second.close_
+				<< " h: "
+				<< It->second.high_
+				<< " l: "
+				<< It->second.low_
+				<< " v: "
+				<< It->second.volume_
+				<< std::endl;
 
 	}
 
-	// creating csv file
-	std::cout << "writing data file..." << std::endl;
+	// creating log file
+	if (IB::settings::instance().verbosity() > 0)
+		std::cout 
+			<< "writing data file..." 
+			<< std::endl;
 
 	thOth::utilities::csvBuilder csv(								// csv path name
-		std::string(LOG_PATH)										// todo: put this guy into settings
-		.append(contract.symbol)
-		.append("_")
-		.append(boost::posix_time::to_iso_string(
-		boost::posix_time::second_clock::local_time()))
-		.append("_")
-		.append(".csv"));
+		IB::settings::instance().logPath()
+			.append(contract.symbol)
+			.append("_")
+			.append(boost::posix_time::to_iso_string(
+				boost::posix_time::second_clock::local_time()))
+			.append("_")
+			.append(".csv"));
 
 	csv.add("date_time", 1, 1);										// line headers
 	csv.add("open", 1, 2);
@@ -166,5 +182,10 @@ void historicalRequest() {
 		csv.add(It->second.volume_, row, 6);
 
 	}
+
+	if (IB::settings::instance().verbosity() > 0)					// message
+		std::cout 
+			<< "historical data download completed" 
+			<< std::endl;
 
 };
