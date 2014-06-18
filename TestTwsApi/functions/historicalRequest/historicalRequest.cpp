@@ -2,17 +2,12 @@
 
 void historicalRequest() {
 
-	int verbosity = IB::settings::instance().verbosity();	// get the current settings
-
-
 	std::cout
 		<< "please provide some contract code:"
 		<< std::endl;
 
-
 	int clientId = 0;											// request Id
 	unsigned attempt = 0;
-
 
 	std::string contractCode;
 	std::cin >> contractCode;
@@ -88,7 +83,7 @@ void historicalRequest() {
 				<< "Attempt "
 				<< attempt
 				<< " out of "
-				<< MAX_ATTEMPTS
+				<< MAX_ATTEMPT
 				<< std::endl;
 
 		client.connect(
@@ -97,7 +92,7 @@ void historicalRequest() {
 
 		while (client.isConnected()) client.processMessages();
 
-		if (attempt >= MAX_ATTEMPTS)							// max attemps reached
+		if (attempt >= MAX_ATTEMPT)								// max attemps reached
 			throw std::exception("failed to connect after max attempts");
 
 		if (client.endOfHistoricalData()) {						// download succedded

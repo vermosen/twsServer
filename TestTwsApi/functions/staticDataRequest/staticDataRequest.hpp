@@ -16,8 +16,8 @@
 #include <mysql.h>
 
 // max connection attempts
-const unsigned MAX_ATTEMPTS = 2;
-const unsigned SLEEP_TIME   = 5;
+const unsigned MAX_ATTEMPT_S = 2;
+const unsigned SLEEP_TIME_S  = 5;
 
 // this procedure is meant to request missing static data about a given contract
 void staticDataRequest();

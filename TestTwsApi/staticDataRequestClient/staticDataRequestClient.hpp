@@ -7,10 +7,6 @@
 #include "EWrapper.h"																	// TWS components
 #include "contract.h"																	
 
-#include "utilities/factory/barSizeFactory/barSizeFactory.hpp"							// factories
-#include "utilities/factory/dataTypeFactory/dataTypeFactory.hpp"
-#include "utilities/factory/dataDurationFactory/dataDurationFactory.hpp"
-
 //#include <memory>
 #include <stdio.h>																		// printf()
 
@@ -23,20 +19,6 @@ namespace IB {
 
 	class EPosixClientSocket;
 	struct Contract;
-
-	struct historicalQuoteDetails {														// data structure for historical request
-
-		TickerId id_;
-		double open_;
-		double high_;
-		double low_;
-		double close_;
-		int volume_;
-		int barCount_;
-		double WAP_;
-		int hasGaps_;
-
-	};
 
 	class staticDataRequestClient : public EWrapper, thOth::observable {
 
@@ -61,21 +43,18 @@ namespace IB {
 
 	public:
 
-		staticDataRequestClient(const Contract &,										// public ctor
-								const thOth::dateTime &,
-								const barSize bs = barSize::oneSecond,
-								const int lenght = 1,
-								const dataDuration dur = dataDuration::day,
-								const dataType = dataType::trade);
+		staticDataRequestClient(const Contract &);
 
 		~staticDataRequestClient();														// destructor
 
 		// accessors
-		bool endOfHistoricalData() const { return endOfHistoricalData_; };				// end of data (public ?)
+		bool endOfStaticData() const { return endOfStaticData_; };						// end of data (public ?)
 		bool errorForRequest() const { return errorForRequest_; };						// error
 		
-		thOth::TimeSeries<historicalQuoteDetails> timeSeries() const{					// the time series
-			return ts_;
+		Contract contract() const{														// the contract
+
+			return contract_;
+		
 		};
 
 		void processMessages();
@@ -92,31 +71,24 @@ namespace IB {
 
 	protected:
 
-		thOth::dateTime convertDateTime(const IBString &) const;					// parse a date string into some dateTime
-		IBString convertDateTime(const thOth::dateTime &) const;
-		void requestHistoricalData();												// request data
+		thOth::dateTime convertDateTime(const IBString &       ) const;				// parse a date string into some dateTime
+		IBString        convertDateTime(const thOth::dateTime &) const;
+		void requestStaticData();													// request static data
 
-		bool IsEndOfHistoricalData(const IBString& Date) {							// check if historical data is finished
+		bool IsEndOfStaticData(const IBString& Date) {								// check if static request has been achieve
 
-			endOfHistoricalData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);
-			return endOfHistoricalData_;
+			endOfStaticData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);	// todo: check for request achivement
+			return endOfStaticData_;
 		
 		}
 
 	private:
 
-		bool endOfHistoricalData_;													// indicate whether the file has been read
+		bool endOfStaticData_;														// indicate whether the file has been read
 		bool errorForRequest_;														// error on the request
 		int marketDataType_;														// market data type
 		
 		Contract contract_;															// the contract definition
-		thOth::dateTime endDate_;													// the end date
-		int length_;																// lenght of the period
-		barSize barSize_;															// bar size
-		dataDuration dataDuration_;													// data duration
-		dataType dataType_;															// data Type
-
-		thOth::TimeSeries<historicalQuoteDetails> ts_;								// timeseries object
 
 		boost::shared_ptr<EPosixClientSocket> m_pClient;							// posix client
 		state m_state;																// current state

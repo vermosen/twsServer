@@ -16,7 +16,7 @@
 #include <mysql.h>
 
 // max connection attempts
-const unsigned MAX_ATTEMPTS = 2;
+const unsigned MAX_ATTEMPT  = 2;
 const unsigned SLEEP_TIME   = 5;
 
 void historicalRequest();

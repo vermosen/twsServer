@@ -206,12 +206,6 @@ namespace IB {
 
 	}
 
-	///////////////////////////////////////////////////////////////////
-	// events
-	void historicalRequestClient::orderStatus(OrderId orderId, const IBString &status, int filled,
-		int remaining, double avgFillPrice, int permId, int parentId,
-		double lastFillPrice, int clientId, const IBString& whyHeld) {}
-
 	void historicalRequestClient::nextValidId(OrderId orderId) {
 	
 		m_state = ST_REQUEST;
@@ -242,8 +236,6 @@ namespace IB {
 				<< std::endl;
 
 	}
-
-
 
 	thOth::dateTime historicalRequestClient::convertDateTime(const IBString & dtStr) const {
 
@@ -337,7 +329,10 @@ namespace IB {
 	void historicalRequestClient::contractDetailsEnd(int reqId) {}
 	void historicalRequestClient::execDetails(int reqId, const Contract& contract, const Execution& execution) {}
 	void historicalRequestClient::execDetailsEnd(int reqId) {}
-
+	void historicalRequestClient::orderStatus(
+		OrderId orderId, const IBString &status, int filled,
+		int remaining, double avgFillPrice, int permId, int parentId,
+		double lastFillPrice, int clientId, const IBString& whyHeld) {}
 	void historicalRequestClient::updateMktDepth(TickerId id, int position, int operation, int side,
 		double price, int size) {}
 	void historicalRequestClient::updateMktDepthL2(TickerId id, int position, IBString marketMaker, int operation,

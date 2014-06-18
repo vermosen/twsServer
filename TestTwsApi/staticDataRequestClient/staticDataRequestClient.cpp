@@ -32,22 +32,12 @@ namespace IB {
 
 	///////////////////////////////////////////////////////////
 	// member funcs
-	staticDataRequestClient::staticDataRequestClient(const Contract & ct,
-		const thOth::dateTime & dt,
-		const barSize bar,
-		const int length,
-		const dataDuration dur,
-		const dataType type)
+	staticDataRequestClient::staticDataRequestClient(const Contract & ct)
 
 		: m_pClient(new EPosixClientSocket(this)),
 		  m_state(ST_CONNECT),
 		  m_sleepDeadline(0),
-		  contract_(ct),
-		  endDate_(dt),
-		  length_(length),
-		  barSize_(bar),
-		  dataDuration_(dur),
-		  dataType_(type) {}
+		  contract_(ct) {}
 
 	staticDataRequestClient::~staticDataRequestClient() {}
 
@@ -56,21 +46,15 @@ namespace IB {
 		// member copy
 		if (this != &o) {
 		
-			ts_                  = o.ts_                 ;
-			endOfHistoricalData_ = o.endOfHistoricalData_;
-			errorForRequest_     = o.errorForRequest_    ;
-			marketDataType_      = o.marketDataType_     ;
+			endOfStaticData_ = o.endOfStaticData_;
+			errorForRequest_ = o.errorForRequest_;
+			marketDataType_  = o.marketDataType_ ;
 
-			contract_            = o.contract_           ;
-			endDate_             = o.endDate_			 ;
-			length_				 = o.length_			 ;
-			barSize_			 = o.barSize_			 ;
-			dataDuration_		 = o.dataDuration_		 ;
-			dataType_			 = o.dataType_			 ;
+			contract_        = o.contract_       ;
 
-			m_pClient            = o.m_pClient           ;
-			m_state              = o.m_state             ;
-			m_sleepDeadline      = o.m_sleepDeadline     ;
+			m_pClient        = o.m_pClient       ;
+			m_state          = o.m_state         ;
+			m_sleepDeadline  = o.m_sleepDeadline ;
 
 		}
 	
@@ -78,7 +62,10 @@ namespace IB {
 	
 	};
 
-	bool staticDataRequestClient::connect(const char *host, unsigned int port, int clientId) {
+	bool staticDataRequestClient::connect(
+		const char *host, 
+		unsigned int port, 
+		int clientId) {
 
 		// trying to connect
 		bool bRes = m_pClient->eConnect2(host, port, clientId);
@@ -98,23 +85,18 @@ namespace IB {
 
 	}
 
-	void staticDataRequestClient::requestHistoricalData() {
+	void staticDataRequestClient::requestStaticData() {
 	
 		// generates an id -> guid generator ?
 		TickerId id = 12;
 
 		// call the corresponding EClientSocketBase method
-		m_pClient->reqHistoricalData(
-			id,																// request id
-			contract_,														// contract
-			convertDateTime(endDate_),										// date
-			IB::utilities::dataDurationFactory()(dataDuration_, length_),	// whole day
-			IB::utilities::barSizeFactory     ()(barSize_),					// 1 min bar
-			IB::utilities::dataTypeFactory    ()(dataType_),				// dataType: only trades
-			1,																// only data with regular trading hours
-			1);																// date format: yyyymmdd{ space }{space}hh:mm : dd
-	
+		m_pClient->reqContractDetails(
+			id,
+			contract_);
+		
 		m_state = ST_REQUEST_ACK;
+	
 	}
 
 	void staticDataRequestClient::processMessages() {
@@ -130,7 +112,7 @@ namespace IB {
 		switch (m_state) {
 
 		case ST_REQUEST:
-			requestHistoricalData();
+			requestStaticData();
 
 		case ST_REQUEST_ACK:
 			break;
@@ -206,12 +188,6 @@ namespace IB {
 
 	}
 
-	///////////////////////////////////////////////////////////////////
-	// events
-	void staticDataRequestClient::orderStatus(OrderId orderId, const IBString &status, int filled,
-		int remaining, double avgFillPrice, int permId, int parentId,
-		double lastFillPrice, int clientId, const IBString& whyHeld) {}
-
 	void staticDataRequestClient::nextValidId(OrderId orderId) {
 	
 		m_state = ST_REQUEST;
@@ -231,7 +207,10 @@ namespace IB {
 		}
 	}
 
-	void staticDataRequestClient::error(const int id, const int errorCode, const IBString errorString) {
+	void staticDataRequestClient::error(
+		const int id, 
+		const int errorCode, 
+		const IBString errorString) {
 
 		if (id == -1 && errorCode == 1100)					// if "Connectivity between IB and TWS has been lost"
 			disconnect();
@@ -243,53 +222,12 @@ namespace IB {
 
 	}
 
+	void staticDataRequestClient::contractDetails(
+		int reqId,
+		const ContractDetails& contractDetails) {
 
-
-	thOth::dateTime staticDataRequestClient::convertDateTime(const IBString & dtStr) const {
-
-		return thOth::dateTime(								// smallest increments is second
-			thOth::dateTime::Years(boost::lexical_cast<int>(dtStr.substr(0, 4))),
-			thOth::dateTime::Months(boost::lexical_cast<int>(dtStr.substr(4, 2))),
-			thOth::dateTime::Days(boost::lexical_cast<int>(dtStr.substr(6, 2))),
-			thOth::dateTime::Hours(boost::lexical_cast<int>(dtStr.substr(10, 2))),
-			thOth::dateTime::Minutes(boost::lexical_cast<int>(dtStr.substr(13, 2))),
-			thOth::dateTime::Seconds(boost::lexical_cast<int>(dtStr.substr(16, 2))));
-
-	};
-
-	IBString staticDataRequestClient::convertDateTime(const thOth::dateTime & date) const {
-	
-		std::stringstream stream;							
-		boost::posix_time::time_facet* facet = new boost::posix_time::time_facet();
-		facet->format("%Y%m%d  %H:%M:%S");
-		stream.imbue(std::locale(std::locale::classic(), facet));
-		stream << date;
-		
-		IBString ib(stream.str());
-
-		return ib;
-
-	};
-
-	void staticDataRequestClient::historicalData(
-		TickerId reqId,
-		const IBString& date,
-		double open,
-		double high,
-		double low,
-		double close,
-		int volume,
-		int barCount,
-		double WAP,
-		int hasGaps) {
-
-		if (volume < 1) {
-		
-			int i = 0;
-		
-		}
 		// control for EoF
-		if (IsEndOfHistoricalData(date)) {
+		if (reqId == reqId/*IsEndOfHistoricalData(date)*/) {
 
 			notifyObservers();
 			disconnect();
@@ -297,18 +235,7 @@ namespace IB {
 
 		}
 
-			ts_.insert(std::pair<thOth::dateTime, IB::historicalQuoteDetails>(			// copy the current date in the container
-				this->convertDateTime(date),
-				IB::historicalQuoteDetails{
-				reqId,
-				open,
-				high,
-				low,
-				close,
-				volume,
-				barCount,
-				WAP,
-				hasGaps }));
+		contract_ = contractDetails.summary;
 
 	}
 
@@ -332,7 +259,6 @@ namespace IB {
 		double unrealizedPNL, double realizedPNL, const IBString& accountName){}
 	void staticDataRequestClient::updateAccountTime(const IBString& timeStamp) {}
 	void staticDataRequestClient::accountDownloadEnd(const IBString& accountName) {}
-	void staticDataRequestClient::contractDetails(int reqId, const ContractDetails& contractDetails) {}
 	void staticDataRequestClient::bondContractDetails(int reqId, const ContractDetails& contractDetails) {}
 	void staticDataRequestClient::contractDetailsEnd(int reqId) {}
 	void staticDataRequestClient::execDetails(int reqId, const Contract& contract, const Execution& execution) {}
@@ -361,5 +287,12 @@ namespace IB {
 	void staticDataRequestClient::positionEnd() {}
 	void staticDataRequestClient::accountSummary(int reqId, const IBString& account, const IBString& tag, const IBString& value, const IBString& curency) {}
 	void staticDataRequestClient::accountSummaryEnd(int reqId) {}
+	void staticDataRequestClient::orderStatus(
+		OrderId orderId, const IBString &status, int filled,
+		int remaining, double avgFillPrice, int permId, int parentId,
+		double lastFillPrice, int clientId, const IBString& whyHeld) {}
+	void staticDataRequestClient::historicalData(
+		TickerId reqId, const IBString& date, double open, double high,
+		double low, double close, int volume, int barCount, double WAP, int hasGaps) {}
 
 }

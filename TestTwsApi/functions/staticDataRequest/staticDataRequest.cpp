@@ -1,18 +1,13 @@
 #include "functions/staticDataRequest/staticDataRequest.hpp"
 
-void historicalRequest() {
-
-	int verbosity = IB::settings::instance().verbosity();	// get the current settings
-
+void staticDataRequest() {
 
 	std::cout
 		<< "please provide some contract code:"
 		<< std::endl;
 
-
 	int clientId = 0;											// request Id
 	unsigned attempt = 0;
-
 
 	std::string contractCode;
 	std::cin >> contractCode;
@@ -20,7 +15,6 @@ void historicalRequest() {
 	// initialize mySQL connection
 	MYSQL * connect;											// connection
 	connect = mysql_init(NULL);									// initialize the variable
-
 
 	if (!connect)												// fails to initialize mySQL
 		throw std::exception("mySQL initialization failed");
@@ -63,15 +57,8 @@ void historicalRequest() {
 
 	thOth::dateTime dt(2014, 6, 3);								// the date requested
 
-	IB::historicalRequestClient client(							// creates the client				
-		contract,												// contract 
-		dt,														// startDate of the request
-		IB::barSize::thirtySeconds,								// bar size
-		1,														// period length
-		IB::dataDuration::day,								    // period type
-		IB::dataType::trade);									// data type
-
-	thOth::TimeSeries<IB::historicalQuoteDetails> ts;
+	IB::staticDataRequestClient client(							// creates the client				
+		contract);												// contract 
 
 	if (IB::settings::instance().verbosity() > 0)
 		std::cout
@@ -88,7 +75,7 @@ void historicalRequest() {
 				<< "Attempt "
 				<< attempt
 				<< " out of "
-				<< MAX_ATTEMPTS
+				<< MAX_ATTEMPT_S
 				<< std::endl;
 
 		client.connect(
@@ -97,10 +84,10 @@ void historicalRequest() {
 
 		while (client.isConnected()) client.processMessages();
 
-		if (attempt >= MAX_ATTEMPTS)							// max attemps reached
+		if (attempt >= MAX_ATTEMPT_S)							// max attemps reached
 			throw std::exception("failed to connect after max attempts");
 
-		if (client.endOfHistoricalData()) {						// download succedded
+		if (client.endOfStaticData()) {							// download succedded
 
 			if (IB::settings::instance().verbosity() > 0)
 				std::cout
@@ -110,82 +97,26 @@ void historicalRequest() {
 					<< "in the database"
 					<< std::endl;
 
-			ts = client.timeSeries();
 			break;
 
-		}
-		else {
+		} else {
 
 			if (IB::settings::instance().verbosity() > 2)
 				std::cout
 					<< "Sleeping "
-					<< SLEEP_TIME
+					<< SLEEP_TIME_S
 					<< " seconds before next attempt"
 					<< std::endl;
 
-			sleep(SLEEP_TIME);
+			sleep(SLEEP_TIME_S);
 
 		}
-
-	}
-
-	for (thOth::TimeSeries<IB::historicalQuoteDetails>::const_iterator
-		It = ts.cbegin(); It != ts.cend(); It++) {
-		
-		//verbose
-		if (IB::settings::instance().verbosity() > 2)
-			std::cout
-				<< It->first
-				<< " p: "
-				<< It->second.close_
-				<< " h: "
-				<< It->second.high_
-				<< " l: "
-				<< It->second.low_
-				<< " v: "
-				<< It->second.volume_
-				<< std::endl;
-
-	}
-
-	// creating log file
-	if (IB::settings::instance().verbosity() > 0)
-		std::cout 
-			<< "writing data file..." 
-			<< std::endl;
-
-	thOth::utilities::csvBuilder csv(								// csv path name
-		IB::settings::instance().logPath()
-			.append(contract.symbol)
-			.append("_")
-			.append(boost::posix_time::to_iso_string(
-				boost::posix_time::second_clock::local_time()))
-			.append("_")
-			.append(".csv"));
-
-	csv.add("date_time", 1, 1);										// line headers
-	csv.add("open", 1, 2);
-	csv.add("close", 1, 3);
-	csv.add("high", 1, 4);
-	csv.add("low", 1, 5);
-	csv.add("volume", 1, 6);
-
-	long row = 2;
-	for (thOth::TimeSeries<IB::historicalQuoteDetails>::const_iterator
-		It = ts.cbegin(); It != ts.cend(); It++, row++) {
-
-		csv.add(boost::lexical_cast<std::string>(It->first), row, 1);
-		csv.add(It->second.open_, row, 2);
-		csv.add(It->second.close_, row, 3);
-		csv.add(It->second.high_, row, 4);
-		csv.add(It->second.low_, row, 5);
-		csv.add(It->second.volume_, row, 6);
 
 	}
 
 	if (IB::settings::instance().verbosity() > 0)					// message
 		std::cout 
-			<< "historical data download completed" 
+			<< "static data download completed" 
 			<< std::endl;
 
 };
