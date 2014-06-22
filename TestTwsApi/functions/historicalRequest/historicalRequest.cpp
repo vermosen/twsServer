@@ -6,16 +6,20 @@ void historicalRequest() {
 		<< "please provide some contract code:"
 		<< std::endl;
 
-	int clientId = 0;											// request Id
-	unsigned attempt = 0;
+	int clientId = 0; unsigned attempt = 0;						// request Id
 
-	std::string contractCode;
-	std::cin >> contractCode;
+	std::string contractCode; std::cin >> contractCode;			// provided code
 
-	// initialize mySQL connection
-	MYSQL * connect;											// connection
+	TWS_LOG(													// log
+		std::string("contract provided: ")
+			.append(contractCode))
+
+	MYSQL * connect;											// initialize mySQL connection
 	connect = mysql_init(NULL);									// initialize the variable
 
+	TWS_LOG(													// log
+		std::string("requesting contract details for: ")
+		.append(contractCode))
 
 	if (!connect)												// fails to initialize mySQL
 		throw std::exception("mySQL initialization failed");
@@ -31,12 +35,17 @@ void historicalRequest() {
 
 	if (!connect) throw std::exception("unable to reach mySQL database");
 
-	mysql_query(												// query to run
-		connect,
-		std::string("SELECT * FROM table_instrument WHERE instrument_symbol = '")
-		.append(contractCode)
-		.append("'").c_str());
+	std::string query(											// query to run
+		"SELECT * FROM table_instrument WHERE instrument_symbol = '");
+		query.append(contractCode);
+		query.append("'");
 
+		TWS_LOG(												// log
+			std::string("running query: ")
+				.append(query))
+
+	mysql_query(connect, query.c_str());						// query to run
+		
 	// mySQL query result
 	MYSQL_RES * reception = mysql_store_result(connect);		// results
 
@@ -56,37 +65,49 @@ void historicalRequest() {
 	contract.currency = db_row[3];
 	contract.primaryExchange = db_row[4];
 
+	TWS_LOG(													// log
+		std::string("contract details: ")
+			.append(contract.symbol)
+			.append(", ")
+			.append(contract.secType)
+			.append(", ")
+			.append(contract.exchange)
+			.append(", ")
+			.append(contract.currency)
+			.append(", ")
+			.append(contract.primaryExchange));
+
 	thOth::dateTime dt(2014, 6, 3);								// the date requested
 
+	TWS_LOG(std::string("requesting date: ")					// log
+		.append(boost::lexical_cast<std::string>(dt)))
+
+	TWS_LOG(std::string("requesting query: ")					// log
+		.append(query))
+			
 	IB::historicalRequestClient client(							// creates the client				
 		contract,												// contract 
 		dt,														// startDate of the request
 		IB::barSize::thirtySeconds,								// bar size
-		1,														// period length
-		IB::dataDuration::day,								    // period type
+		1, IB::dataDuration::day,								// period length and type
 		IB::dataType::trade);									// data type
 
-	thOth::TimeSeries<IB::historicalQuoteDetails> ts;
+	thOth::TimeSeries<IB::historicalQuoteDetails> ts;			// time series
 
-	if (IB::settings::instance().verbosity() > 0)
-		std::cout
-			<< "connecting to the server..."
-			<< std::endl;
+	TWS_LOG(std::string("connecting to the server"))			// log
 
 	for (;;) {													// loop over attemps
 
 		++attempt;
 
-		if (IB::settings::instance().verbosity() > 0)
-			std::cout
-				<< std::endl
-				<< "Attempt "
-				<< attempt
-				<< " out of "
-				<< MAX_ATTEMPT
-				<< std::endl;
+		if (IB::settings::instance().verbosity() > 0)			// verbose ?
 
-		client.connect(
+			TWS_LOG(std::string("attempt number ")				// log
+				.append(boost::lexical_cast<std::string>(attempt))
+				.append(" out of ")
+				.append(boost::lexical_cast<std::string>(MAX_ATTEMPT)))
+
+		client.connect(											// client is connecting
 			IB::settings::instance().ibHost().c_str(),
 			IB::settings::instance().ibPort(), clientId);
 
@@ -98,25 +119,22 @@ void historicalRequest() {
 		if (client.endOfHistoricalData()) {						// download succedded
 
 			if (IB::settings::instance().verbosity() > 0)
-				std::cout
-					<< "download successful..."
-					<< std::endl
-					<< "trying to store data "
-					<< "in the database"
-					<< std::endl;
 
+				TWS_LOG(std::string("attempt number ")			// log
+					.append("download successful. \
+						Trying to store data in the database"))
+					
 			ts = client.timeSeries();
+
 			break;
 
-		}
-		else {
+		} else {
 
 			if (IB::settings::instance().verbosity() > 2)
-				std::cout
-					<< "Sleeping "
-					<< SLEEP_TIME
-					<< " seconds before next attempt"
-					<< std::endl;
+
+				TWS_LOG(std::string("sleeping ")				// log
+					.append(boost::lexical_cast<std::string>(SLEEP_TIME))
+					.append(" seconds before next attempt "))
 
 			sleep(SLEEP_TIME);
 
@@ -124,54 +142,31 @@ void historicalRequest() {
 
 	}
 
+	if (IB::settings::instance().verbosity() > 0)				// verbose
+
+		TWS_LOG(std::string("writing data file"))
+
 	for (thOth::TimeSeries<IB::historicalQuoteDetails>::const_iterator
 		It = ts.cbegin(); It != ts.cend(); It++) {
 		
-		//verbose
-		if (IB::settings::instance().verbosity() > 2)
-			std::cout
-				<< It->first
-				<< " p: "
-				<< It->second.close_
-				<< " h: "
-				<< It->second.high_
-				<< " l: "
-				<< It->second.low_
-				<< " v: "
-				<< It->second.volume_
-				<< std::endl;
+		
+		if (IB::settings::instance().verbosity() > 2)			//verbose
+
+			TWS_LOG(std::string("new data: d: ")
+				.append(boost::lexical_cast<std::string>(It->first))
+				.append(", p: ")
+				.append(boost::lexical_cast<std::string>(It->second.close_))
+				.append(", h: ")
+				.append(boost::lexical_cast<std::string>(It->second.high_))
+				.append(", l: ")
+				.append(boost::lexical_cast<std::string>(It->second.low_))
+				.append(", v: ")
+				.append(boost::lexical_cast<std::string>(It->second.volume_)))
 
 	}
 
-	// feeding log file
-	if (IB::settings::instance().verbosity() > 0)
-		std::cout
-		<< "writing data file..."
-		<< std::endl;
+	if (IB::settings::instance().verbosity() > 0)					// verbose
 
-	IB::settings::instance().log()->add("date_time", 1, 1);
-	IB::settings::instance().log()->add("open"     , 1, 2);
-	IB::settings::instance().log()->add("close"    , 1, 3);
-	IB::settings::instance().log()->add("high"     , 1, 4);
-	IB::settings::instance().log()->add("low"      , 1, 5);
-	IB::settings::instance().log()->add("volume"   , 1, 6);
-
-	thOth::size row = 2;
-	for (thOth::TimeSeries<IB::historicalQuoteDetails>::const_iterator
-		It = ts.cbegin(); It != ts.cend(); It++, row++) {
-
-		IB::settings::instance().log()->add(boost::lexical_cast<std::string>(It->first), row, 1);
-		IB::settings::instance().log()->add(It->second.open_                           , row, 2);
-		IB::settings::instance().log()->add(It->second.close_						   , row, 3);
-		IB::settings::instance().log()->add(It->second.high_						   , row, 4);
-		IB::settings::instance().log()->add(It->second.low_							   , row, 5);
-		IB::settings::instance().log()->add(It->second.volume_						   , row, 6);
-
-	}
-
-	if (IB::settings::instance().verbosity() > 0)					// message
-		std::cout 
-			<< "historical data download completed." 
-			<< std::endl;
+		TWS_LOG(std::string("end of historical data request"))
 
 };

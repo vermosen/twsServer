@@ -13,6 +13,7 @@
 #include "contract.h"
 #include "utilities/type/all.hpp"
 
+
 // thOth components
 #include <thOth/time/DateTime.hpp>
 #include <thOth/utilities/csvBuilder.hpp>
@@ -29,9 +30,11 @@
 # include <unistd.h>
 #endif
 
+// tws api test
 #include "functions/historicalRequest/historicalRequest.hpp"
 #include "functions/staticDataRequest/staticDataRequest.hpp"
 #include "utilities/settings.hpp"
+#include "utilities/define.hpp"
 
 int main(int argc, char** argv) {
 
@@ -53,12 +56,14 @@ int main(int argc, char** argv) {
 
 		IB::settings::instance().logPath(							// log path
 			std::string(LOGPATH)
-			.append("TwsApiTest")
-			.append("_")
-			.append(boost::posix_time::to_iso_string(
-			boost::posix_time::second_clock::local_time()))
-			.append("_")
-			.append(".csv"));
+				.append("TwsApiTest")
+				.append("_")
+				.append(boost::posix_time::to_iso_string(
+					boost::posix_time::second_clock::local_time()))
+				.append("_")
+				.append(".csv"));
+
+		TWS_LOG(std::string("starting TwsApiTest"))				// log
 
 		for (int i = 1; i < argc; i++) {							// deals with optional arguments
 			
@@ -71,60 +76,61 @@ int main(int argc, char** argv) {
 				IB::settings::instance().verbosity(					// set the verbosity
 					boost::lexical_cast<int>(str));
 
-				IB::settings::instance().log()->push_back(
-					std::string("sets verbosity to ")
-						.append(str));
-				
+				TWS_LOG(std::string("sets verbosity to ")			// log
+					.append(str))
+
 			};
 
 			if (arg.substr(1, 4) == "host") {						// expects -host=xxx.xx.x.xxx
 
-				std::string str(arg.substr(6, arg.length() - 6));
+				std::string str(arg.substr(6, arg.length() - 6));	// the value
 
 				IB::settings::instance().ibHost(str);				// set the host
 
-				IB::settings::instance().log()->push_back(
-					std::string("sets host to ")
-					.append(str));
+				TWS_LOG(std::string("sets host to ")			// log
+					.append(str))
 
 			};
 
 			if (arg.substr(1, 4) == "port") {						// expects -port=xxxx
 
-				std::string str(arg.substr(6, arg.length() - 6));
+				std::string str(arg.substr(6, arg.length() - 6));	// the value
 
 				IB::settings::instance().ibPort(					// set the port
 					boost::lexical_cast<int>(str));
+
+				TWS_LOG(std::string("sets port to ")				// log
+					.append(str))
 
 			};
 
 			if (arg.substr(1, 3) == "log") {						// expects -log=C:/bla
 
-				IB::settings::instance().logPath(					// set the log path
-					arg.substr(5, arg.length() - 5));
+				std::string str(arg.substr(5, arg.length() - 5));	// the value
+
+				IB::settings::instance().logPath(str);				// set the log path
+
+				TWS_LOG(std::string("sets log path to ")			// log
+					.append(str))
 
 			};
 
 			if (arg.substr(1, 4) == "test") {						// expects -test=n
 			
-				test = boost::lexical_cast<int>(					// runs the selected test automatically
-					arg.substr(6, arg.length() - 6));
+				std::string str(arg.substr(6, arg.length() - 6));	// the value
+
+				test = boost::lexical_cast<int>(str);				// runs the selected test automatically
 				
 				end = true;											// for later use: only one attempt
+
+				TWS_LOG(std::string("enforcing test ")				// log
+					.append(str))
 
 			}
 
 		}
 
-		// TODO: add the comments to the log file
-		if (IB::settings::instance().verbosity() > 1)
-			std::cout												// title
-				<< "Starting POSIX Socket Client server"
-				<< std::endl
-				<< "-----------------------------------"
-				<< std::endl
-				<< std::endl;
-
+		// manual choice
 		do {														// loop over the choices
 		
 			int res = test;											// for manual definition
@@ -143,26 +149,41 @@ int main(int argc, char** argv) {
 
 				std::cin >> res;									// user defined test
 			
+				TWS_LOG(std::string("manual selection ")			// log
+					.append(boost::lexical_cast<std::string>(res)))
+
 			}
 			
 			switch (res) {											// switch over the tests available
 			
 				case 1:
 				
+					TWS_LOG(										// log
+						std::string("starting historicalRequest test"))	
+
 					historicalRequest();							// launch historical request process
-					break;
-				
+					break;				
+
 				case 2:
+
+					TWS_LOG(										// log
+						std::string("starting staticDataRequest test"))
 
 					staticDataRequest();							// launch static data request process
 					break;
 
 				case 0:
 
+					TWS_LOG(										// log
+						std::string("manual exit"))
+
 					end = true;										// stop the server
 					break;
 
 				default:											// unknown, invalid
+
+					TWS_LOG(										// log
+						std::string("invalid selection"))
 
 					std::cout
 						<< "invalid selection, please try again"
@@ -175,32 +196,35 @@ int main(int argc, char** argv) {
 		} while (end == false);										// loop until exit
 
 	} catch (std::exception & e) {									// exception management
-
-																	// first log
-
-		if (IB::settings::instance().verbosity() > 0)				// if verbosity > 0
 			
-			std::cout												// TODO: replace by a log
-				<< "an error occured: "
-				<< std::endl
-				<< e.what()
-				<< std::endl;
+		TWS_LOG(													// log
+			std::string("an error occured: ")
+				.append(e.what()))
+
+		TWS_LOG(													// log
+			std::string("exiting with code 1"))
+
+			return 1;
+
+	} catch (...) {													// unknown error
 	
-	} catch (...) {
-	
-		if (IB::settings::instance().verbosity() > 0)
-			std::cout
-				<< "an unknown error occured..."
-				<< std::endl;
+		TWS_LOG(													// log
+			std::string("an unknown error occured"))
+
+		TWS_LOG(													// log
+			std::string("exiting with code 1"))
+
+		return 1;
 
 	}
-	
-	std::cout 
-		<< "End of TWS Api Test\n"
-		<< std::endl;
 
-	if (IB::settings::instance().verbosity() > 0)
+	if (IB::settings::instance().verbosity() > 0) {					// exit
+
+		TWS_LOG(													// log
+			std::string("end of TwsApiTest"))
+
 		system("pause");
 
+	}
 }
 

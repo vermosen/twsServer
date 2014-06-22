@@ -89,5 +89,8 @@
     <ClInclude Include="staticDataRequestClient\staticDataRequestClient.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="utilities\define.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

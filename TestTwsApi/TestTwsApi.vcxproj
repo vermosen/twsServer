@@ -170,6 +170,7 @@
     <ClCompile Include="utilities\factory\dataTypeFactory\dataTypeFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="utilities\define.hpp" />
     <ClInclude Include="functions\historicalRequest\historicalRequest.hpp" />
     <ClInclude Include="functions\staticDataRequest\staticDataRequest.hpp" />
     <ClInclude Include="historicalRequestClient\historicalRequestClient.hpp" />

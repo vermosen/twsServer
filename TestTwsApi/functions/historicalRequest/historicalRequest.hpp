@@ -10,6 +10,7 @@
 #include "utilities/type/all.hpp"
 #include "utilities/settings.hpp"
 #include "historicalRequestClient/historicalRequestClient.hpp"
+#include "utilities/define.hpp"
 
 // mySQL
 #include <my_global.h>
