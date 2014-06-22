@@ -75,6 +75,7 @@ namespace IB {
 		IBString        convertDateTime(const thOth::dateTime &) const;
 		void requestStaticData();													// request static data
 
+		// maybe useless
 		bool IsEndOfStaticData(const IBString& Date) {								// check if static request has been achieve
 
 			endOfStaticData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);	// todo: check for request achivement

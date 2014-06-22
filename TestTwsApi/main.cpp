@@ -41,44 +41,82 @@ int main(int argc, char** argv) {
 
 		IB::utilities::registerAll();								// register the factories
 
-		// register the default settings
-		IB::settings::instance().verbosity(0       );
+		bool end = false; int test = 0;
+
+		IB::settings::instance().verbosity(0       );				// default settings
 		IB::settings::instance().server   (SERVER  );
 		IB::settings::instance().user     (USER    );
 		IB::settings::instance().password (PASSWORD);
 		IB::settings::instance().dataBase (DATABASE);
 		IB::settings::instance().port     (PORT    );
-		IB::settings::instance().logPath  (LOGPATH );
 		IB::settings::instance().ibPort   (7496    );
 
-		// deals with optional arguments
-		for (int i = 1; i < argc; i++) {							// check whether verbosity has been activated
+		IB::settings::instance().logPath(							// log path
+			std::string(LOGPATH)
+			.append("TwsApiTest")
+			.append("_")
+			.append(boost::posix_time::to_iso_string(
+			boost::posix_time::second_clock::local_time()))
+			.append("_")
+			.append(".csv"));
+
+		for (int i = 1; i < argc; i++) {							// deals with optional arguments
 			
-			std::string arg(argv[i]);
+			std::string arg(argv[i]);								// current std::string
 
-			if (arg.substr(1, 7) == "verbose") {					// expected -verbose=n
+			if (arg.substr(1, 7) == "verbose") {					// expects -verbose=n
 				
+				std::string str(arg.substr(9, arg.length() - 9));	// the value
+
 				IB::settings::instance().verbosity(					// set the verbosity
-					boost::lexical_cast<int>(arg.substr(9, arg.length() - 9)));
+					boost::lexical_cast<int>(str));
+
+				IB::settings::instance().log()->push_back(
+					std::string("sets verbosity to ")
+						.append(str));
 				
 			};
 
-			if (arg.substr(1, 4) == "host") {						// expected -host=xxx.xx.x.xxx
+			if (arg.substr(1, 4) == "host") {						// expects -host=xxx.xx.x.xxx
 
-				IB::settings::instance().ibHost(					// set the host
+				std::string str(arg.substr(6, arg.length() - 6));
+
+				IB::settings::instance().ibHost(str);				// set the host
+
+				IB::settings::instance().log()->push_back(
+					std::string("sets host to ")
+					.append(str));
+
+			};
+
+			if (arg.substr(1, 4) == "port") {						// expects -port=xxxx
+
+				std::string str(arg.substr(6, arg.length() - 6));
+
+				IB::settings::instance().ibPort(					// set the port
+					boost::lexical_cast<int>(str));
+
+			};
+
+			if (arg.substr(1, 3) == "log") {						// expects -log=C:/bla
+
+				IB::settings::instance().logPath(					// set the log path
+					arg.substr(5, arg.length() - 5));
+
+			};
+
+			if (arg.substr(1, 4) == "test") {						// expects -test=n
+			
+				test = boost::lexical_cast<int>(					// runs the selected test automatically
 					arg.substr(6, arg.length() - 6));
+				
+				end = true;											// for later use: only one attempt
 
-			};
-
-			if (arg.substr(1, 4) == "port") {						// expected -port=xxxx
-
-				IB::settings::instance().ibPort(					// set the host
-					boost::lexical_cast<int>(arg.substr(6, arg.length() - 6)));
-
-			};
+			}
 
 		}
 
+		// TODO: add the comments to the log file
 		if (IB::settings::instance().verbosity() > 1)
 			std::cout												// title
 				<< "Starting POSIX Socket Client server"
@@ -87,20 +125,27 @@ int main(int argc, char** argv) {
 				<< std::endl
 				<< std::endl;
 
-		// loop over the activities
-		bool end = false; while (end == false) {
+		do {														// loop over the choices
 		
-			std::cout												// select the activity
-				<< "Please select an activity: "
-				<< std::endl
-				<< "1 - historical data request"
-				<< std::endl
-				<< "2 - exit the server"
-				<< std::endl;
-			
-			unsigned int res; std::cin >> res;						// user defined test
+			int res = test;											// for manual definition
 
-			switch (res) {
+			if (test == 0) {
+			
+				std::cout											// message
+					<< "Please select an activity: "
+					<< std::endl
+					<< "1 - historical data request"
+					<< std::endl
+					<< "2 - static data test"
+					<< std::endl
+					<< "0 - exit"
+					<< std::endl;
+
+				std::cin >> res;									// user defined test
+			
+			}
+			
+			switch (res) {											// switch over the tests available
 			
 				case 1:
 				
@@ -112,12 +157,12 @@ int main(int argc, char** argv) {
 					staticDataRequest();							// launch static data request process
 					break;
 
-				case 3:
+				case 0:
 
 					end = true;										// stop the server
 					break;
 
-				default:
+				default:											// unknown, invalid
 
 					std::cout
 						<< "invalid selection, please try again"
@@ -127,12 +172,15 @@ int main(int argc, char** argv) {
 			
 			}
 		
-		}
+		} while (end == false);										// loop until exit
 
-	} catch (std::exception & e) {
+	} catch (std::exception & e) {									// exception management
 
-		if (IB::settings::instance().verbosity() > 0)
-			std::cout
+																	// first log
+
+		if (IB::settings::instance().verbosity() > 0)				// if verbosity > 0
+			
+			std::cout												// TODO: replace by a log
 				<< "an error occured: "
 				<< std::endl
 				<< e.what()

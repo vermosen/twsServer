@@ -4,6 +4,9 @@
 #include <string>
 
 #include <thOth/pattern/singleton.hpp>
+#include <thOth/utilities/csvBuilder.hpp>
+
+#define DEFAULTPATH "C:/Temp/"
 
 namespace IB {
 
@@ -15,7 +18,12 @@ namespace IB {
 
 		settings()							// default values
 			: verbosity_(0),
-			  port_     (0) {}; 
+			  port_     (0) {
+		
+			csv_ = std::shared_ptr<thOth::utilities::csvBuilder>(
+				new thOth::utilities::csvBuilder(DEFAULTPATH));
+		
+		};
 
 		public: 
 			
@@ -24,7 +32,7 @@ namespace IB {
 			inline void port     (const int           v) { port_      = v; };
 			inline void ibPort   (const int           v) { ibPort_    = v; };
 			inline void ibHost   (const std::string & s) { ibHost_    = s; };
-			inline void logPath(const std::string & s) { logPath_     = s; };
+			inline void logPath  (const std::string & s) { csv_->path(s) ; };
 			inline void server   (const std::string & s) { server_    = s; };
 			inline void user     (const std::string & s) { user_      = s; };
 			inline void password (const std::string & s) { password_  = s; };
@@ -34,17 +42,19 @@ namespace IB {
 			inline int         port     () const { return port_     ; };
 			inline int         ibPort   () const { return ibPort_   ; };
 			inline std::string ibHost   () const { return ibHost_   ; };
-			inline std::string logPath  () const { return server_   ; };
 			inline std::string server   () const { return server_   ; };
 			inline std::string user     () const { return user_     ; };
 			inline std::string password () const { return password_ ; };
 			inline std::string dataBase () const { return dataBase_ ; };
+			
+			std::shared_ptr<thOth::utilities::csvBuilder> log() const { return csv_; };
 
 		private: 
 
-			// debug settings
-			int         verbosity_;     	// verbosity settings				
-			std::string logPath_  ;			// log file path
+			int         verbosity_;			// verbosity settings				
+			
+			// log file
+			std::shared_ptr<thOth::utilities::csvBuilder> csv_;
 
 			// dataBase settings
 			int         port_     ;     	// server port

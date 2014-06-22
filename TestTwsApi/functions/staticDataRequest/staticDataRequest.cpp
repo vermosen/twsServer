@@ -12,7 +12,7 @@ void staticDataRequest() {
 	std::string contractCode;
 	std::cin >> contractCode;
 
-	// initialize mySQL connection
+	// check if the contract is already in the table
 	MYSQL * connect;											// connection
 	connect = mysql_init(NULL);									// initialize the variable
 
@@ -44,21 +44,26 @@ void staticDataRequest() {
 
 	IB::Contract contract;										// contract to request
 
-	if (mysql_num_rows(reception) != 1)							// assumed to be a unique record
-		throw std::exception("unknown contract");
+	if (mysql_num_rows(reception) == 1) {						// if the contract is already in the db
+	
+		if (IB::settings::instance().verbosity() > 0)
+			std::cout
+			<< "Contract already in the database."
+			<< std::endl;
 
-	MYSQL_ROW db_row = mysql_fetch_row(reception);
+		return;
+	
+	}							
 
+	// otherwise, request
 	contract.symbol = contractCode.c_str();
-	contract.secType = db_row[2];
-	contract.exchange = "SMART";								// default to smart
-	contract.currency = db_row[3];
-	contract.primaryExchange = db_row[4];
-
-	thOth::dateTime dt(2014, 6, 3);								// the date requested
-
-	IB::staticDataRequestClient client(							// creates the client				
-		contract);												// contract 
+	contract.currency = "USD";
+	contract.exchange = "SMART";
+	contract.primaryExchange = "NYSE";
+	contract.secType = "STK";
+	
+	IB::staticDataRequestClient client(							// request the contrct details
+		contract);
 
 	if (IB::settings::instance().verbosity() > 0)
 		std::cout

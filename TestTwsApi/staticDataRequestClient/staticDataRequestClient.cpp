@@ -227,13 +227,13 @@ namespace IB {
 		const ContractDetails& contractDetails) {
 
 		// control for EoF
-		if (reqId == reqId/*IsEndOfHistoricalData(date)*/) {
+		// if (IsEndOfStaticData(date)) {
 
 			notifyObservers();
 			disconnect();
 			return;
 
-		}
+		//}
 
 		contract_ = contractDetails.summary;
 

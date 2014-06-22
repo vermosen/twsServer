@@ -143,44 +143,35 @@ void historicalRequest() {
 
 	}
 
-	// creating log file
+	// feeding log file
 	if (IB::settings::instance().verbosity() > 0)
-		std::cout 
-			<< "writing data file..." 
-			<< std::endl;
+		std::cout
+		<< "writing data file..."
+		<< std::endl;
 
-	thOth::utilities::csvBuilder csv(								// csv path name
-		IB::settings::instance().logPath()
-			.append(contract.symbol)
-			.append("_")
-			.append(boost::posix_time::to_iso_string(
-				boost::posix_time::second_clock::local_time()))
-			.append("_")
-			.append(".csv"));
+	IB::settings::instance().log()->add("date_time", 1, 1);
+	IB::settings::instance().log()->add("open"     , 1, 2);
+	IB::settings::instance().log()->add("close"    , 1, 3);
+	IB::settings::instance().log()->add("high"     , 1, 4);
+	IB::settings::instance().log()->add("low"      , 1, 5);
+	IB::settings::instance().log()->add("volume"   , 1, 6);
 
-	csv.add("date_time", 1, 1);										// line headers
-	csv.add("open", 1, 2);
-	csv.add("close", 1, 3);
-	csv.add("high", 1, 4);
-	csv.add("low", 1, 5);
-	csv.add("volume", 1, 6);
-
-	long row = 2;
+	thOth::size row = 2;
 	for (thOth::TimeSeries<IB::historicalQuoteDetails>::const_iterator
 		It = ts.cbegin(); It != ts.cend(); It++, row++) {
 
-		csv.add(boost::lexical_cast<std::string>(It->first), row, 1);
-		csv.add(It->second.open_, row, 2);
-		csv.add(It->second.close_, row, 3);
-		csv.add(It->second.high_, row, 4);
-		csv.add(It->second.low_, row, 5);
-		csv.add(It->second.volume_, row, 6);
+		IB::settings::instance().log()->add(boost::lexical_cast<std::string>(It->first), row, 1);
+		IB::settings::instance().log()->add(It->second.open_                           , row, 2);
+		IB::settings::instance().log()->add(It->second.close_						   , row, 3);
+		IB::settings::instance().log()->add(It->second.high_						   , row, 4);
+		IB::settings::instance().log()->add(It->second.low_							   , row, 5);
+		IB::settings::instance().log()->add(It->second.volume_						   , row, 6);
 
 	}
 
 	if (IB::settings::instance().verbosity() > 0)					// message
 		std::cout 
-			<< "historical data download completed" 
+			<< "historical data download completed." 
 			<< std::endl;
 
 };
