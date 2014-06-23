@@ -9,17 +9,15 @@
 
 #include "utilities/type/all.hpp"
 #include "utilities/settings.hpp"
+#include "utilities/define.hpp"
 #include "staticDataRequestClient/staticDataRequestClient.hpp"
 
 // mySQL
 #include <my_global.h>
 #include <mysql.h>
 
-// max connection attempts
-const unsigned MAX_ATTEMPT_S = 2;
-const unsigned SLEEP_TIME_S  = 5;
-
-// this procedure is meant to request missing static data about a given contract
+// this procedure is meant to request 
+// missing static data about a given contract
 void staticDataRequest();
 
 #endif

@@ -16,10 +16,8 @@
 #include <my_global.h>
 #include <mysql.h>
 
-// max connection attempts
-const unsigned MAX_ATTEMPT  = 2;
-const unsigned SLEEP_TIME   = 5;
-
+// this procedure is meant to request 
+// missing historical data about a given contract
 void historicalRequest();
 
 #endif

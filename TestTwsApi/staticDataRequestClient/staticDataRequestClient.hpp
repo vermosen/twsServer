@@ -51,11 +51,9 @@ namespace IB {
 		bool endOfStaticData() const { return endOfStaticData_; };						// end of data (public ?)
 		bool errorForRequest() const { return errorForRequest_; };						// error
 		
-		Contract contract() const{														// the contract
-
-			return contract_;
-		
-		};
+		// accessors
+		Contract        contract()        const { return contract_       ; };			// contract
+		ContractDetails contractDetails() const { return contractDetails_; };			// contract detailss
 
 		void processMessages();
 
@@ -89,7 +87,8 @@ namespace IB {
 		bool errorForRequest_;														// error on the request
 		int marketDataType_;														// market data type
 		
-		Contract contract_;															// the contract definition
+		Contract contract_;															// the initial contract definition
+		ContractDetails contractDetails_;											// the contract details returned
 
 		boost::shared_ptr<EPosixClientSocket> m_pClient;							// posix client
 		state m_state;																// current state

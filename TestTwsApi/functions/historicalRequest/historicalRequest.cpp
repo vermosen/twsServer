@@ -3,7 +3,12 @@
 void historicalRequest() {
 
 	std::cout
-		<< "please provide some contract code:"
+		<< "historical Request Test"
+		<< std::endl
+		<< "-----------------------"
+		<< std::endl
+		<< std::endl
+		<< "please provide some contract code : "
 		<< std::endl;
 
 	int clientId = 0; unsigned attempt = 0;						// request Id
@@ -40,8 +45,7 @@ void historicalRequest() {
 		query.append(contractCode);
 		query.append("'");
 
-		TWS_LOG(												// log
-			std::string("running query: ")
+		TWS_LOG(std::string("running query: ")					// log
 				.append(query))
 
 	mysql_query(connect, query.c_str());						// query to run
@@ -150,7 +154,7 @@ void historicalRequest() {
 		It = ts.cbegin(); It != ts.cend(); It++) {
 		
 		
-		if (IB::settings::instance().verbosity() > 2)			//verbose
+		if (IB::settings::instance().verbosity() > 1)			//verbose
 
 			TWS_LOG(std::string("new data: d: ")
 				.append(boost::lexical_cast<std::string>(It->first))

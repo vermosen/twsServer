@@ -51,6 +51,7 @@ namespace IB {
 			marketDataType_  = o.marketDataType_ ;
 
 			contract_        = o.contract_       ;
+			contractDetails_ = o.contractDetails_;
 
 			m_pClient        = o.m_pClient       ;
 			m_state          = o.m_state         ;
@@ -214,6 +215,8 @@ namespace IB {
 
 		if (id == -1 && errorCode == 1100)					// if "Connectivity between IB and TWS has been lost"
 			disconnect();
+		else if (errorCode == 200)								// contract has no match
+			disconnect();
 		else
 			std::cout
 				<< "request information: "
@@ -222,31 +225,37 @@ namespace IB {
 
 	}
 
-	void staticDataRequestClient::contractDetails(
+	void staticDataRequestClient::contractDetails(			// eWrapper implementation 
 		int reqId,
 		const ContractDetails& contractDetails) {
 
-		// control for EoF
-		// if (IsEndOfStaticData(date)) {
+		endOfStaticData_ = true;
+		disconnect();
+		contractDetails_ = contractDetails;
+		notifyObservers();
+		return;
 
-			notifyObservers();
-			disconnect();
-			return;
+	}
 
-		//}
-
-		contract_ = contractDetails.summary;
-
+	void staticDataRequestClient::contractDetailsEnd(int reqId) {
+	
+		// no idea of it's usage
+		std::cout << "contractDetailsEnd has been called" << std::endl;
+	
 	}
 
 	void staticDataRequestClient::tickPrice(TickerId tickerId, TickType field, double price, int canAutoExecute) {}
 	void staticDataRequestClient::tickSize(TickerId tickerId, TickType field, int size) {}
-	void staticDataRequestClient::tickOptionComputation(TickerId tickerId, TickType tickType, double impliedVol, double delta,
+	void staticDataRequestClient::tickOptionComputation(
+		TickerId tickerId, TickType tickType, double impliedVol, double delta,
 		double optPrice, double pvDividend,
 		double gamma, double vega, double theta, double undPrice) {}
-	void staticDataRequestClient::tickGeneric(TickerId tickerId, TickType tickType, double value) {}
-	void staticDataRequestClient::tickString(TickerId tickerId, TickType tickType, const IBString& value) {}
-	void staticDataRequestClient::tickEFP(TickerId tickerId, TickType tickType, double basisPoints, const IBString& formattedBasisPoints,
+	void staticDataRequestClient::tickGeneric(
+		TickerId tickerId, TickType tickType, double value) {}
+	void staticDataRequestClient::tickString(
+		TickerId tickerId, TickType tickType, const IBString& value) {}
+	void staticDataRequestClient::tickEFP(
+		TickerId tickerId, TickType tickType, double basisPoints, const IBString& formattedBasisPoints,
 		double totalDividends, int holdDays, const IBString& futureExpiry, double dividendImpact, double dividendsToExpiry) {}
 	void staticDataRequestClient::openOrder(OrderId orderId, const Contract&, const Order&, const OrderState& ostate) {}
 	void staticDataRequestClient::openOrderEnd() {}
@@ -260,7 +269,6 @@ namespace IB {
 	void staticDataRequestClient::updateAccountTime(const IBString& timeStamp) {}
 	void staticDataRequestClient::accountDownloadEnd(const IBString& accountName) {}
 	void staticDataRequestClient::bondContractDetails(int reqId, const ContractDetails& contractDetails) {}
-	void staticDataRequestClient::contractDetailsEnd(int reqId) {}
 	void staticDataRequestClient::execDetails(int reqId, const Contract& contract, const Execution& execution) {}
 	void staticDataRequestClient::execDetailsEnd(int reqId) {}
 
