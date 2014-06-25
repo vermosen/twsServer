@@ -39,6 +39,12 @@
     <ClCompile Include="staticDataRequestClient\staticDataRequestClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="recordset\tableContractRecordset\tableContractRecordset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="recordset\recordset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="historicalRequestClient\historicalRequestClient.hpp">
@@ -90,6 +96,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utilities\define.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recordset\tableContractRecordset\tableContractRecordset.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recordset\recordset.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

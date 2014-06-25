@@ -32,109 +32,132 @@ void staticDataRequest() {
 
 	if (!connect) throw std::exception("unable to reach mySQL database");
 
-	std::string query("SELECT * FROM table_instrument WHERE instrument_symbol = '");
-	query.append(contractCode)
-		.append("'");
+	std::string selectQuery("SELECT * FROM table_contract WHERE contract_symbol = '");
+	selectQuery.append(contractCode)
+		       .append("'");
 	
 	mysql_query(												// query to run
 		connect,
-		query.c_str());
+		selectQuery.c_str());
 
 	TWS_LOG(std::string("running query: ")					// log
-		.append(query))
+		.append(selectQuery))
 
 	// mySQL query result
 	MYSQL_RES * reception = mysql_store_result(connect);		// results
 
-	if (!reception)												// request failed
-		throw std::exception("instrument request failed");
+	if (!reception) {											// instrument not in the table
 
-	IB::Contract contract;										// contract to request
+		TWS_LOG(std::string("instrument not in the database"))
 
-	if (mysql_num_rows(reception) == 1)							// if the contract is already in the db
+		IB::Contract contract;									// contract to request
 
-		throw std::exception("contract already in the database");
-	
-	contract.symbol = contractCode.c_str();						// contract default caracteristics
-	contract.currency = "USD";
-	contract.exchange = "SMART";
-	contract.primaryExchange = "NYSE";
-	contract.secType = "STK";
-	
-	IB::staticDataRequestClient client(							// request the contrct details
-		contract);
+		contract.symbol = contractCode.c_str();					// attempt with contract default
+		contract.currency = "USD";
+		contract.exchange = "SMART";
+		contract.primaryExchange = "NYSE";
+		contract.secType = "STK";
 
-	if (IB::settings::instance().verbosity() > 0)
-
-		TWS_LOG(std::string("connecting to tws server"))		// log
-
-	for (;;) {													// loop over attemps
-
-		++attempt;
+		IB::staticDataRequestClient client(contract);			// request the contract 
 
 		if (IB::settings::instance().verbosity() > 0)
+
+			TWS_LOG(std::string("connecting to tws server"))	// log
+
+			for (;;) {											// loop over attemps
+
+				++attempt;
+
+				if (IB::settings::instance().verbosity() > 0)
+
+					TWS_LOG(std::string("attempt number ")		// log
+					.append(boost::lexical_cast<std::string>(attempt))
+					.append(" out of ")
+					.append(boost::lexical_cast<std::string>(MAX_ATTEMPT)))
+
+					client.connect(
+					IB::settings::instance().ibHost().c_str(),
+					IB::settings::instance().ibPort(), clientId);
+
+				while (client.isConnected()) client.processMessages();
+
+				if (attempt >= MAX_ATTEMPT)						// max attemps reached
+
+					throw std::exception("failed to connect after max attempts");
+
+				if (client.endOfStaticData()) {					// download succedded
+
+					if (IB::settings::instance().verbosity() > 0)
+
+						TWS_LOG(								// log
+							std::string("download successful"))	
+
+						break;
+
+				}
+				else {
+
+					if (IB::settings::instance().verbosity() > 2)
+
+						TWS_LOG(std::string("sleeping ")		// log
+						.append(boost::lexical_cast<std::string>(SLEEP_TIME))
+						.append(" seconds before next attempt"))
+
+						sleep(SLEEP_TIME);
+
+				}
+
+			}													// end of for loop
+
+		
+		if (IB::settings::instance().verbosity() > 0)			// verbosity ?
+
+			TWS_LOG(											// partially log the contract details
+			std::string("contract details: (symbol) ")
+			.append(client.contract().symbol)
+			.append(", (secType) ")
+			.append(client.contract().secType)
+			.append(", (currency) ")
+			.append(client.contract().currency)
+			.append(", (primary exchange) ")
+			.append(client.contract().primaryExchange)
+			.append(", (bondType) ")
+			.append(client.contractDetails().bondType)
+			.append(", (callable) ")
+			.append(boost::lexical_cast<std::string>(client.contractDetails().callable))
+			.append(", (category) ")
+			.append(client.contractDetails().category)
+			.append(", (contractMonth) ")
+			.append(client.contractDetails().contractMonth)
+			.append("..."))
+
+
+			// insert into the database
+			TWS_LOG(												// log
+			std::string("attempt to insert contract details"))
+
+			// BMQ
+			std::string insertQuery("INSERT INTO table_contract (");
 			
-			TWS_LOG(std::string("attempt number ")				// log
-				.append(boost::lexical_cast<std::string>(attempt))
-				.append(" out of ")
-				.append(boost::lexical_cast<std::string>(MAX_ATTEMPT)))
+			insertQuery
+				.append("CONTRACT_IBID,")							// field names 
+				.append("CONTRACT_SYMBOL,")
+				.append("CONTRACT_SECTYPE,")
+				.append("CONTRACT_EXPIRY,")
+				.append("CONTRACT_STRIKE,")
+				.append("CONTRACT_RIGHT,")
 			
-		client.connect(
-			IB::settings::instance().ibHost().c_str(),
-			IB::settings::instance().ibPort(), clientId);
+				.append(") VALUES(")
+			
+				.append("")											// values
+				.append(")");								
 
-		while (client.isConnected()) client.processMessages();
-
-		if (attempt >= MAX_ATTEMPT)								// max attemps reached
-
-			throw std::exception("failed to connect after max attempts");
-
-		if (client.endOfStaticData()) {							// download succedded
-
-			if (IB::settings::instance().verbosity() > 0)
-
-				TWS_LOG(std::string("download successful"))		// log
-				
-			break;
-
-		} else {
-
-			if (IB::settings::instance().verbosity() > 2)
-				
-				TWS_LOG(std::string("sleeping ")				// log
-					.append(boost::lexical_cast<std::string>(SLEEP_TIME))
-					.append(" seconds before next attempt"))
-
-			sleep(SLEEP_TIME);
-
-		}
+	} else {
+	
+		throw std::exception("contract already in the database");
 
 	}
 
-	// check for data
-	if (IB::settings::instance().verbosity() > 0)
-
-		TWS_LOG(												// log
-			std::string("contract details: (symbol) ")
-				.append(client.contract().symbol)
-				.append(", (secType) ")
-				.append(client.contract().secType)
-				.append(", (currency) ")
-				.append(client.contract().currency)
-				.append(", (primary exchange) ")
-				.append(client.contract().primaryExchange)
-				.append(", (bondType) ")
-				.append(client.contractDetails().bondType)
-				.append(", (callable) ")
-				.append(boost::lexical_cast<std::string>(client.contractDetails().callable))
-				.append(", (category) ")
-				.append(client.contractDetails().category)
-				.append(", (contractMonth) ")
-				.append(client.contractDetails().contractMonth))
-
-	// insert into the database
-	TWS_LOG(													// log
-		std::string("attempt to insert contract details"))
 	if (IB::settings::instance().verbosity() > 0)				// message
 			
 		TWS_LOG(												// log
