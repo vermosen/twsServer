@@ -13,7 +13,7 @@
 #include "utilities/define.hpp"
 
 // mySQL
-#include <my_global.h>
+//#include <my_global.h>
 #include <mysql.h>
 
 // this procedure is meant to request 

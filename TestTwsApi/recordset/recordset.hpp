@@ -1,6 +1,9 @@
 #ifndef tws_recordset_hpp
 #define tws_recordset_hpp
 
+#include <string>
+#include <mysql.h>
+
 namespace IB {
 
 	namespace dataBase {
@@ -9,17 +12,24 @@ namespace IB {
 
 			public:
 
-				recordset();
+				recordset(MYSQL *);
 				recordset(const recordset &);
-				~recordset();
+				
+				virtual ~recordset();
 
 				recordset & operator =(const recordset &);
 
-				virtual bool Open();
-				virtual void Close();
+				virtual bool open() = 0;
+				virtual void close() = 0;
 
-				virtual void connect() const = 0;
-				virtual void selectQuery(std::string &)
+				virtual bool select(std::string) = 0;		// return true if the select statement is non empty
+
+			protected:
+
+				recordset() {};								// protected default ctor
+				
+				MYSQL     * connection_;					// connection object
+				MYSQL_RES * reception_ ;
 
 		};
 	

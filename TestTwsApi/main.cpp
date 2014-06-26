@@ -23,13 +23,6 @@
 #include <my_global.h>
 #include <mysql.h>
 
-#ifdef _WIN32
-# include <windows.h>
-# define sleep( seconds) Sleep( seconds * 1000);
-#else
-# include <unistd.h>
-#endif
-
 // tws api test
 #include "functions/historicalRequest/historicalRequest.hpp"
 #include "functions/staticDataRequest/staticDataRequest.hpp"

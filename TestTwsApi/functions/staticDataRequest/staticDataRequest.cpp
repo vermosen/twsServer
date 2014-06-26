@@ -32,27 +32,23 @@ void staticDataRequest() {
 
 	if (!connect) throw std::exception("unable to reach mySQL database");
 
-	std::string selectQuery("SELECT * FROM table_contract WHERE contract_symbol = '");
-	selectQuery.append(contractCode)
-		       .append("'");
+	IB::dataBase::tableContractRecordset rs(connect);			// the recordset object
 	
-	mysql_query(												// query to run
-		connect,
-		selectQuery.c_str());
+	std::string selectQuery(									// the query
+		"SELECT * FROM table_contract WHERE contract_symbol = '");
+	selectQuery.append(contractCode)
+		.append("'");
 
-	TWS_LOG(std::string("running query: ")					// log
+	TWS_LOG(std::string("running query: ")						// log
 		.append(selectQuery))
 
-	// mySQL query result
-	MYSQL_RES * reception = mysql_store_result(connect);		// results
+	if (!rs.select(selectQuery)) {								// returns value ?
 
-	if (!reception) {											// instrument not in the table
-
-		TWS_LOG(std::string("instrument not in the database"))
+		TWS_LOG(std::string("instrument not in the database"))	// log
 
 		IB::Contract contract;									// contract to request
 
-		contract.symbol = contractCode.c_str();					// attempt with contract default
+		contract.symbol = contractCode.c_str();					// attempt with contract default values
 		contract.currency = "USD";
 		contract.exchange = "SMART";
 		contract.primaryExchange = "NYSE";
@@ -64,50 +60,50 @@ void staticDataRequest() {
 
 			TWS_LOG(std::string("connecting to tws server"))	// log
 
-			for (;;) {											// loop over attemps
+		for (;;) {												// loop over attemps
 
-				++attempt;
+			++attempt;
+
+			if (IB::settings::instance().verbosity() > 0)
+
+				TWS_LOG(std::string("attempt number ")			// log
+				.append(boost::lexical_cast<std::string>(attempt))
+				.append(" out of ")
+				.append(boost::lexical_cast<std::string>(MAX_ATTEMPT)))
+
+				client.connect(
+				IB::settings::instance().ibHost().c_str(),
+				IB::settings::instance().ibPort(), clientId);
+
+			while (client.isConnected()) client.processMessages();
+
+			if (attempt >= MAX_ATTEMPT)							// max attemps reached
+
+				throw std::exception("failed to connect after max attempts");
+
+			if (client.endOfStaticData()) {						// download succedded
 
 				if (IB::settings::instance().verbosity() > 0)
 
-					TWS_LOG(std::string("attempt number ")		// log
-					.append(boost::lexical_cast<std::string>(attempt))
-					.append(" out of ")
-					.append(boost::lexical_cast<std::string>(MAX_ATTEMPT)))
+					TWS_LOG(									// log
+						std::string("download successful"))	
 
-					client.connect(
-					IB::settings::instance().ibHost().c_str(),
-					IB::settings::instance().ibPort(), clientId);
+					break;
 
-				while (client.isConnected()) client.processMessages();
+			}
+			else {
 
-				if (attempt >= MAX_ATTEMPT)						// max attemps reached
+				if (IB::settings::instance().verbosity() > 2)
 
-					throw std::exception("failed to connect after max attempts");
+					TWS_LOG(std::string("sleeping ")		// log
+					.append(boost::lexical_cast<std::string>(SLEEP_TIME))
+					.append(" seconds before next attempt"))
 
-				if (client.endOfStaticData()) {					// download succedded
+					sleep(SLEEP_TIME);
 
-					if (IB::settings::instance().verbosity() > 0)
+			}
 
-						TWS_LOG(								// log
-							std::string("download successful"))	
-
-						break;
-
-				}
-				else {
-
-					if (IB::settings::instance().verbosity() > 2)
-
-						TWS_LOG(std::string("sleeping ")		// log
-						.append(boost::lexical_cast<std::string>(SLEEP_TIME))
-						.append(" seconds before next attempt"))
-
-						sleep(SLEEP_TIME);
-
-				}
-
-			}													// end of for loop
+		}													// end of for loop
 
 		
 		if (IB::settings::instance().verbosity() > 0)			// verbosity ?
@@ -136,21 +132,10 @@ void staticDataRequest() {
 			TWS_LOG(												// log
 			std::string("attempt to insert contract details"))
 
-			// BMQ
-			std::string insertQuery("INSERT INTO table_contract (");
-			
-			insertQuery
-				.append("CONTRACT_IBID,")							// field names 
-				.append("CONTRACT_SYMBOL,")
-				.append("CONTRACT_SECTYPE,")
-				.append("CONTRACT_EXPIRY,")
-				.append("CONTRACT_STRIKE,")
-				.append("CONTRACT_RIGHT,")
-			
-				.append(") VALUES(")
-			
-				.append("")											// values
-				.append(")");								
+			if (!rs.insert(client.contractDetails()));				// tries to insert 
+
+				TWS_LOG(
+					std::string("insert failed"))
 
 	} else {
 	

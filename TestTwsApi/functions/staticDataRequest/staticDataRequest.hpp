@@ -11,10 +11,7 @@
 #include "utilities/settings.hpp"
 #include "utilities/define.hpp"
 #include "staticDataRequestClient/staticDataRequestClient.hpp"
-
-// mySQL
-#include <my_global.h>
-#include <mysql.h>
+#include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 
 // this procedure is meant to request 
 // missing static data about a given contract

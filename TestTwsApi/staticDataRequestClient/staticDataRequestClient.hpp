@@ -4,8 +4,8 @@
 #ifndef static_data_request_client_hpp
 #define static_data_request_client_hpp
 
-#include "EWrapper.h"																	// TWS components
-#include "contract.h"																	
+#include <EWrapper.h>																	// TWS components
+#include <contract.h>																	
 
 //#include <memory>
 #include <stdio.h>																		// printf()
