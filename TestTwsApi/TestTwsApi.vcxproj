@@ -164,7 +164,6 @@
     <ClCompile Include="functions\staticDataRequest\staticDataRequest.cpp" />
     <ClCompile Include="historicalRequestClient\historicalRequestClient.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="recordset\recordset.cpp" />
     <ClCompile Include="recordset\tableContractRecordset\tableContractRecordset.cpp" />
     <ClCompile Include="staticDataRequestClient\staticDataRequestClient.cpp" />
     <ClCompile Include="utilities\factory\barSizeFactory\barSizeFactory.cpp" />

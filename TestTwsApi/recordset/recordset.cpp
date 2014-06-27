@@ -4,13 +4,13 @@ namespace IB {
 
 	namespace dataBase {
 
-		recordset::recordset(MYSQL * connection) : connection_(connection){};
-		recordset::recordset(const recordset & o) {
+		recordset::recordset<class T>(MYSQL * connection) : connection_(connection){};
+		recordset<T>::recordset(const recordset & o) {
 		
 			connection_ = o.connection_;
 		
 		};
-		recordset::~recordset() {};
+		recordset<T>::~recordset() {};
 
 		recordset & recordset::operator = (const recordset & o) {
 		

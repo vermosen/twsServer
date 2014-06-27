@@ -132,10 +132,9 @@ void staticDataRequest() {
 			TWS_LOG(												// log
 			std::string("attempt to insert contract details"))
 
-			if (!rs.insert(client.contractDetails()));				// tries to insert 
+			if (!rs.insert(client.contractDetails()))				// tries to insert 
 
-				TWS_LOG(
-					std::string("insert failed"))
+				TWS_LOG(std::string("insert failed"))
 
 	} else {
 	

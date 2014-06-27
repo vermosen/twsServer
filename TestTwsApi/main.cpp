@@ -197,7 +197,7 @@ int main(int argc, char** argv) {
 		TWS_LOG(													// log
 			std::string("exiting with code 1"))
 
-			return 1;
+		return 1;
 
 	} catch (...) {													// unknown error
 	
