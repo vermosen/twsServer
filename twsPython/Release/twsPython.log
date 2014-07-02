@@ -1,0 +1,81 @@
+﻿Build started 04/06/2014 17:49:09.
+Project "C:\Users\vermosen\Documents\GitHub\twsapi\twsPython\twsPython.vcxproj" on node 2 (Build target(s)).
+InitializeBuildStatus:
+  Touching "Release\twsPython.tlog\unsuccessfulbuild".
+CustomBuild:
+  Performing Custom Build Tools
+  In order to function correctly, please ensure the following environment variables are correctly set: 
+  PYTHON_INCLUDE: C:\Python33\include 
+  PYTHON_LIB: C:\Python33\libs\python33.lib 
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Python33\include /Zi /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D TWSPYTHON_EXPORTS /D _UNICODE /D UNICODE /D _WINDLL /D _MBCS /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt example_wrap.cxx example.cxx
+  example_wrap.cxx
+  example.cxx
+  Generating Code...
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1186,5): warning MSB8012: TargetPath(C:\Users\vermosen\Documents\GitHub\twsapi\Release\_twsPython.pyd) does not match the Linker's OutputFile property value (C:\Users\vermosen\Documents\GitHub\twsapi\twsPython\_twsPython.pyd). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"_twsPython.pyd" /INCREMENTAL:NO /NOLOGO C:\Python33\libs\python33.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:\Users\vermosen\Documents\GitHub\twsapi\Release\_twsPython.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\vermosen\Documents\GitHub\twsapi\Release\_twsPython.lib" /MACHINE:X86 /SAFESEH /DLL Release\example_wrap.obj
+  Release\example.obj
+     Creating library C:\Users\vermosen\Documents\GitHub\twsapi\Release\_twsPython.lib and object C:\Users\vermosen\Documents\GitHub\twsapi\Release\_twsPython.exp
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyType_IsSubtype referenced in function __wrap_example_a
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyType_Ready referenced in function _SwigPyObject_TypeOnce
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyObject_GetAttrString referenced in function _SwigPyClientData_New
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyObject_GetAttr referenced in function _SWIG_Python_GetSwigThis
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyObject_SetAttr referenced in function _SWIG_Python_NewShadowInstance
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyObject_GenericGetAttr referenced in function _SwigPyObject_TypeOnce
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyObject_IsTrue referenced in function _SwigPyObject_own
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__Py_DecRef referenced in function _SwigPyObject_repr
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyObject_Malloc referenced in function _SwigPyObject_New
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyObject_Free referenced in function _SwigPyObject_dealloc
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyObject_Init referenced in function _SwigPyObject_New
+example_wrap.obj : error LNK2019: unresolved external symbol __imp___PyObject_New referenced in function _SWIG_Python_NewPointerObj
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyUnicode_FromString referenced in function "struct _object * __cdecl SWIG_Python_str_FromChar(char const *)" (?SWIG_Python_str_FromChar@@YAPAU_object@@PBD@Z)
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyUnicode_FromFormat referenced in function _SwigPyObject_repr
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyUnicode_Concat referenced in function _SwigPyObject_repr
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyLong_AsLong referenced in function "int __cdecl SWIG_AsVal_double(struct _object *,double *)" (?SWIG_AsVal_double@@YAHPAU_object@@PAN@Z)
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyLong_FromVoidPtr referenced in function _SwigPyObject_long
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyBool_FromLong referenced in function _SwigPyObject_own
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyFloat_FromDouble referenced in function __wrap_example_a__get
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyFloat_AsDouble referenced in function "int __cdecl SWIG_AsVal_double(struct _object *,double *)" (?SWIG_AsVal_double@@YAHPAU_object@@PAN@Z)
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyTuple_New referenced in function _SwigPyClientData_New
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyTuple_SetItem referenced in function _SwigPyClientData_New
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyDict_SetItemString referenced in function _SWIG_Python_InstallConstants
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyModule_GetDict referenced in function _PyInit__twsPython
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyInstanceMethod_New referenced in function _SWIG_PyInstanceMethod_New
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyCapsule_New referenced in function _SWIG_InitializeModule
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyCapsule_GetPointer referenced in function _SWIG_Python_DestroyModule
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyCapsule_Import referenced in function _SWIG_InitializeModule
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyErr_SetString referenced in function __wrap_example_a__set
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyErr_Occurred referenced in function _SWIG_InitializeModule
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyErr_Clear referenced in function _SWIG_InitializeModule
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyArg_ParseTuple referenced in function __wrap_new_example
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyArg_UnpackTuple referenced in function _SwigPyObject_own
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__Py_BuildValue referenced in function _SwigPyObject_append
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyModule_AddObject referenced in function _SWIG_InitializeModule
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyModule_Create2 referenced in function _PyInit__twsPython
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyImport_AddModule referenced in function _SWIG_InitializeModule
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyObject_Call referenced in function _SWIG_Python_NewShadowInstance
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyObject_CallFunctionObjArgs referenced in function _SWIG_Python_ConvertPtrAndOwn
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyObject_Size referenced in function __wrap_example_a
+example_wrap.obj : error LNK2019: unresolved external symbol __imp__PyObject_IsInstance referenced in function _SwigPyClientData_New
+example_wrap.obj : error LNK2001: unresolved external symbol __imp__PyType_Type
+example_wrap.obj : error LNK2001: unresolved external symbol __imp___Py_NotImplementedStruct
+example_wrap.obj : error LNK2001: unresolved external symbol __imp__PyFloat_Type
+example_wrap.obj : error LNK2001: unresolved external symbol __imp__PyExc_AttributeError
+example_wrap.obj : error LNK2001: unresolved external symbol __imp__PyExc_IndexError
+example_wrap.obj : error LNK2001: unresolved external symbol __imp__PyExc_MemoryError
+example_wrap.obj : error LNK2001: unresolved external symbol __imp__PyExc_OverflowError
+example_wrap.obj : error LNK2001: unresolved external symbol __imp__PyExc_RuntimeError
+example_wrap.obj : error LNK2001: unresolved external symbol __imp__PyExc_NotImplementedError
+example_wrap.obj : error LNK2001: unresolved external symbol __imp__PyExc_SyntaxError
+example_wrap.obj : error LNK2001: unresolved external symbol __imp__PyExc_SystemError
+example_wrap.obj : error LNK2001: unresolved external symbol __imp__PyExc_TypeError
+example_wrap.obj : error LNK2001: unresolved external symbol __imp__PyExc_ValueError
+example_wrap.obj : error LNK2001: unresolved external symbol __imp__PyExc_ZeroDivisionError
+example_wrap.obj : error LNK2001: unresolved external symbol __imp__PyExc_IOError
+_twsPython.pyd : fatal error LNK1120: 56 unresolved externals
+Done Building Project "C:\Users\vermosen\Documents\GitHub\twsapi\twsPython\twsPython.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:02.32
