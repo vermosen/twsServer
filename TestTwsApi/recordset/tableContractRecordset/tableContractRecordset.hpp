@@ -30,7 +30,7 @@ namespace IB {
 			protected:
 
 				tableContractRecordset() {};
-				const std::vector<std::string> fields_ = std::vector<std::string> {
+				/*const std::vector<std::string> fields_ = std::vector<std::string> {
 
 					std::string("CONTRACT_IBID"),
 					std::string("CONTRACT_SYMBOL"),
@@ -77,7 +77,7 @@ namespace IB {
 					std::string("CONTRACT_DETAILS_BOND_NEXTOPTIONPARTIAL"),
 					std::string("CONTRACT_DETAILS_BOND_NOTE")
 
-				};
+				};*/
 		};
 	}
 }

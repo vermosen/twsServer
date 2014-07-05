@@ -7,9 +7,9 @@
 
 #include <mysql.h>
 
-#define INSERT_SQL_STR(Y,X) \
-	Y.append("'")           \
-	 .append(X)             \
+#define INSERT_SQL_STR(X,Y) \
+	X.append("'" )          \
+	 .append(Y   )          \
 	 .append("',");
 
 namespace IB {
