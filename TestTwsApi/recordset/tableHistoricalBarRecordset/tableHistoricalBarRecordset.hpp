@@ -11,6 +11,14 @@ namespace IB {
 
 	namespace dataBase {
 
+		struct barRecord {
+
+			recordId    id_      ;
+			thOth::bar  bar_     ;
+			std::string exchange_;
+
+		};
+
 		class tableHistoricalBarRecordset : public recordset<thOth::bar> {
 
 			public:
@@ -24,8 +32,8 @@ namespace IB {
 				bool open();											// recordset interface
 				void close();
 
-				bool select(std::string);								// run a select statement
-				bool insert(uint64_t id, const thOth::bar &);			// insert a contract detail in the database
+				bool select(const std::string &);						// run a select statement
+				bool insert(const barRecord &  );						// insert an historical bar
 
 			protected:
 

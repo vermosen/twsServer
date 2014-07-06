@@ -16,6 +16,8 @@ namespace IB {
 
 	namespace dataBase {
 
+		typedef uint64_t recordId;						// equivalent of a big int
+
 		template <class T>
 		class recordset {
 
@@ -40,7 +42,7 @@ namespace IB {
 				MYSQL     * connection_;					// connection object
 				MYSQL_RES * reception_ ;
 
-				std::map<uint64_t, T>    records_;			// a pile of records for data management, 
+				std::map<recordId, T>    records_;			// a pile of records for data management, 
 															// assumes primary key is a BIGINT
 
 		};
@@ -52,7 +54,7 @@ namespace IB {
 		recordset<T>::recordset(const recordset<T> & o) {
 
 			connection_ = o.connection_;
-			reception_ = o.reception_;
+			reception_  = o.reception_ ;
 
 		};
 		
@@ -67,7 +69,7 @@ namespace IB {
 				// copy stuff
 				// DO NOT COPY FIELDS AND RECORDS HERE
 				connection_ = o.connection_;
-				reception_ = o.reception_;
+				reception_  = o.reception_ ;
 
 			}
 

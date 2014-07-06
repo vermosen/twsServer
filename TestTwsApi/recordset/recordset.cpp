@@ -18,6 +18,7 @@ namespace IB {
 			
 				// copy stuff
 				connection_ = o.connection_;
+				reception_  = o.reception_ ;
 			
 			}
 
