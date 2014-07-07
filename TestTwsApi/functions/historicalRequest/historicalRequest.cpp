@@ -40,18 +40,20 @@ void historicalRequest() {
 
 	if (!connect) throw std::exception("unable to reach mySQL database");
 
+	// recordset
+	IB::dataBase::tableContractRecordset rs(connect);			// table contract recordset
+
 	std::string query(											// query to run
 		"SELECT * FROM table_instrument WHERE instrument_symbol = '");
 		query.append(contractCode);
 		query.append("'");
 
 		TWS_LOG(std::string("running query: ")					// log
-				.append(query))
+			.append(query))
 
-	mysql_query(connect, query.c_str());						// query to run
+	if (!rs.select(query))										// query succeeded ?
+		throw std::exception("instrument request failed");	
 		
-	// mySQL query result
-	MYSQL_RES * reception = mysql_store_result(connect);		// results
 
 	if (!reception)												// request failed
 		throw std::exception("instrument request failed");
@@ -96,7 +98,7 @@ void historicalRequest() {
 		1, IB::dataDuration::day,								// period length and type
 		IB::dataType::trade);									// data type
 
-	thOth::TimeSeries<IB::historicalQuoteDetails> ts;			// time series
+	thOth::timeSeries<IB::historicalQuoteDetails> ts;			// time series
 
 	TWS_LOG(std::string("connecting to the server"))			// log
 
@@ -150,7 +152,7 @@ void historicalRequest() {
 
 		TWS_LOG(std::string("writing data file"))
 
-	for (thOth::TimeSeries<IB::historicalQuoteDetails>::const_iterator
+	for (thOth::timeSeries<IB::historicalQuoteDetails>::const_iterator
 		It = ts.cbegin(); It != ts.cend(); It++) {
 		
 		

@@ -42,7 +42,7 @@ namespace IB {
 		
 		};
 
-		bool tableHistoricalBarRecordset::select(std::string selectStr) {
+		bool tableHistoricalBarRecordset::select(const std::string & selectStr) {
 		
 			mysql_query(												// query to run
 				connection_,
@@ -73,23 +73,55 @@ namespace IB {
 				.append(",");
 
 			fieldStr.append("BAR_START,");								// barStart
-			
-			// TODO: conversion to format
-			// SELECT * FROM util_audit
-			// WHERE DATED BETWEEN '2012-02-15 00:00:00' AND '2012-03-31 00:00:00';
 
 			valueStr
-				.append(boost::lexical_cast<std::string>(rec.bar_.barStart()))
-				.append(",");
+				.append("'")
+				.append(convertDateTime(rec.bar_.barStart()))
+				.append("',");
 			
 			fieldStr.append("BAR_END,");								// barEnd
 
 			valueStr
-				.append(boost::lexical_cast<std::string>(rec.bar_.barEnd()))
+				.append("'")
+				.append(convertDateTime(rec.bar_.barEnd()))
+				.append("',");
+			
+			fieldStr.append("OPEN,");									// open
+
+			valueStr
+				.append(boost::lexical_cast<std::string>(rec.bar_.open()))
+				.append(",");
+			
+			fieldStr.append("CLOSE,");									// close
+
+			valueStr
+				.append(boost::lexical_cast<std::string>(rec.bar_.close()))
+				.append(",");
+			
+			fieldStr.append("HIGH,");									// close
+
+			valueStr
+				.append(boost::lexical_cast<std::string>(rec.bar_.high()))
 				.append(",");
 
-			fieldStr.pop_back();							// erase extra characters
-			valueStr.pop_back();
+			fieldStr.append("LOW,");									// close
+
+			valueStr
+				.append(boost::lexical_cast<std::string>(rec.bar_.low()))
+				.append(",");
+
+			fieldStr.append("VOLUME,");									// close
+
+			valueStr
+				.append(boost::lexical_cast<std::string>(rec.bar_.volume()))
+				.append(",");
+
+			fieldStr.append("EXCHANGE");									// close
+
+			valueStr
+				.append("'")
+				.append(rec.exchange_)
+				.append("'");
 
 			std::string insertStatement("INSERT INTO table_contract (");
 			insertStatement

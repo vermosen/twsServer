@@ -3,10 +3,14 @@
 
 #include <string>
 #include <map>
+
 #include <stdint.h>
 
 #include <mysql.h>
 
+#include <thOth/time/DateTime.hpp>
+
+// insert a string field
 #define INSERT_SQL_STR(X,Y) \
 	X.append("'" )          \
 	 .append(Y   )          \
@@ -16,7 +20,7 @@ namespace IB {
 
 	namespace dataBase {
 
-		typedef uint64_t recordId;						// equivalent of a big int
+		typedef uint64_t recordId;								// equivalent of a big int
 
 		template <class T>
 		class recordset {
@@ -33,18 +37,26 @@ namespace IB {
 				virtual bool open() = 0;
 				virtual void close() = 0;
 
-				virtual bool select(std::string) = 0;		// return true if the select statement is non empty
+				virtual bool select(const std::string &) = 0;	// return true if the select statement is non empty
+
+				// iterators
+				typename std::map<recordId, T>::const_iterator cbegin() const;
+				typename std::map<recordId, T>::const_iterator cend  () const;
+				typename std::map<recordId, T>::const_iterator begin () const { return cbegin(); };
+				typename std::map<recordId, T>::const_iterator end   () const { return cend  (); };
 
 			protected:
 
-				recordset() {};								// protected default ctor
+				recordset() {};									// protected default ctor
+
+				std::string convertDateTime(const thOth::dateTime &) const;
+																// convert dateTime into SQL string format
 				
-				MYSQL     * connection_;					// connection object
+				MYSQL     * connection_;						// connection object
 				MYSQL_RES * reception_ ;
 
-				std::map<recordId, T>    records_;			// a pile of records for data management, 
-															// assumes primary key is a BIGINT
-
+				std::map<recordId, T>    records_;				// a pile of records for data management, 
+																// assumes primary key of the table is a BIGINT
 		};
 
 		template <class T>
@@ -74,6 +86,39 @@ namespace IB {
 			}
 
 			return * this;
+
+		}
+
+		template <class T>
+		std::string recordset<T>::convertDateTime(const thOth::dateTime & date) const {
+		
+			std::stringstream stream;
+			boost::posix_time::time_facet facet;
+			facet.format("%Y%m%d  %H:%M:%S");					// format '2012-02-15 00:00:00'
+			stream.imbue(std::locale(std::locale::classic(), &facet));
+			stream << date;
+
+			// temp 
+			std::string test = stream.str();
+			//
+			
+			return stream.str();
+
+		}
+
+		template <typename T>
+		inline typename recordset<T>::const_iterator
+			recordset<T>::cbegin() const {
+
+			return data_.begin();
+
+		}
+
+		template <class T>
+		inline typename recordset<T>::const_iterator
+			recordset<T>::cend() const {
+
+			return data_.end();
 
 		}
 	

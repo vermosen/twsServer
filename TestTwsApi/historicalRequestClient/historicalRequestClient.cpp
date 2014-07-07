@@ -252,9 +252,9 @@ namespace IB {
 	IBString historicalRequestClient::convertDateTime(const thOth::dateTime & date) const {
 	
 		std::stringstream stream;							
-		boost::posix_time::time_facet* facet = new boost::posix_time::time_facet();
-		facet->format("%Y%m%d  %H:%M:%S");
-		stream.imbue(std::locale(std::locale::classic(), facet));
+		boost::posix_time::time_facet facet;
+		facet.format("%Y%m%d  %H:%M:%S");
+		stream.imbue(std::locale(std::locale::classic(), &facet));
 		stream << date;
 		
 		IBString ib(stream.str());

@@ -42,7 +42,7 @@ namespace IB {
 		
 		};
 
-		bool tableContractRecordset::select(std::string selectStr) {
+		bool tableContractRecordset::select(const std::string & selectStr) {
 		
 			mysql_query(												// query to run
 				connection_,
@@ -539,5 +539,18 @@ namespace IB {
 			return true;													// return true otherwise
 
 		}
+
+		// bulk insert
+		bool tableContractRecordset::insert(const std::vector<ContractDetails> & data) {
+		
+			for (std::vector<ContractDetails>::const_iterator 
+				It = data.cbegin(); It != data.cend(); It++)
+
+				insert(*It);
+
+			return true;
+
+		}
+
 	}
 }

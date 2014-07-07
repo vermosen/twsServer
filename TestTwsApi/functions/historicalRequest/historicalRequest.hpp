@@ -7,13 +7,14 @@
 #include <thOth/time/DateTime.hpp>
 #include <thOth/utilities/csvBuilder.hpp>
 
+// twsapi
 #include "utilities/type/all.hpp"
 #include "utilities/settings.hpp"
-#include "historicalRequestClient/historicalRequestClient.hpp"
 #include "utilities/define.hpp"
+#include "historicalRequestClient/historicalRequestClient.hpp"
+#include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 
 // mySQL
-//#include <my_global.h>
 #include <mysql.h>
 
 // this procedure is meant to request 

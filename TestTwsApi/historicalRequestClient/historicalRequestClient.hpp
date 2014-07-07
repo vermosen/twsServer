@@ -74,7 +74,7 @@ namespace IB {
 		bool endOfHistoricalData() const { return endOfHistoricalData_; };				// end of data (public ?)
 		bool errorForRequest() const { return errorForRequest_; };						// error
 		
-		thOth::TimeSeries<historicalQuoteDetails> timeSeries() const{					// the time series
+		thOth::timeSeries<historicalQuoteDetails> timeSeries() const{					// the time series
 			return ts_;
 		};
 
@@ -116,7 +116,7 @@ namespace IB {
 		dataDuration dataDuration_;													// data duration
 		dataType dataType_;															// data Type
 
-		thOth::TimeSeries<historicalQuoteDetails> ts_;								// timeseries object
+		thOth::timeSeries<historicalQuoteDetails> ts_;								// timeseries object
 
 		boost::shared_ptr<EPosixClientSocket> m_pClient;							// posix client
 		state m_state;																// current state
