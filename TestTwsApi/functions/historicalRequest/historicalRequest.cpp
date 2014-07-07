@@ -44,7 +44,7 @@ void historicalRequest() {
 	IB::dataBase::tableContractRecordset rs(connect);			// table contract recordset
 
 	std::string query(											// query to run
-		"SELECT * FROM table_instrument WHERE instrument_symbol = '");
+		"SELECT * FROM table_contract WHERE contract_symbol = '");
 		query.append(contractCode);
 		query.append("'");
 
@@ -54,22 +54,15 @@ void historicalRequest() {
 	if (!rs.select(query))										// query succeeded ?
 		throw std::exception("instrument request failed");	
 		
+	if (rs.size() == 0)											// symbol found ?
+		throw std::exception("symbol not found");
 
-	if (!reception)												// request failed
-		throw std::exception("instrument request failed");
-
-	IB::Contract contract;										// contract to request
-
-	if (mysql_num_rows(reception) != 1)							// assumed to be a unique record
-		throw std::exception("unknown contract");
-
-	MYSQL_ROW db_row = mysql_fetch_row(reception);
-
+	IB::Contract contract;
 	contract.symbol = contractCode.c_str();
-	contract.secType = db_row[2];
+	contract.secType = "test";
 	contract.exchange = "SMART";								// default to smart
-	contract.currency = db_row[3];
-	contract.primaryExchange = db_row[4];
+	contract.currency = "USD";
+	contract.primaryExchange = "NYSE";
 
 	TWS_LOG(													// log
 		std::string("contract details: ")

@@ -56,8 +56,23 @@ namespace IB {
 			if (reception_->row_count == 0)								// no record
 				return false;
 
-			// local copy in records_
-			//records_.insert();
+			MYSQL_ROW row;
+
+			while (row = mysql_fetch_row(reception_)) {						// loop over the results
+			
+				ContractDetails contract;									// the current contract
+				contract.summary.conId = boost::lexical_cast<long>(row[1]);
+				
+				// test
+				std::cout << "contract Id " << row[1] << std::endl;
+				
+				// insert in the map
+				records_.insert(
+					std::pair<recordId, ContractDetails>(
+						boost::lexical_cast<recordId>(row[0]), contract));
+
+			}
+						
 			return true;
 
 		};

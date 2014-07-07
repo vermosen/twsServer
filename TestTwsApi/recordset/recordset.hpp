@@ -39,11 +39,16 @@ namespace IB {
 
 				virtual bool select(const std::string &) = 0;	// return true if the select statement is non empty
 
+				// definition
+				typedef typename std::map<recordId, T>::const_iterator const_iterator;
+
 				// iterators
-				typename std::map<recordId, T>::const_iterator cbegin() const;
-				typename std::map<recordId, T>::const_iterator cend  () const;
-				typename std::map<recordId, T>::const_iterator begin () const { return cbegin(); };
-				typename std::map<recordId, T>::const_iterator end   () const { return cend  (); };
+				typename const_iterator cbegin() const;
+				typename const_iterator cend  () const;
+				typename const_iterator begin () const { return cbegin(); };
+				typename const_iterator end   () const { return cend  (); };
+
+				recordId size() const;							// potentially large number
 
 			protected:
 
@@ -110,7 +115,7 @@ namespace IB {
 		inline typename recordset<T>::const_iterator
 			recordset<T>::cbegin() const {
 
-			return data_.begin();
+			return records_.begin();
 
 		}
 
@@ -118,7 +123,14 @@ namespace IB {
 		inline typename recordset<T>::const_iterator
 			recordset<T>::cend() const {
 
-			return data_.end();
+			return records_.end();
+
+		}
+
+		template <class T>
+		inline recordId recordset<T>::size() const {
+
+			return records_.size();
 
 		}
 	
