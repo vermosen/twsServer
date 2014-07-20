@@ -41,59 +41,109 @@ void historicalRequest() {
 	if (!connect) throw std::exception("unable to reach mySQL database");
 
 	// recordset
-	IB::dataBase::tableContractRecordset rs(connect);			// table contract recordset
+	IB::dataBase::tableContractRecordset contractRs(connect);	// table contract recordset
 
 	std::string query(											// query to run
 		"SELECT * FROM table_contract WHERE contract_symbol = '");
 		query.append(contractCode);
 		query.append("'");
 
-		TWS_LOG(std::string("running query: ")					// log
-			.append(query))
+	TWS_LOG(std::string("running query: ")						// log
+		.append(query))
 
-	if (!rs.select(query))										// query succeeded ?
+	if (!contractRs.select(query))								// query succeeded ?
 		throw std::exception("instrument request failed");	
 		
-	if (rs.size() == 0)											// symbol found ?
+	query = "";													// for later usage
+
+	if (contractRs.size() == 0)									// symbol found ?
 		throw std::exception("symbol not found");
 
-	IB::Contract contract;
-	contract.symbol = contractCode.c_str();
-	contract.secType = "test";
-	contract.exchange = "SMART";								// default to smart
-	contract.currency = "USD";
-	contract.primaryExchange = "NYSE";
+	if (contractRs.size() > 1)									// unique ?
+		throw std::exception("different symbols found");
 
+	IB::dataBase::recordId id = contractRs.cbegin()->first;		// contract Id
+	IB::ContractDetails contract = contractRs.cbegin()->second;	// contract
+	
 	TWS_LOG(													// log
 		std::string("contract details: ")
-			.append(contract.symbol)
+			.append(contract.summary.symbol)
 			.append(", ")
-			.append(contract.secType)
+			.append(contract.summary.secType)
 			.append(", ")
-			.append(contract.exchange)
+			.append(contract.summary.exchange)
 			.append(", ")
-			.append(contract.currency)
+			.append(contract.summary.currency)
 			.append(", ")
-			.append(contract.primaryExchange));
+			.append(contract.summary.primaryExchange));
 
-	thOth::dateTime dt(2014, 6, 3);								// the date requested
+	// step 2: date of the request
+	std::cout << "Please provide a request date (MM/dd/yyyy):"	// message
+			  << std::endl;
 
-	TWS_LOG(std::string("requesting date: ")					// log
-		.append(boost::lexical_cast<std::string>(dt)))
+	std::string dtStr; std::cin >> dtStr;
+	std::shared_ptr<thOth::dateTime> requestDate;				// the date requested
 
-	TWS_LOG(std::string("requesting query: ")					// log
-		.append(query))
+	// TODO: overload the >> operator for datetime
+	bool passed = false; while (!passed) {						// try to perform lexical_cast
+	
+		try {
+
+			thOth::dateTime::Days   ds = 
+				boost::lexical_cast<int>(
+					dtStr.substr(3, 2));
+
+			thOth::dateTime::Months mt = 
+				boost::lexical_cast<int>(
+					dtStr.substr(0, 2));
+
+			thOth::dateTime::Years  yr = 
+				boost::lexical_cast<long>(
+					dtStr.substr(6, 4));
 			
+			requestDate =										// the date requested
+				std::shared_ptr<thOth::dateTime>(
+					new thOth::dateTime(yr, mt, ds));		
+
+			passed = true;										// no exception raised
+		
+		} catch (boost::bad_lexical_cast & ex) {
+
+			TWS_LOG(std::string("bad lexical cast exception")
+				.append(ex.what()))
+
+		} catch (std::exception & ex) {
+		
+			TWS_LOG(std::string("an error occured: ")
+				.append(ex.what()))
+
+			throw std::exception(ex.what());
+		
+		} catch (...) { 
+
+			TWS_LOG(std::string("an unknown error occured..."))
+			throw std::exception("an unknown error occured..."); 
+		
+		};
+	
+	};
+
+	// step 3: download data
+	TWS_LOG(std::string("requesting IB data for date: ")		// log
+		.append(boost::lexical_cast<std::string>(*requestDate)))
+
+	contract.summary.exchange = "SMART";						// setting exchange to SMART
+
 	IB::historicalRequestClient client(							// creates the client				
-		contract,												// contract 
-		dt,														// startDate of the request
-		IB::barSize::thirtySeconds,								// bar size
+		contract.summary,										// contract 
+		*requestDate,											// startDate of the request
+		IB::barSize::thirtySeconds,								// minimum bar size
 		1, IB::dataDuration::day,								// period length and type
 		IB::dataType::trade);									// data type
 
 	thOth::timeSeries<IB::historicalQuoteDetails> ts;			// time series
 
-	TWS_LOG(std::string("connecting to the server"))			// log
+	TWS_LOG("connecting to the server")							// log
 
 	for (;;) {													// loop over attemps
 
@@ -135,19 +185,36 @@ void historicalRequest() {
 					.append(boost::lexical_cast<std::string>(SLEEP_TIME))
 					.append(" seconds before next attempt "))
 
-			sleep(SLEEP_TIME);
+				sleep(SLEEP_TIME);
 
 		}
 
 	}
 
-	if (IB::settings::instance().verbosity() > 0)				// verbose
+	// step 4: check for previous import
+	// strategy: check on the contract Id * date * exchange
+	IB::dataBase::tableHistoricalBarRecordset barRs(connect);	// table contract recordset
 
+	query.append(												// query to run
+		"SELECT * FROM table_historical_bar WHERE (contract_ID = '")
+		.append(boost::lexical_cast<std::string>(id))
+		.append("' AND exchange = '")
+		.append();
+
+	TWS_LOG(std::string("running query: ")						// log
+		.append(query))
+
+		if (!barRs.select(query))								// query succeeded ?
+			throw std::exception("instrument request failed");
+
+	if (barRs.size() == 0)										// symbol found ?
+		throw std::exception("symbol not found");
+
+	if (IB::settings::instance().verbosity() > 0)				// verbose
 		TWS_LOG(std::string("writing data file"))
 
 	for (thOth::timeSeries<IB::historicalQuoteDetails>::const_iterator
 		It = ts.cbegin(); It != ts.cend(); It++) {
-		
 		
 		if (IB::settings::instance().verbosity() > 1)			//verbose
 
@@ -164,7 +231,7 @@ void historicalRequest() {
 
 	}
 
-	if (IB::settings::instance().verbosity() > 0)					// verbose
+	if (IB::settings::instance().verbosity() > 0)				// verbose
 
 		TWS_LOG(std::string("end of historical data request"))
 

@@ -7,6 +7,7 @@
 #include "EWrapper.h"																	// TWS components
 #include "contract.h"																	
 
+#include "utilities/define.hpp"
 #include "utilities/factory/barSizeFactory/barSizeFactory.hpp"							// factories
 #include "utilities/factory/dataTypeFactory/dataTypeFactory.hpp"
 #include "utilities/factory/dataDurationFactory/dataDurationFactory.hpp"

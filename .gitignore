@@ -48,3 +48,14 @@ ltmain.sh
 
 *.pc
 *.spec
+*.obj
+*.ilk
+*.pdb
+*.log
+*.tlog
+*.idb
+*.exe
+*.lib
+*.log
+*.pdb
+*.idb

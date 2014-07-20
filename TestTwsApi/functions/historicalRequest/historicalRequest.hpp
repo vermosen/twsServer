@@ -13,6 +13,7 @@
 #include "utilities/define.hpp"
 #include "historicalRequestClient/historicalRequestClient.hpp"
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
+#include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
 
 // mySQL
 #include <mysql.h>

@@ -1,6 +1,9 @@
 #ifndef tws_define_hpp
 #define tws_define_hpp
 
+#include "utilities/settings.hpp"
+#include <thOth/time/DateTime.hpp>
+
 // build logging string
 #define TWS_LOG(X) \
 	IB::settings::instance().log()->push_back( \
@@ -17,10 +20,10 @@ const unsigned SLEEP_TIME = 5;
 
 // sleep macro
 #ifdef _WIN32
-# include <windows.h>
-# define sleep( seconds) Sleep( seconds * 1000);
+//#include <windows.h> // bugged
+#define sleep( seconds) Sleep( seconds * 1000);
 #else
-# include <unistd.h>
+#include <unistd.h>
 #endif
 
 #endif

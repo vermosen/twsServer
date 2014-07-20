@@ -225,25 +225,41 @@ namespace IB {
 		}
 	}
 
-	void historicalRequestClient::error(const int id, const int errorCode, const IBString errorString) {
+	void historicalRequestClient::error(
+		const int id, 
+		const int errorCode, 
+		const IBString errorString) {
 
-		if (id == -1 && errorCode == 1100)					// if "Connectivity between IB and TWS has been lost"
-			disconnect();
-		else
-			std::cout
-				<< "request information: "
-				<< errorString
-				<< std::endl;
+		if (id == -1 && errorCode == 1100) {				// if "Connectivity between IB and TWS has been lost"
 
+			TWS_LOG(std::string("Connectivity error: ")		// log
+				.append(errorString))
+
+				disconnect();
+
+		} else if (errorCode == 200) {						// if "Connectivity between IB and TWS has been lost"
+
+			TWS_LOG(std::string("Request error: ")		// log
+				.append(errorString))
+
+				disconnect();
+
+		} else {
+
+			TWS_LOG(std::string("request information: ")	// log
+				.append(errorString))
+		
+		}
+			
 	}
 
 	thOth::dateTime historicalRequestClient::convertDateTime(const IBString & dtStr) const {
 
 		return thOth::dateTime(								// smallest increments is second
-			thOth::dateTime::Years(boost::lexical_cast<int>(dtStr.substr(0, 4))),
-			thOth::dateTime::Months(boost::lexical_cast<int>(dtStr.substr(4, 2))),
-			thOth::dateTime::Days(boost::lexical_cast<int>(dtStr.substr(6, 2))),
-			thOth::dateTime::Hours(boost::lexical_cast<int>(dtStr.substr(10, 2))),
+			thOth::dateTime::Years(  boost::lexical_cast<int>(dtStr.substr(0 , 4))),
+			thOth::dateTime::Months( boost::lexical_cast<int>(dtStr.substr(4 , 2))),
+			thOth::dateTime::Days(   boost::lexical_cast<int>(dtStr.substr(6 , 2))),
+			thOth::dateTime::Hours(  boost::lexical_cast<int>(dtStr.substr(10, 2))),
 			thOth::dateTime::Minutes(boost::lexical_cast<int>(dtStr.substr(13, 2))),
 			thOth::dateTime::Seconds(boost::lexical_cast<int>(dtStr.substr(16, 2))));
 
@@ -251,15 +267,36 @@ namespace IB {
 
 	IBString historicalRequestClient::convertDateTime(const thOth::dateTime & date) const {
 	
-		std::stringstream stream;							
+// bug with locale destructor, to be fixed in MSVC 2014...
+#if (_MSC_VER <= 1800)
+
+		// std::string to_iso_string(ptime) returns
+		// a string in the form of YYYYMMDDTHHMMSS, 
+		// fffffffff where T is the date - time separator.
+		std::string temp = boost::posix_time::to_iso_string(date);
+
+		IBString ib(temp.substr(0,8)
+			.append("  ")
+			.append(temp.substr(9, 2))
+			.append(":")
+			.append(temp.substr(11, 2))
+			.append(":")
+			.append(temp.substr(13, 2)));
+
+#else
+
+		std::stringstream stream;
 		boost::posix_time::time_facet facet;
 		facet.format("%Y%m%d  %H:%M:%S");
 		stream.imbue(std::locale(std::locale::classic(), &facet));
 		stream << date;
-		
+
 		IBString ib(stream.str());
 
+#endif
+
 		return ib;
+		
 
 	};
 
