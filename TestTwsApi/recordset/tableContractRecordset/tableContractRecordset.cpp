@@ -60,7 +60,6 @@ namespace IB {
 
 			while (row = mysql_fetch_row(reception_)) {					// loop over the results
 																		// !! check how it iterates !!
-			
 				// contract details might be partial 
 				// depending of the original request
 				ContractDetails contract;								// the current contract

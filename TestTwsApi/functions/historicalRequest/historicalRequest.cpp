@@ -193,41 +193,44 @@ void historicalRequest() {
 
 	// step 4: check for previous import
 	// strategy: check on the contract Id * date * exchange
+	thOth::dateTime first = ts.begin()->first;					// first date
+	thOth::dateTime last = ts.rbegin()->first;					// last date
 	IB::dataBase::tableHistoricalBarRecordset barRs(connect);	// table contract recordset
 
 	query.append(												// query to run
 		"SELECT * FROM table_historical_bar WHERE (contract_ID = '")
 		.append(boost::lexical_cast<std::string>(id))
 		.append("' AND exchange = '")
-		.append();
+		.append(contract.summary.exchange)
+		.append("' AND bar_start > ");
 
 	TWS_LOG(std::string("running query: ")						// log
 		.append(query))
 
-		if (!barRs.select(query))								// query succeeded ?
-			throw std::exception("instrument request failed");
+	if (!barRs.select(query))									// query succeeded ?
+		throw std::exception("instrument request failed");
 
-	if (barRs.size() == 0)										// symbol found ?
-		throw std::exception("symbol not found");
+	if (barRs.size() > 0)										// symbol found ?
+		throw std::exception("data already found,aborting import");
 
 	if (IB::settings::instance().verbosity() > 0)				// verbose
-		TWS_LOG(std::string("writing data file"))
+		TWS_LOG(std::string("writing database"))
 
 	for (thOth::timeSeries<IB::historicalQuoteDetails>::const_iterator
 		It = ts.cbegin(); It != ts.cend(); It++) {
 		
-		if (IB::settings::instance().verbosity() > 1)			//verbose
+	if (IB::settings::instance().verbosity() > 1)				//verbose
 
-			TWS_LOG(std::string("new data: d: ")
-				.append(boost::lexical_cast<std::string>(It->first))
-				.append(", p: ")
-				.append(boost::lexical_cast<std::string>(It->second.close_))
-				.append(", h: ")
-				.append(boost::lexical_cast<std::string>(It->second.high_))
-				.append(", l: ")
-				.append(boost::lexical_cast<std::string>(It->second.low_))
-				.append(", v: ")
-				.append(boost::lexical_cast<std::string>(It->second.volume_)))
+		TWS_LOG(std::string("new data: d: ")
+			.append(boost::lexical_cast<std::string>(It->first))
+			.append(", p: ")
+			.append(boost::lexical_cast<std::string>(It->second.close_))
+			.append(", h: ")
+			.append(boost::lexical_cast<std::string>(It->second.high_))
+			.append(", l: ")
+			.append(boost::lexical_cast<std::string>(It->second.low_))
+			.append(", v: ")
+			.append(boost::lexical_cast<std::string>(It->second.volume_)))
 
 	}
 
