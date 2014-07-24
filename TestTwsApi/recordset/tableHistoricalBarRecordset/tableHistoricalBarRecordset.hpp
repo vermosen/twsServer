@@ -6,20 +6,35 @@
 #include <thOth/bar/bar.hpp>
 
 #include "recordset/recordset.hpp"
+#include "utilities/conversion/convertDatetime/convertDatetime.hpp"
 
 namespace IB {
 
 	namespace dataBase {
 
-		struct barRecord {
+		class barRecord {
 
-			recordId    id_      ;
-			thOth::bar  bar_     ;
-			std::string exchange_;
+			public:
+
+				barRecord(recordId id, 
+						  const thOth::bar & bar,
+						  const std::string & exchange);
+				barRecord(const barRecord &);
+				~barRecord() {};
+
+				recordId instrumentIdentifier() const { return id_; };
+				thOth::bar & bar() { return bar_; };
+				std::string exchange() const { return exchange_; };
+
+			protected:
+
+				recordId    id_      ;
+				thOth::bar  bar_     ;
+				std::string exchange_;
 
 		};
 
-		class tableHistoricalBarRecordset : public recordset<thOth::bar> {
+		class tableHistoricalBarRecordset : public recordset<barRecord> {
 
 			public:
 
@@ -28,9 +43,6 @@ namespace IB {
 				~tableHistoricalBarRecordset();
 
 				tableHistoricalBarRecordset & operator =(const tableHistoricalBarRecordset &);
-
-				bool open();											// recordset interface
-				void close();
 
 				bool select(const std::string &);						// run a select statement
 				bool insert(const barRecord &  );						// insert an historical bar

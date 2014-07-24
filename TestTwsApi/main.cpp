@@ -56,6 +56,14 @@ int main(int argc, char** argv) {
 				.append("_")
 				.append(".csv"));
 
+		// test generator
+		std::cout << IB::settings::instance().generator().next() << std::endl;
+		std::cout << IB::settings::instance().generator().next() << std::endl;
+		std::cout << IB::settings::instance().generator().next() << std::endl;
+		std::cout << IB::settings::instance().generator().next() << std::endl;
+		std::cout << IB::settings::instance().generator().next() << std::endl;
+
+		// end test
 		TWS_LOG(std::string("starting TwsApiTest"))				// log
 
 		for (int i = 1; i < argc; i++) {							// deals with optional arguments

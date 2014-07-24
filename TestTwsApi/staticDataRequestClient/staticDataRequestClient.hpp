@@ -11,9 +11,12 @@
 #include <stdio.h>																		// printf()
 
 #include <boost/shared_ptr.hpp>
+
 #include <thOth/time/DateTime.hpp>
 #include <thOth/time/timeseries.hpp>
 #include <thOth/pattern/observable.hpp>
+
+#include "utilities/conversion/convertDateTime/convertDateTime.hpp"
 
 namespace IB {
 
@@ -69,8 +72,6 @@ namespace IB {
 
 	protected:
 
-		thOth::dateTime convertDateTime(const IBString &       ) const;				// parse a date string into some dateTime
-		IBString        convertDateTime(const thOth::dateTime &) const;
 		void requestStaticData();													// request static data
 
 		// maybe useless
@@ -89,6 +90,7 @@ namespace IB {
 		
 		Contract contract_;															// the initial contract definition
 		ContractDetails contractDetails_;											// the contract details returned
+		TickerId id_;																// id of the request
 
 		boost::shared_ptr<EPosixClientSocket> m_pClient;							// posix client
 		state m_state;																// current state

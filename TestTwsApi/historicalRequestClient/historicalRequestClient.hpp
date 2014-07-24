@@ -8,11 +8,11 @@
 #include "contract.h"																	
 
 #include "utilities/define.hpp"
+#include "utilities/conversion/convertDateTime/convertDateTime.hpp"
 #include "utilities/factory/barSizeFactory/barSizeFactory.hpp"							// factories
 #include "utilities/factory/dataTypeFactory/dataTypeFactory.hpp"
 #include "utilities/factory/dataDurationFactory/dataDurationFactory.hpp"
 
-//#include <memory>
 #include <stdio.h>																		// printf()
 
 #include <boost/shared_ptr.hpp>
@@ -93,8 +93,6 @@ namespace IB {
 
 	protected:
 
-		thOth::dateTime convertDateTime(const IBString &) const;					// parse a date string into some dateTime
-		IBString convertDateTime(const thOth::dateTime &) const;
 		void requestHistoricalData();												// request data
 
 		bool IsEndOfHistoricalData(const IBString& Date) {							// check if historical data is finished
@@ -109,7 +107,8 @@ namespace IB {
 		bool endOfHistoricalData_;													// indicate whether the file has been read
 		bool errorForRequest_;														// error on the request
 		int marketDataType_;														// market data type
-		
+		TickerId id_;																// id of the request
+
 		Contract contract_;															// the contract definition
 		thOth::dateTime endDate_;													// the end date
 		int length_;																// lenght of the period

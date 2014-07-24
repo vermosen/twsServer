@@ -45,6 +45,12 @@
     <ClCompile Include="recordset\tableHistoricalBarRecordset\tableHistoricalBarRecordset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="utilities\conversion\convertDateTime\convertDateTime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\idGenerator\idGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="historicalRequestClient\historicalRequestClient.hpp">
@@ -105,6 +111,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="recordset\tableHistoricalBarRecordset\tableHistoricalBarRecordset.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\conversion\convertDateTime\convertDateTime.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\idGenerator\idGenerator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

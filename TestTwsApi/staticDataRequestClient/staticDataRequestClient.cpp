@@ -37,7 +37,8 @@ namespace IB {
 		: m_pClient(new EPosixClientSocket(this)),
 		  m_state(ST_CONNECT),
 		  m_sleepDeadline(0),
-		  contract_(ct) {}
+		  contract_(ct),
+		  id_(1) {}
 
 	staticDataRequestClient::~staticDataRequestClient() {}
 
@@ -56,6 +57,7 @@ namespace IB {
 			m_pClient        = o.m_pClient       ;
 			m_state          = o.m_state         ;
 			m_sleepDeadline  = o.m_sleepDeadline ;
+			// do not copy the id, generate a new one ?
 
 		}
 	
@@ -89,11 +91,11 @@ namespace IB {
 	void staticDataRequestClient::requestStaticData() {
 	
 		// generates an id -> guid generator ?
-		TickerId id = 12;
+		
 
 		// call the corresponding EClientSocketBase method
 		m_pClient->reqContractDetails(
-			id,
+			id_,
 			contract_);
 		
 		m_state = ST_REQUEST_ACK;

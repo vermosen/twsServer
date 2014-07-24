@@ -21,12 +21,9 @@ namespace IB {
 
 				tableContractRecordset & operator =(const tableContractRecordset &);
 
-				bool open();											// recordset interface
-				void close();
 
 				bool select(const std::string &);						// run a select statement
 				bool insert(const ContractDetails &);					// insert a contract detail in the database
-				bool insert(const std::vector<ContractDetails> &);		// insert a contract detail in the database
 
 			protected:
 

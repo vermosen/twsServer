@@ -30,18 +30,6 @@ namespace IB {
 		
 		}
 
-		bool tableContractRecordset::open() {
-		
-			return true;
-		
-		};
-
-		void tableContractRecordset::close() {
-		
-
-		
-		};
-
 		bool tableContractRecordset::select(const std::string & selectStr) {
 		
 			mysql_query(												// query to run
@@ -57,22 +45,24 @@ namespace IB {
 				return false;
 
 			MYSQL_ROW row;
+			recordId id = 1;											// in case the db id is not part of the 
+																		// request, automatically generate one
 
 			while (row = mysql_fetch_row(reception_)) {					// loop over the results
 																		// !! check how it iterates !!
 				// contract details might be partial 
 				// depending of the original request
-				ContractDetails contract;								// the current contract
-				
-				for (long i = 0; i < reception_->field_count; i++) {
+				ContractDetails contract;								// the current contract				
+
+				for (unsigned long i = 0; i < reception_->field_count; i++) {
 
 					if (std::string(reception_->fields[i].name)      
 						== "CONTRACT_ID" && row[i] != NULL)
-						contract.summary.conId   = boost::lexical_cast<long>(row[i]);
+						id = boost::lexical_cast<recordId>(row[i]);
 
 					else if (std::string(reception_->fields[i].name)
 						== "CONTRACT_IBID" && row[i] != NULL)
-						contract.summary.conId   = boost::lexical_cast<long>(row[i]);
+						contract.summary.conId = boost::lexical_cast<long>(row[i]);
 
 					else if (std::string(reception_->fields[i].name)
 						== "CONTRACT_SYMBOL" && row[i] != NULL)
@@ -296,11 +286,11 @@ namespace IB {
 				}
 				
 				// TODO: check for minimum structure requirements
-
-				// finally insert the contract details in the map
-				records_.insert(
+				records_.insert(										// finally insert the contract details in the map
 					std::pair<recordId, ContractDetails>(
-						boost::lexical_cast<recordId>(row[0]), contract));
+					boost::lexical_cast<recordId>(id), contract));
+
+				id++;													// in case there is no id included
 
 			}
 						
@@ -315,13 +305,11 @@ namespace IB {
 			if (details.summary.secIdType == "SIN") {					// first manage the identifiers
 
 				fieldStr.append("CONTRACT_ISIN,");
-
 				INSERT_SQL_STR(valueStr, details.summary.secId)
 			
 				if (details.cusip != "") {
 				
 					fieldStr.append("CONTRACT_CUSIP,");
-
 					INSERT_SQL_STR(valueStr, details.cusip)
 
 				}
@@ -331,7 +319,6 @@ namespace IB {
 			if (details.summary.secIdType == "CUSIP") {					// case is CUSIP
 
 				fieldStr.append("CONTRACT_CUSIP,");
-
 				INSERT_SQL_STR(valueStr, details.summary.secId)
 
 			} else
@@ -339,13 +326,11 @@ namespace IB {
 			if (details.summary.secIdType == "SEDOL") {					// case is SEDOL
 
 				fieldStr.append("CONTRACT_SEDOL,");
-
 				INSERT_SQL_STR(valueStr, details.summary.secId)
 
 				if (details.cusip != "") {
 
 					fieldStr.append("CONTRACT_CUSIP,");
-
 					INSERT_SQL_STR(valueStr, details.cusip)
 
 				}
@@ -355,13 +340,11 @@ namespace IB {
 			if (details.summary.secIdType == "RIC") {					// case is RIC
 
 				fieldStr.append("CONTRACT_RIC,");
-
 				INSERT_SQL_STR(valueStr, details.summary.secId)
 
 				if (details.cusip != "") {
 
 					fieldStr.append("CONTRACT_CUSIP,");
-
 					INSERT_SQL_STR(valueStr, details.cusip)
 				}
 
@@ -371,7 +354,6 @@ namespace IB {
 				if (details.cusip != "") {
 
 					fieldStr.append("CONTRACT_CUSIP,");
-
 					INSERT_SQL_STR(valueStr, details.cusip)
 
 				}
@@ -783,18 +765,6 @@ namespace IB {
 				throw std::exception(mysql_error(connection_));
 
 			return true;													// return true otherwise
-
-		}
-
-		// bulk insert
-		bool tableContractRecordset::insert(const std::vector<ContractDetails> & data) {
-		
-			for (std::vector<ContractDetails>::const_iterator 
-				It = data.cbegin(); It != data.cend(); It++)
-
-				insert(*It);
-
-			return true;
 
 		}
 

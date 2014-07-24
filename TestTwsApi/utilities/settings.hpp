@@ -6,6 +6,10 @@
 #include <thOth/pattern/singleton.hpp>
 #include <thOth/utilities/csvBuilder.hpp>
 
+#include <commonDefs.h>
+
+#include "utilities/idGenerator/idGenerator.hpp"
+
 #define DEFAULTPATH "C:/Temp/"
 
 namespace IB {
@@ -18,7 +22,7 @@ namespace IB {
 
 		settings()							// default values
 			: verbosity_(0),
-			  port_     (0) {
+			  port_(0) {
 		
 			csv_ = std::shared_ptr<thOth::utilities::csvBuilder>(
 				new thOth::utilities::csvBuilder(DEFAULTPATH));
@@ -46,13 +50,15 @@ namespace IB {
 			inline std::string user     () const { return user_     ; };
 			inline std::string password () const { return password_ ; };
 			inline std::string dataBase () const { return dataBase_ ; };
-			
+			inline idGenerator & generator() { return generator_; };
+
 			std::shared_ptr<thOth::utilities::csvBuilder> log() const { return csv_; };
 
 		private: 
 
 			int         verbosity_;			// verbosity settings				
-			
+			idGenerator generator_;			// unique id generator
+
 			// log file
 			std::shared_ptr<thOth::utilities::csvBuilder> csv_;
 

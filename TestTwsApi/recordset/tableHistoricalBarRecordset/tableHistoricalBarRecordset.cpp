@@ -4,6 +4,15 @@ namespace IB {
 
 	namespace dataBase {
 	
+		barRecord::barRecord(
+			recordId id,
+			const thOth::bar & bar,
+			const std::string & exchange) 
+			: id_(id), bar_(bar), exchange_(exchange) {};
+		
+		barRecord::barRecord(const barRecord & rec)
+			: id_(rec.id_), bar_(rec.bar_), exchange_(rec.exchange_) {};
+
 		tableHistoricalBarRecordset::tableHistoricalBarRecordset(MYSQL * connection) 
 			: recordset(connection) {};
 
@@ -30,18 +39,6 @@ namespace IB {
 		
 		}
 
-		bool tableHistoricalBarRecordset::open() {
-		
-			return true;
-		
-		};
-
-		void tableHistoricalBarRecordset::close() {
-		
-
-		
-		};
-
 		bool tableHistoricalBarRecordset::select(const std::string & selectStr) {
 		
 			mysql_query(												// query to run
@@ -58,247 +55,78 @@ namespace IB {
 
 			MYSQL_ROW row;
 
-			while (row = mysql_fetch_row(reception_)) {					// loop over the results
-				// !! check how it iterates !!
-				// contract details might be partial 
-				// depending of the original request
-				thOth::bar currentBar;								// the current contract
+			recordId barId = 1;											// in case the id is not part of the 
+																		// request we generate a key
 
-				for (long i = 0; i < reception_->field_count; i++) {
+			while (row = mysql_fetch_row(reception_)) {					// loop over the results
+				
+				recordId instrumentId;									// the id of the record to insert
+				thOth::dateTime startDate; thOth::dateTime endDate;		// mandatory bar components
+				thOth::real open; thOth::real close; thOth::real low;
+				thOth::real high; thOth::real volume;
+				std::string exchange;
+
+				for (unsigned long i = 0;								// loop over the fields
+					i < reception_->field_count; i++) {	
 
 					if (std::string(reception_->fields[i].name)
-						== "CONTRACT_ID" && row[i] != NULL)
-						contract.summary.conId = boost::lexical_cast<long>(row[i]);
+						== "bar_id" && row[i] != NULL)
+						barId = boost::lexical_cast<recordId>(row[i]);
 
 					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_IBID" && row[i] != NULL)
-						contract.summary.conId = boost::lexical_cast<long>(row[i]);
+						== "contract_id" && row[i] != NULL)
+						instrumentId = boost::lexical_cast<recordId>(row[i]);
 
 					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_SYMBOL" && row[i] != NULL)
-						contract.summary.symbol = std::string(row[i]);
+						== "bar_start" && row[i] != NULL)
+						startDate = convertDateTime(IB::IBString(row[i]));
 
 					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_SECTYPE" && row[i] != NULL)
-						contract.summary.secType = std::string(row[i]);
+						== "bar_end" && row[i] != NULL)
+						endDate   = convertDateTime(IB::IBString(row[i]));
 
 					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_EXPIRY" && row[i] != NULL)
-						contract.summary.expiry = std::string(row[i]);
+						== "open" && row[i] != NULL)
+						open = boost::lexical_cast<thOth::real>(row[i]);
 
 					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_STRIKE" && row[i] != NULL)
-						contract.summary.strike = boost::lexical_cast<double>(row[i]);
+						== "close" && row[i] != NULL)
+						open = boost::lexical_cast<thOth::real>(row[i]);
 
 					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_RIGHT" && row[i] != NULL) {
-
-						// temporary variable
-						unsigned int j = boost::lexical_cast<unsigned int>(row[i]);
-
-						(j == 1 ? contract.summary.right = "P" :
-							(j == 2 ? contract.summary.right = "C" :
-							contract.summary.right = ""));
-
-					}
+						== "close" && row[i] != NULL)
+						close = boost::lexical_cast<thOth::real>(row[i]);
 
 					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_MULTIPLIER" && row[i] != NULL)
-						contract.summary.multiplier = std::string(row[i]);
+						== "high" && row[i] != NULL)
+						high = boost::lexical_cast<thOth::real>(row[i]);
 
 					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_PRIMARY_EXCHANGE" && row[i] != NULL)
-						contract.summary.primaryExchange = std::string(row[i]);
-
+						== "low" && row[i] != NULL)
+						low = boost::lexical_cast<thOth::real>(row[i]);
+					
 					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_CURRENCY" && row[i] != NULL)
-						contract.summary.currency = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_TRADING_CLASS" && row[i] != NULL)
-						contract.summary.tradingClass = std::string(row[i]);
-
-					// might be the cusip plus another identifier
-					// strategy: first insert cusip only in bond.cusip
-					// then complete if this is the only identifier
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_CUSIP" && row[i] != NULL)
-						contract.cusip = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_ISIN" && row[i] != NULL) {
-
-						contract.summary.secId = std::string(row[i]);
-						contract.summary.secIdType = "ISIN";
-
-					}
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_SEDOL" && row[i] != NULL) {
-
-						contract.summary.secId = std::string(row[i]);
-						contract.summary.secIdType = "SEDOL";
-
-					}
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_RIC" && row[i] != NULL) {
-
-						contract.summary.secId = std::string(row[i]);
-						contract.summary.secIdType = "RIC";
-
-					}
-
-					// other fields
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_MARKET_NAME" && row[i] != NULL)
-						contract.marketName = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_MINTICK" && row[i] != NULL)
-						contract.minTick = boost::lexical_cast<double>(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_ORDERTYPES" && row[i] != NULL)
-						contract.orderTypes = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_VALID_EXCHANGES" && row[i] != NULL)
-						contract.validExchanges = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_PRICE_MAGNIFIER" && row[i] != NULL)
-						contract.priceMagnifier = boost::lexical_cast<long>(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_UNDERLYING_CONTRACT_ID" && row[i] != NULL)
-						contract.underConId = boost::lexical_cast<long>(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_LONG_NAME" && row[i] != NULL)
-						contract.longName = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_MONTH" && row[i] != NULL)
-						contract.contractMonth = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_INDUSTRY" && row[i] != NULL)
-						contract.industry = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_CATEGORY" && row[i] != NULL)
-						contract.category = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_SUBCATEGORY" && row[i] != NULL)
-						contract.subcategory = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_TIMEZONE_ID" && row[i] != NULL)
-						contract.timeZoneId = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_TRADINGHOURS" && row[i] != NULL)
-						contract.tradingHours = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_LIQUIDHOURS" && row[i] != NULL)
-						contract.liquidHours = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_EVRULE" && row[i] != NULL)
-						contract.evRule = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_EVRULE_MULTIPLIER" && row[i] != NULL)
-						contract.evMultiplier = boost::lexical_cast<long>(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_BOND_RATINGS" && row[i] != NULL)
-						contract.ratings = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_BOND_DESCRIPTION" && row[i] != NULL)
-						contract.descAppend = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_BOND_TYPE" && row[i] != NULL)
-						contract.bondType = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_BOND_COUPONTYPE" && row[i] != NULL)
-						contract.couponType = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_BOND_CALLABLE" && row[i] != NULL)
-						(std::string(row[i]) == "1" ?
-						contract.callable = true :
-						contract.callable = false);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_BOND_PUTABLE" && row[i] != NULL)
-						(std::string(row[i]) == "1" ?
-						contract.putable = true :
-						contract.putable = false);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_BOND_COUPON" && row[i] != NULL)
-						contract.couponType = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_BOND_CONVERTIBLE" && row[i] != NULL)
-						(std::string(row[i]) == "1" ?
-						contract.convertible = true :
-						contract.convertible = false);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_BOND_MATURITY" && row[i] != NULL)
-						contract.maturity = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_BOND_ISSUEDATE" && row[i] != NULL)
-						contract.issueDate = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_BOND_NEXTOPTIONDATE" && row[i] != NULL)
-						contract.nextOptionDate = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_BOND_NEXTOPTIONTYPE" && row[i] != NULL)
-						contract.nextOptionType = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_BOND_NEXTOPTIONTYPE" && row[i] != NULL)
-						contract.nextOptionType = std::string(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_BOND_NEXTOPTIONPARTIAL" && row[i] != NULL)
-						(std::string(row[i]) == "1" ?
-						contract.nextOptionPartial = true :
-						contract.nextOptionPartial = false);
-
-					else if (std::string(reception_->fields[i].name)
-						== "CONTRACT_DETAILS_BOND_NOTE" && row[i] != NULL)
-						contract.notes = std::string(row[i]);
+						== "volume" && row[i] != NULL)
+						volume = boost::lexical_cast<thOth::real>(row[i]);
 
 					else
+
 						std::exception("unknown field provided");
 
 				}
 
-				// in case the cusip has been copied
-				if (contract.summary.secType == "" && contract.cusip != "") {
+				records_.insert(									// finally insert the contract details in the map
+					std::pair<recordId, barRecord>(
+						barId,
+						barRecord(
+							instrumentId,
+							thOth::bar(
+								startDate, endDate,
+								open, close, high, 
+								low, volume),
+							exchange)));
 
-					contract.summary.secId = contract.cusip;
-					contract.summary.secIdType = "CUSIP";
-
-				}
-
-				// finally insert the contract details in the map
-				records_.insert(
-					std::pair<recordId, thOth::bar>(
-						boost::lexical_cast<recordId>(row[0]), bar));
+				barId++;
 
 			}
 
@@ -314,61 +142,61 @@ namespace IB {
 
 			INSERT_SQL_STR(
 				valueStr,
-				boost::lexical_cast<std::string>(rec.id_))
+				boost::lexical_cast<std::string>(rec.instrumentIdentifier()))
 
 			fieldStr.append("BAR_START,");								// barStart
 
 			INSERT_SQL_STR(
 				valueStr, 
-				convertDateTime(rec.bar_.barStart()))
+				convertDateTime(rec.bar().barStart()))
 			
 			fieldStr.append("BAR_END,");								// barEnd
 
 			INSERT_SQL_STR(
 				valueStr, 
-				convertDateTime(rec.bar_.barEnd()))
+				convertDateTime(rec.bar().barEnd()))
 			
 			fieldStr.append("OPEN,");									// open
 
 			INSERT_SQL_STR(
 				valueStr, 
 				boost::lexical_cast<std::string>(
-					rec.bar_.open()))
+					rec.bar().open()))
 			
 			fieldStr.append("CLOSE,");									// close
 
 			INSERT_SQL_STR(
 				valueStr,
 				boost::lexical_cast<std::string>(
-					rec.bar_.close()))
+					rec.bar().close()))
 			
 			fieldStr.append("HIGH,");									// close
 
 			INSERT_SQL_STR(
 				valueStr,
 				boost::lexical_cast<std::string>(
-					rec.bar_.high()))
+					rec.bar().high()))
 
 			fieldStr.append("LOW,");									// close
 
 			INSERT_SQL_STR(
 				valueStr,
 				boost::lexical_cast<std::string>(
-					rec.bar_.low()))
+					rec.bar().low()))
 
 			fieldStr.append("VOLUME,");									// close
 
 			INSERT_SQL_STR(
 				valueStr,
 				boost::lexical_cast<std::string>(
-					rec.bar_.volume()))
+					rec.bar().volume()))
 
 			fieldStr.append("EXCHANGE");								// close
 
 			INSERT_SQL_STR(
 				valueStr,
 				boost::lexical_cast<std::string>(
-				rec.exchange_))
+				rec.exchange()))
 
 			valueStr.pop_back();										// remove the last colon
 			
