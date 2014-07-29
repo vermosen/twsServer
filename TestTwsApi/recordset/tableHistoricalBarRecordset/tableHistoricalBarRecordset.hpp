@@ -23,7 +23,7 @@ namespace IB {
 				~barRecord() {};
 
 				recordId instrumentIdentifier() const { return id_; };
-				thOth::bar & bar() { return bar_; };
+				thOth::bar bar() const { return bar_; };
 				std::string exchange() const { return exchange_; };
 
 			protected:

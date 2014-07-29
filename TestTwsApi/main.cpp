@@ -1,5 +1,8 @@
-/* Copyright (C) 2013 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
-* and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
+/*
+ *
+ * Copyright (C) 2014 Jean-Mathieu Vermosen
+ *
+ */
 
 // database setup
 #define SERVER   "macbookwin"
@@ -29,14 +32,20 @@
 #include "utilities/settings.hpp"
 #include "utilities/define.hpp"
 
+// This procedure can be started manually (empty argv)
+// or automatically by passing some argument through one
+// of the following options:
+//     - verbose: defines the level of verbosity
+//     - host   : define the TWS server adress
+//     - port   : define the TWS server port
+//     - log    : overload the log path
+//     - test   : automatically start a test
 int main(int argc, char** argv) {
 
 	try {
 
 		static ObjectHandler::EnumTypeRegistry enumTypeRegistry;	// registry
-
 		IB::utilities::registerAll();								// register the factories
-
 		bool end = false; int test = 0;
 
 		IB::settings::instance().verbosity(0       );				// default settings
@@ -56,15 +65,7 @@ int main(int argc, char** argv) {
 				.append("_")
 				.append(".csv"));
 
-		// test generator
-		std::cout << IB::settings::instance().generator().next() << std::endl;
-		std::cout << IB::settings::instance().generator().next() << std::endl;
-		std::cout << IB::settings::instance().generator().next() << std::endl;
-		std::cout << IB::settings::instance().generator().next() << std::endl;
-		std::cout << IB::settings::instance().generator().next() << std::endl;
-
-		// end test
-		TWS_LOG(std::string("starting TwsApiTest"))				// log
+		TWS_LOG(std::string("starting TwsApiTest"))					// log
 
 		for (int i = 1; i < argc; i++) {							// deals with optional arguments
 			
@@ -73,10 +74,8 @@ int main(int argc, char** argv) {
 			if (arg.substr(1, 7) == "verbose") {					// expects -verbose=n
 				
 				std::string str(arg.substr(9, arg.length() - 9));	// the value
-
 				IB::settings::instance().verbosity(					// set the verbosity
 					boost::lexical_cast<int>(str));
-
 				TWS_LOG(std::string("sets verbosity to ")			// log
 					.append(str))
 
@@ -85,9 +84,7 @@ int main(int argc, char** argv) {
 			if (arg.substr(1, 4) == "host") {						// expects -host=xxx.xx.x.xxx
 
 				std::string str(arg.substr(6, arg.length() - 6));	// the value
-
 				IB::settings::instance().ibHost(str);				// set the host
-
 				TWS_LOG(std::string("sets host to ")			// log
 					.append(str))
 
@@ -96,10 +93,8 @@ int main(int argc, char** argv) {
 			if (arg.substr(1, 4) == "port") {						// expects -port=xxxx
 
 				std::string str(arg.substr(6, arg.length() - 6));	// the value
-
 				IB::settings::instance().ibPort(					// set the port
 					boost::lexical_cast<int>(str));
-
 				TWS_LOG(std::string("sets port to ")				// log
 					.append(str))
 
@@ -108,9 +103,7 @@ int main(int argc, char** argv) {
 			if (arg.substr(1, 3) == "log") {						// expects -log=C:/bla
 
 				std::string str(arg.substr(5, arg.length() - 5));	// the value
-
 				IB::settings::instance().logPath(str);				// set the log path
-
 				TWS_LOG(std::string("sets log path to ")			// log
 					.append(str))
 
@@ -119,13 +112,10 @@ int main(int argc, char** argv) {
 			if (arg.substr(1, 4) == "test") {						// expects -test=n
 			
 				std::string str(arg.substr(6, arg.length() - 6));	// the value
-
-				test = boost::lexical_cast<int>(str);				// runs the selected test automatically
-				
-				end = true;											// for later use: only one attempt
-
+				test = boost::lexical_cast<int>(str);				// runs the selected test automatically	
 				TWS_LOG(std::string("enforcing test ")				// log
 					.append(str))
+				end = true;											// for later use: only one attempt
 
 			}
 
@@ -175,9 +165,7 @@ int main(int argc, char** argv) {
 
 				case 0:
 
-					TWS_LOG(										// log
-						std::string("manual exit"))
-
+					TWS_LOG(std::string("manual exit"))				// log
 					end = true;										// stop the server
 					break;
 
@@ -202,28 +190,20 @@ int main(int argc, char** argv) {
 			std::string("an error occured: ")
 				.append(e.what()))
 
-		TWS_LOG(													// log
-			std::string("exiting with code 1"))
-
+		TWS_LOG(std::string("exiting with code 1"))					// log
 		return 1;
 
 	} catch (...) {													// unknown error
 	
-		TWS_LOG(													// log
-			std::string("an unknown error occured"))
-
-		TWS_LOG(													// log
-			std::string("exiting with code 1"))
-
+		TWS_LOG(std::string("an unknown error occured"))			// log
+		TWS_LOG(std::string("exiting with code 1"))					// log
 		return 1;
 
 	}
 
 	if (IB::settings::instance().verbosity() > 0) {					// exit
 
-		TWS_LOG(													// log
-			std::string("end of TwsApiTest"))
-
+		TWS_LOG(std::string("end of TwsApiTest"))
 		system("pause");
 
 	}
