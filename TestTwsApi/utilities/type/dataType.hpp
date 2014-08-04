@@ -1,3 +1,10 @@
+/*
+ *
+ * custom TwsApi
+ * Copyright (C) 2014 Jean-Mathieu Vermosen
+ *
+ */
+
 #ifndef data_type_hpp
 #define data_type_hpp
 
@@ -23,16 +30,16 @@ namespace IB {
 
 		switch (v) {
 
-		case trade                  : return "TRADES"                   ;
-		case midPoint               : return "MIDPOINT"                 ;
-		case bid                    : return "BID"                      ;
-		case ask                    : return "ASK"                      ;
-		case bidAsk                 : return "BID_ASK"                  ;
-		case historicalVolatility   : return "HISTORICAL_VOLATILITY"    ;
-		case optionImpliedVolatility: return "OPTION_IMPLIED_VOLATILITY";
-		case unknownType            : return "unkown type"              ;
+			case trade                  : return "TRADES"                   ;
+			case midPoint               : return "MIDPOINT"                 ;
+			case bid                    : return "BID"                      ;
+			case ask                    : return "ASK"                      ;
+			case bidAsk                 : return "BID_ASK"                  ;
+			case historicalVolatility   : return "HISTORICAL_VOLATILITY"    ;
+			case optionImpliedVolatility: return "OPTION_IMPLIED_VOLATILITY";
+			case unknownType            : return "unkown type"              ;
 
-		default                     : return "unkown type"              ;
+			default                     : return "unkown type"              ;
 
 		}
 	}

@@ -1,3 +1,10 @@
+/*
+ *
+ * custom TwsApi
+ * Copyright (C) 2014 Jean-Mathieu Vermosen
+ *
+ */
+
 #ifndef bar_size_hpp
 #define bar_size_hpp
 

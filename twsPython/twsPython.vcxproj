@@ -198,7 +198,6 @@ C:\swigwin\swig.exe -c++ -python "%(FullPath)" </Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="contract_wrap.cxx" />
-    <ClCompile Include="example_wrap.cxx" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="contract.i">

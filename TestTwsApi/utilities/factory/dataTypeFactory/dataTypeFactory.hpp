@@ -1,3 +1,10 @@
+/*
+ *
+ * custom TwsApi
+ * Copyright (C) 2014 Jean-Mathieu Vermosen
+ *
+ */
+
 #ifndef data_type_factory_hpp
 #define data_type_factory_hpp
 

@@ -114,14 +114,14 @@ void historicalRequest() {
 
 		} catch (std::exception & ex) {
 		
-			TWS_LOG(std::string("an error occured: ")
+			TWS_LOG(std::string("an error occured in historicaRequest function: ")
 				.append(ex.what()))
 
 			throw std::exception(ex.what());
 		
 		} catch (...) { 
 
-			TWS_LOG(std::string("an unknown error occured..."))
+			TWS_LOG(std::string("an unknown error occured in historicaRequest function"))
 			throw std::exception("an unknown error occured..."); 
 		
 		};
@@ -170,6 +170,7 @@ void historicalRequest() {
 			if (IB::settings::instance().verbosity() > 0)
 
 				TWS_LOG(std::string("attempt number ")			// log
+					.append(boost::lexical_cast<std::string>(attempt))
 					.append("download successful. \
 						Trying to store data in the database"))
 					

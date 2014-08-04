@@ -1,3 +1,10 @@
+/*
+ *
+ * custom TwsApi
+ * Copyright (C) 2014 Jean-Mathieu Vermosen
+ *
+ */
+
 #ifndef id_generator_hpp
 #define id_generator_hpp
 

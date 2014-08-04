@@ -2,7 +2,9 @@
 #define data_duration_factory_hpp
 
 #include <oh/enumerations/typefactory.hpp>
+
 #include <IBString.h>
+
 #include "utilities/type/dataDuration.hpp"
 
 namespace IB {

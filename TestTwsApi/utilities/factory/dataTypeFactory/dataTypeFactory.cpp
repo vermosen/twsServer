@@ -1,3 +1,10 @@
+/*
+ *
+ * custom TwsApi
+ * Copyright (C) 2014 Jean-Mathieu Vermosen
+ *
+ */
+
 #include "utilities/factory/dataTypeFactory/dataTypeFactory.hpp"
 
 namespace IB {
@@ -22,8 +29,7 @@ namespace IB {
 
 				return *(static_cast<IB::dataType *>(this->getType(str)));
 
-			}
-			else {
+			} else {
 
 				return IB::unknownType;
 

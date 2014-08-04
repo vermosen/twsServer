@@ -1,26 +1,31 @@
+/*
+ *
+ * custom TwsApi
+ * Copyright (C) 2014 Jean-Mathieu Vermosen
+ *
+ */
 #ifndef tws_define_hpp
 #define tws_define_hpp
 
-#include "utilities/settings.hpp"
 #include <thOth/time/DateTime.hpp>
 
-// build logging string
+#include "utilities/settings.hpp"
+
+// build logging string macro
 #define TWS_LOG(X) \
-	IB::settings::instance().log()->push_back( \
+	IB::settings::instance().log().push_back( \
 		boost::posix_time::to_iso_string( \
 			boost::posix_time::microsec_clock::local_time()) \
 				.append(", ") \
 				.append(X));
 
-// maximum number of connection attemps
-const unsigned MAX_ATTEMPT = 2;
 
-// sleep time between two connections
-const unsigned SLEEP_TIME = 5;
+const unsigned MAX_ATTEMPT = 1;				// maximum number of connection attemps
+const unsigned SLEEP_TIME  = 3;				// sleep time between two connections
 
 // sleep macro
 #ifdef _WIN32
-//#include <windows.h> // bugged
+//#include <windows.h>						// link bug
 #define sleep( seconds) Sleep( seconds * 1000);
 #else
 #include <unistd.h>

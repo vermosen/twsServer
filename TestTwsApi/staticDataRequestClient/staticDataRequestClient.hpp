@@ -17,6 +17,7 @@
 #include <thOth/pattern/observable.hpp>
 
 #include "utilities/conversion/convertDateTime/convertDateTime.hpp"
+#include "utilities/settings.hpp"
 
 namespace IB {
 
@@ -38,32 +39,32 @@ namespace IB {
 
 		};
 
-	private:																			// private default ctor, cc ctors and assignement
-		staticDataRequestClient() {};													// TODO: turn it into a singleton
-		staticDataRequestClient(const staticDataRequestClient &) {};
-
+	private:														
+		staticDataRequestClient() {};													// private default ctor
+		staticDataRequestClient(const staticDataRequestClient &) {};					// cc ctors and assignement
 		staticDataRequestClient & operator =(const staticDataRequestClient &);
+
+		void requestId() { id_ = IB::settings::instance().generator().next(); };		// request a new id
 
 	public:
 
 		staticDataRequestClient(const Contract &);
-
 		~staticDataRequestClient();														// destructor
 
 		// accessors
 		bool endOfStaticData() const { return endOfStaticData_; };						// end of data (public ?)
 		bool errorForRequest() const { return errorForRequest_; };						// error
 		
-		// accessors
 		Contract        contract()        const { return contract_       ; };			// contract
 		ContractDetails contractDetails() const { return contractDetails_; };			// contract detailss
 
 		void processMessages();
 
-	public:
-
-		bool connect(const char * host, unsigned int port, int clientId = 0);
-		void disconnect() const;
+		bool connect(
+			const char * host, 
+			unsigned int port,
+			int clientId = 0);
+		void disconnect () const;
 		bool isConnected() const;
 
 	private:
@@ -86,11 +87,11 @@ namespace IB {
 
 		bool endOfStaticData_;														// indicate whether the file has been read
 		bool errorForRequest_;														// error on the request
-		int marketDataType_;														// market data type
+		int marketDataType_  ;														// market data type
 		
-		Contract contract_;															// the initial contract definition
+		Contract contract_				;											// the initial contract definition
 		ContractDetails contractDetails_;											// the contract details returned
-		TickerId id_;																// id of the request
+		TickerId id_					;											// id of the request
 
 		boost::shared_ptr<EPosixClientSocket> m_pClient;							// posix client
 		state m_state;																// current state

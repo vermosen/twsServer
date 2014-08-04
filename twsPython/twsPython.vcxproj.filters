@@ -22,9 +22,6 @@
     <CustomBuild Include="contract.i" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="example_wrap.cxx">
-      <Filter>generated files</Filter>
-    </ClCompile>
     <ClCompile Include="contract_wrap.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>

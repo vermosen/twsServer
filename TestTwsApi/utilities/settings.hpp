@@ -1,3 +1,10 @@
+/*
+ *
+ * custom TwsApi
+ * Copyright (C) 2014 Jean-Mathieu Vermosen
+ *
+ */
+
 #ifndef settings_hpp
 #define settings_hpp
 
@@ -16,18 +23,14 @@ namespace IB {
 
 	class settings : public thOth::singleton < settings > {
 
-		friend class thOth::singleton < settings > ;
+		friend class thOth::singleton < settings >;
 
-	private:
+		private:
 
-		settings()							// default values
-			: verbosity_(0),
-			  port_(0) {
-		
-			csv_ = std::shared_ptr<thOth::utilities::csvBuilder>(
-				new thOth::utilities::csvBuilder(DEFAULTPATH));
-		
-		};
+			settings()							// default values
+				: verbosity_(0),
+				  port_(0),
+				  csv_(DEFAULTPATH) {};
 
 		public: 
 			
@@ -36,7 +39,7 @@ namespace IB {
 			inline void port     (const int           v) { port_      = v; };
 			inline void ibPort   (const int           v) { ibPort_    = v; };
 			inline void ibHost   (const std::string & s) { ibHost_    = s; };
-			inline void logPath  (const std::string & s) { csv_->path(s) ; };
+			inline void logPath  (const std::string & s) { csv_.path(s)  ; };
 			inline void server   (const std::string & s) { server_    = s; };
 			inline void user     (const std::string & s) { user_      = s; };
 			inline void password (const std::string & s) { password_  = s; };
@@ -50,9 +53,9 @@ namespace IB {
 			inline std::string user     () const { return user_     ; };
 			inline std::string password () const { return password_ ; };
 			inline std::string dataBase () const { return dataBase_ ; };
-			inline idGenerator & generator() { return generator_; };
 
-			std::shared_ptr<thOth::utilities::csvBuilder> log() const { return csv_; };
+			inline idGenerator & generator            () { return generator_; };
+			inline thOth::utilities::csvBuilder & log () { return csv_      ; };
 
 		private: 
 
@@ -60,7 +63,7 @@ namespace IB {
 			idGenerator generator_;			// unique id generator
 
 			// log file
-			std::shared_ptr<thOth::utilities::csvBuilder> csv_;
+			thOth::utilities::csvBuilder csv_;
 
 			// dataBase settings
 			int         port_     ;     	// server port
@@ -70,8 +73,8 @@ namespace IB {
 			std::string dataBase_ ;			// dataBase name
 
 			// interactive broker settings
-			std::string ibHost_   ;			// interactive broker ip
-			int         ibPort_   ;			// interactive broker port
+			std::string ibHost_   ;			// interactive broker server ip
+			int         ibPort_   ;			// interactive broker server port
 	
 	};
 

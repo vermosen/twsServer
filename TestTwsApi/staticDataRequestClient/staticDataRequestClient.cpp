@@ -27,8 +27,8 @@ life you should include the needed headers from your system. */
 
 namespace IB {
 
-	const int PING_DEADLINE = 2; // seconds
-	const int SLEEP_BETWEEN_PINGS = 30; // seconds
+	const int PING_DEADLINE = 2;							// seconds
+	const int SLEEP_BETWEEN_PINGS = 30;						// seconds
 
 	///////////////////////////////////////////////////////////
 	// member funcs
@@ -38,14 +38,13 @@ namespace IB {
 		  m_state(ST_CONNECT),
 		  m_sleepDeadline(0),
 		  contract_(ct),
-		  id_(1) {}
+		  id_(0) {};
 
 	staticDataRequestClient::~staticDataRequestClient() {}
 
 	staticDataRequestClient & staticDataRequestClient::operator = (const staticDataRequestClient & o) {
 	
-		// member copy
-		if (this != &o) {
+		if (this != &o) {									// member copy
 		
 			endOfStaticData_ = o.endOfStaticData_;
 			errorForRequest_ = o.errorForRequest_;
@@ -57,7 +56,8 @@ namespace IB {
 			m_pClient        = o.m_pClient       ;
 			m_state          = o.m_state         ;
 			m_sleepDeadline  = o.m_sleepDeadline ;
-			// do not copy the id, generate a new one ?
+			
+			id_ = 0;										// do not copy the id, set the new one to 0 instead
 
 		}
 	
@@ -69,9 +69,10 @@ namespace IB {
 		const char *host, 
 		unsigned int port, 
 		int clientId) {
-
-		// trying to connect
-		bool bRes = m_pClient->eConnect2(host, port, clientId);
+						
+		// TODO: test how clientId has to be set or not here
+		bool bRes = m_pClient->eConnect2(					// trying to connect
+			host, port, clientId);
 		return bRes;
 
 	}
@@ -90,11 +91,8 @@ namespace IB {
 
 	void staticDataRequestClient::requestStaticData() {
 	
-		// generates an id -> guid generator ?
-		
-
-		// call the corresponding EClientSocketBase method
-		m_pClient->reqContractDetails(
+		requestId();										// generates a new id
+		m_pClient->reqContractDetails(						// call the corresponding EClientSocketBase method
 			id_,
 			contract_);
 		
@@ -143,9 +141,8 @@ namespace IB {
 			}
 			break;
 		}
-
-		// initialize timeout with m_sleepDeadline - now
-		if (m_sleepDeadline > 0)
+		
+		if (m_sleepDeadline > 0)							// initialize timeout with m_sleepDeadline - now
 			tval.tv_sec = static_cast<long>(m_sleepDeadline - now);
 
 		if (m_pClient->fd() >= 0) {

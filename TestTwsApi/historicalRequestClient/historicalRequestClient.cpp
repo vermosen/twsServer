@@ -27,11 +27,9 @@ life you should include the needed headers from your system. */
 
 namespace IB {
 
-	const int PING_DEADLINE = 2; // seconds
-	const int SLEEP_BETWEEN_PINGS = 30; // seconds
+	const int PING_DEADLINE = 2;											// seconds
+	const int SLEEP_BETWEEN_PINGS = 30;										// seconds
 
-	///////////////////////////////////////////////////////////
-	// member funcs
 	historicalRequestClient::historicalRequestClient(const Contract & ct,
 		const thOth::dateTime & dt,
 		const barSize bar,
@@ -40,18 +38,19 @@ namespace IB {
 		const dataType type)
 
 		: m_pClient(new EPosixClientSocket(this)),
-		  m_state(ST_CONNECT),
-		  m_sleepDeadline(0),
-		  contract_(ct),
-		  endDate_(dt),
-		  length_(length),
-		  barSize_(bar),
-		  dataDuration_(dur),
-		  dataType_(type) {}
+		  m_state        (ST_CONNECT),
+		  m_sleepDeadline(0         ),
+		  contract_      (ct        ),
+		  endDate_       (dt        ),
+		  length_        (length    ),
+		  barSize_       (bar       ),
+		  dataDuration_  (dur       ),
+		  dataType_      (type      ) {}
 
 	historicalRequestClient::~historicalRequestClient() {}
 
-	historicalRequestClient & historicalRequestClient::operator = (const historicalRequestClient & o) {
+	historicalRequestClient & historicalRequestClient::operator = (
+		const historicalRequestClient & o) {
 	
 		// member copy
 		if (this != &o) {
@@ -72,6 +71,8 @@ namespace IB {
 			m_state              = o.m_state             ;
 			m_sleepDeadline      = o.m_sleepDeadline     ;
 
+			id_ = 0;														// set the new request id to 0
+
 		}
 	
 		return *this;
@@ -80,8 +81,7 @@ namespace IB {
 
 	bool historicalRequestClient::connect(const char *host, unsigned int port, int clientId) {
 
-		// trying to connect
-		bool bRes = m_pClient->eConnect2(host, port, clientId);
+		bool bRes = m_pClient->eConnect2(host, port, clientId);				// trying to connect
 		return bRes;
 
 	}
@@ -100,12 +100,10 @@ namespace IB {
 
 	void historicalRequestClient::requestHistoricalData() {
 	
-		// generates an id -> guid generator ?
-		TickerId id = 12;
+		requestId();														// generates a new id
 
-		// call the corresponding EClientSocketBase method
-		m_pClient->reqHistoricalData(
-			id,																// request id
+		m_pClient->reqHistoricalData(										// call the corresponding EClientSocketBase method
+			id_,															// request id
 			contract_,														// contract
 			convertDateTime(endDate_),										// date
 			IB::utilities::dataDurationFactory()(dataDuration_, length_),	// whole day
@@ -159,8 +157,7 @@ namespace IB {
 			break;
 		}
 
-		// initialize timeout with m_sleepDeadline - now
-		if (m_sleepDeadline > 0)
+		if (m_sleepDeadline > 0)											// initialize timeout with m_sleepDeadline - now
 			tval.tv_sec = static_cast<long>(m_sleepDeadline - now);
 
 		if (m_pClient->fd() >= 0) {
@@ -175,22 +172,22 @@ namespace IB {
 
 			int ret = select(m_pClient->fd() + 1, &readSet, &writeSet, NULL, &tval);
 
-			if (ret == 0)									// timeout
+			if (ret == 0)													// timeout
 				return;
 
-			if (ret < 0) {									// error
+			if (ret < 0) {													// error
 				disconnect();
 				return;
 			}
 
 			if (FD_ISSET(m_pClient->fd(), &writeSet))				
-				m_pClient->onSend();						// socket is ready for writing
+				m_pClient->onSend();										// socket is ready for writing
 
 			if (m_pClient->fd() < 0)
 				return;
 
 			if (FD_ISSET(m_pClient->fd(), &readSet))				
-				m_pClient->onReceive();						// socket is ready for reading
+				m_pClient->onReceive();										// socket is ready for reading
 
 		}
 	}
@@ -200,7 +197,7 @@ namespace IB {
 	void historicalRequestClient::reqCurrentTime()
 	{
 
-		m_sleepDeadline = time(NULL) + PING_DEADLINE;		// set ping deadline to "now + n seconds"
+		m_sleepDeadline = time(NULL) + PING_DEADLINE;						// set ping deadline to "now + n seconds"
 		m_state = ST_PING_ACK;
 		m_pClient->reqCurrentTime();
 
@@ -230,23 +227,23 @@ namespace IB {
 		const int errorCode, 
 		const IBString errorString) {
 
-		if (id == -1 && errorCode == 1100) {				// if "Connectivity between IB and TWS has been lost"
+		if (errorCode == 1100) {											// "Connectivity between IB and TWS has been lost"
 
-			TWS_LOG(std::string("Connectivity error: ")		// log
+			TWS_LOG(std::string("Connectivity error: ")						// log
 				.append(errorString))
 
 				disconnect();
 
-		} else if (errorCode == 200) {						// if "Connectivity between IB and TWS has been lost"
+		} else if (errorCode == 200) {										// ""
 
-			TWS_LOG(std::string("Request error: ")		// log
+			TWS_LOG(std::string("Request error: ")							// log
 				.append(errorString))
 
 				disconnect();
 
 		} else {
 
-			TWS_LOG(std::string("request information: ")	// log
+			TWS_LOG(std::string("request information: ")					// log
 				.append(errorString))
 		
 		}
@@ -264,33 +261,27 @@ namespace IB {
 		int barCount,
 		double WAP,
 		int hasGaps) {
-
-		if (volume < 1) {
 		
-			int i = 0;
-		
-		}
-		// control for EoF
-		if (IsEndOfHistoricalData(date)) {
+		if (IsEndOfHistoricalData(date)) {									// control for EoF
 
 			notifyObservers();
 			disconnect();
 			return;
 
 		}
-
-			ts_.insert(std::pair<thOth::dateTime, IB::historicalQuoteDetails>(			// copy the current date in the container
-				convertDateTime(date),
-				IB::historicalQuoteDetails{
-				reqId,
-				open,
-				high,
-				low,
-				close,
-				volume,
-				barCount,
-				WAP,
-				hasGaps }));
+																			
+		ts_.insert(std::pair<thOth::dateTime, IB::historicalQuoteDetails>(	// copy the current date in the container		
+			convertDateTime(date),
+			IB::historicalQuoteDetails{
+			reqId,
+			open,
+			high,
+			low,
+			close,
+			volume,
+			barCount,
+			WAP,
+			hasGaps }));
 
 	}
 

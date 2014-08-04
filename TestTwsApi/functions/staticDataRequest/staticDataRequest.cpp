@@ -6,7 +6,7 @@ void staticDataRequest() {
 		<< "please provide some contract code:"
 		<< std::endl;
 
-	int clientId = 0;											// request Id
+	int clientId     = 0;										// request Id
 	unsigned attempt = 0;										// current attempt
 
 	std::string contractCode; std::cin >> contractCode;			// contract is provided by the user
@@ -45,14 +45,13 @@ void staticDataRequest() {
 	if (!rs.select(selectQuery)) {								// returns value ?
 
 		TWS_LOG(std::string("instrument not in the database"))	// log
-
 		IB::Contract contract;									// contract to request
 
-		contract.symbol = contractCode.c_str();					// attempt with contract default values
-		contract.currency = "USD";
-		contract.exchange = "SMART";
-		contract.primaryExchange = "NYSE";
-		contract.secType = "STK";
+		contract.symbol          = contractCode.c_str();		// attempt with contract default values
+		contract.currency        = "USD"               ;
+		contract.exchange        = "SMART"             ;
+		contract.primaryExchange = "NYSE"              ;
+		contract.secType         = "STK"               ;
 
 		IB::staticDataRequestClient client(contract);			// request the contract 
 
@@ -73,7 +72,7 @@ void staticDataRequest() {
 
 				client.connect(
 				IB::settings::instance().ibHost().c_str(),
-				IB::settings::instance().ibPort(), clientId);
+				IB::settings::instance().ibPort(), clientId);	// TODO: test if we have to provide connection id here
 
 			while (client.isConnected()) client.processMessages();
 
@@ -95,7 +94,7 @@ void staticDataRequest() {
 
 				if (IB::settings::instance().verbosity() > 2)
 
-					TWS_LOG(std::string("sleeping ")		// log
+					TWS_LOG(std::string("sleeping ")			// log
 					.append(boost::lexical_cast<std::string>(SLEEP_TIME))
 					.append(" seconds before next attempt"))
 
@@ -103,7 +102,7 @@ void staticDataRequest() {
 
 			}
 
-		}													// end of for loop
+		}														// end of for loop
 
 		
 		if (IB::settings::instance().verbosity() > 0)			// verbosity ?
@@ -142,9 +141,9 @@ void staticDataRequest() {
 
 	}
 
-	if (IB::settings::instance().verbosity() > 0)				// message
+	if (IB::settings::instance().verbosity() > 0)					// message
 			
-		TWS_LOG(												// log
+		TWS_LOG(													// log
 			std::string("static data download test completed"))
 
 };

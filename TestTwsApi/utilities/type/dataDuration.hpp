@@ -1,3 +1,10 @@
+/*
+ *
+ * custom TwsApi
+ * Copyright (C) 2014 Jean-Mathieu Vermosen
+ *
+ */
+
 #ifndef data_duration_hpp
 #define data_duration_hpp
 
@@ -19,12 +26,12 @@ namespace IB {
 
 		switch (v) {
 
-		case second         : return "S"           ;
-		case day            : return "D"           ;
-		case week           : return "W"           ;
-		case unknownDuration: return "unknown type";
+			case second         : return "S"           ;
+			case day            : return "D"           ;
+			case week           : return "W"           ;
+			case unknownDuration: return "unknown type";
 
-		default: return "unkown type";
+			default: return "unkown type";
 
 		}
 	}

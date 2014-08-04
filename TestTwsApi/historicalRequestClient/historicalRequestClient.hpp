@@ -27,15 +27,15 @@ namespace IB {
 
 	struct historicalQuoteDetails {														// data structure for historical request
 
-		TickerId id_;
-		double open_;
-		double high_;
-		double low_;
+		TickerId id_ ;
+		double open_ ;
+		double high_ ;
+		double low_  ;
 		double close_;
-		int volume_;
+		int volume_  ;
 		int barCount_;
-		double WAP_;
-		int hasGaps_;
+		double WAP_  ;
+		int hasGaps_ ;
 
 	};
 
@@ -54,11 +54,12 @@ namespace IB {
 
 		};
 
-	private:																			// private default ctor, cc ctors and assignement
-		historicalRequestClient() {};													// TODO: turn it into a singleton
-		historicalRequestClient(const historicalRequestClient &) {};
-
+	private:																			
+		historicalRequestClient() {};												    // private default ctor,
+		historicalRequestClient(const historicalRequestClient &) {};					// cc ctors and assignement
 		historicalRequestClient & operator =(const historicalRequestClient &);
+
+		void requestId() { id_ = IB::settings::instance().generator().next(); };		// request a new id
 
 	public:
 
@@ -105,21 +106,21 @@ namespace IB {
 	private:
 
 		bool endOfHistoricalData_;													// indicate whether the file has been read
-		bool errorForRequest_;														// error on the request
-		int marketDataType_;														// market data type
-		TickerId id_;																// id of the request
+		bool errorForRequest_    ;													// error on the request
+		int marketDataType_		 ;													// market data type
+		TickerId id_			 ;													// id of the request
 
-		Contract contract_;															// the contract definition
-		thOth::dateTime endDate_;													// the end date
-		int length_;																// lenght of the period
-		barSize barSize_;															// bar size
+		Contract contract_		  ;													// the contract definition
+		thOth::dateTime endDate_  ;													// the end date
+		int length_               ;													// lenght of the period
+		barSize barSize_		  ;													// bar size
 		dataDuration dataDuration_;													// data duration
-		dataType dataType_;															// data Type
+		dataType dataType_		  ;													// data Type
 
-		thOth::timeSeries<historicalQuoteDetails> ts_;								// timeseries object
-
+		thOth::timeSeries<historicalQuoteDetails> ts_  ;							// timeseries object
 		boost::shared_ptr<EPosixClientSocket> m_pClient;							// posix client
-		state m_state;																// current state
+		
+		state m_state         ;														// current state
 		time_t m_sleepDeadline;														// sleep deadline
 
 	public:

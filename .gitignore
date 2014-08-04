@@ -8,6 +8,7 @@
 *.kdevelop.pcs
 *.kdevses
 *.opensdf
+*.pdb
 Makefile
 Doxyfile
 TestPosixSocketClient/TestPosixSocketClient

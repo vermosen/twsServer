@@ -1,5 +1,6 @@
 /*
- *
+ * 
+ * custom TwsApi
  * Copyright (C) 2014 Jean-Mathieu Vermosen
  *
  */

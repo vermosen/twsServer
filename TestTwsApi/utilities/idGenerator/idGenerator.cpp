@@ -1,3 +1,10 @@
+/*
+ *
+ * custom TwsApi
+ * Copyright (C) 2014 Jean-Mathieu Vermosen
+ *
+ */
+
 #include "utilities/idGenerator/idGenerator.hpp"
 
 namespace IB {
