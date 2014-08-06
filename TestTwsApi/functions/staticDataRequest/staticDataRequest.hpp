@@ -5,12 +5,11 @@
 
 // thOth components
 #include <thOth/time/DateTime.hpp>
-#include <thOth/utilities/csvBuilder.hpp>
 
 #include "utilities/type/all.hpp"
 #include "utilities/settings.hpp"
 #include "utilities/define.hpp"
-#include "staticDataRequestClient/staticDataRequestClient.hpp"
+#include "EWrapper/staticDataRequestClient/staticDataRequestClient.hpp"
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 
 // this procedure is meant to request 

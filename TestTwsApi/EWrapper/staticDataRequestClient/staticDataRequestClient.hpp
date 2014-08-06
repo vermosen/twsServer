@@ -4,11 +4,8 @@
 #ifndef static_data_request_client_hpp
 #define static_data_request_client_hpp
 
-#include <EWrapper.h>																	// TWS components
-#include <contract.h>																	
-
-//#include <memory>
 #include <stdio.h>																		// printf()
+#include <time.h>
 
 #include <boost/shared_ptr.hpp>
 
@@ -16,10 +13,29 @@
 #include <thOth/time/timeseries.hpp>
 #include <thOth/pattern/observable.hpp>
 
+#include "EWrapper.h"																	// TWS components
+#include "EPosixClientSocket.h"
+#include "EPosixClientSocketPlatform.h"
+#include "Contract.h"
+
 #include "utilities/conversion/convertDateTime/convertDateTime.hpp"
 #include "utilities/settings.hpp"
 
+#ifndef _MSC_VER
+#include <sys/time.h>
+#endif
+
+#if defined __INTEL_COMPILER
+# pragma warning (disable:869)
+#elif defined __GNUC__
+# pragma GCC diagnostic ignored "-Wswitch"
+# pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif  /* __INTEL_COMPILER */
+
 namespace IB {
+
+	const int PING_DEADLINE_S = 2;							// seconds
+	const int SLEEP_BETWEEN_PINGS_S = 30;						// seconds
 
 	class EPosixClientSocket;
 	struct Contract;

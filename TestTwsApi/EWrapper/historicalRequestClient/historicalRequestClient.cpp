@@ -172,7 +172,7 @@ namespace IB {
 	void historicalRequestClient::reqCurrentTime()
 	{
 
-		m_sleepDeadline = time(NULL) + PING_DEADLINE;						// set ping deadline to "now + n seconds"
+		m_sleepDeadline = time(NULL) + PING_DEADLINE_H;						// set ping deadline to "now + n seconds"
 		m_state = ST_PING_ACK;
 		m_pClient->reqCurrentTime();
 
@@ -191,7 +191,7 @@ namespace IB {
 			time_t t = (time_t)time;
 			struct tm * timeinfo = localtime(&t);
 			time_t now = ::time(NULL);
-			m_sleepDeadline = now + SLEEP_BETWEEN_PINGS;
+			m_sleepDeadline = now + SLEEP_BETWEEN_PINGS_H;
 			m_state = ST_IDLE;
 
 		}

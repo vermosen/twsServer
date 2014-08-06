@@ -17,7 +17,6 @@
 #include "EWrapper.h"																	// TWS components
 #include "contract.h"																	
 #include "EPosixClientSocketPlatform.h"
-#include "Order.h"
 
 #include "utilities/define.hpp"
 #include "utilities/conversion/convertDateTime/convertDateTime.hpp"
@@ -38,8 +37,8 @@
 
 namespace IB {
 
-	const int PING_DEADLINE = 2;											// seconds
-	const int SLEEP_BETWEEN_PINGS = 30;										// seconds
+	const int PING_DEADLINE_H = 2;											// seconds
+	const int SLEEP_BETWEEN_PINGS_H = 30;									// seconds
 
 	class EPosixClientSocket;
 	struct Contract;
