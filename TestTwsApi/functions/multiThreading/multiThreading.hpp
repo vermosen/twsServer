@@ -1,5 +1,5 @@
-#ifndef tws_function_historical_request
-#define tws_function_historical_request
+#ifndef tws_function_multi_threading
+#define tws_function_multi_threading
 
 #include <boost/lexical_cast.hpp>
 
@@ -14,8 +14,7 @@
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 #include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
 
-// this procedure is meant to request 
-// missing historical data about a given contract
-void historicalRequest();
+// this procedure is meant to test multi-threading
+void multiThreadingTest();
 
 #endif

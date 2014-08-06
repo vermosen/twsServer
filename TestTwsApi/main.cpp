@@ -5,31 +5,23 @@
  *
  */
 
-// database setup
-#define SERVER   "macbookwin"
+#define SERVER   "macbookwin"										// database setup
 #define USER     "test_user"
 #define PASSWORD "test01"
 #define DATABASE "tws_server"
 #define PORT     3308
 #define LOGPATH  "C://Temp/"
 
-// TWS library
-#include "contract.h"
+#include "contract.h"												// TWS library
 #include "utilities/type/all.hpp"
 
-
-// thOth components
-#include <thOth/time/DateTime.hpp>
+#include <thOth/time/DateTime.hpp>									// thOth components
 #include <thOth/utilities/csvBuilder.hpp>
 #include <utilities/factory/registerAll.hpp>
 
-// mySQL
-#include <my_global.h>
-#include <mysql.h>
-
-// tws api test
-#include "functions/historicalRequest/historicalRequest.hpp"
+#include "functions/historicalRequest/historicalRequest.hpp"		// tws api test
 #include "functions/staticDataRequest/staticDataRequest.hpp"
+#include "functions/multiThreading/multiThreading.hpp"
 #include "utilities/settings.hpp"
 #include "utilities/define.hpp"
 
@@ -40,7 +32,7 @@
 //     - host   : define the TWS server adress
 //     - port   : define the TWS server port
 //     - log    : overload the log path
-//     - test   : automatically start a test
+//     - test   : automatically start selected test
 int main(int argc, char** argv) {
 
 	try {
@@ -86,7 +78,7 @@ int main(int argc, char** argv) {
 
 				std::string str(arg.substr(6, arg.length() - 6));	// the value
 				IB::settings::instance().ibHost(str);				// set the host
-				TWS_LOG(std::string("sets host to ")			// log
+				TWS_LOG(std::string("sets host to ")				// log
 					.append(str))
 
 			};
@@ -122,7 +114,7 @@ int main(int argc, char** argv) {
 
 		}
 
-		// manual choice
+																	// manual choice
 		do {														// loop over the choices
 		
 			int res = test;											// for manual definition
@@ -135,6 +127,8 @@ int main(int argc, char** argv) {
 					<< "1 - historical data request"
 					<< std::endl
 					<< "2 - static data test"
+					<< std::endl
+					<< "3 - multi-threading test"
 					<< std::endl
 					<< "0 - exit"
 					<< std::endl;
@@ -162,6 +156,14 @@ int main(int argc, char** argv) {
 						std::string("starting staticDataRequest test"))
 
 					staticDataRequest();							// launch static data request process
+					break;
+				
+				case 3:
+
+					TWS_LOG(										// log
+						std::string("starting multi-threading test"))
+
+						multiThreadingTest();							// launch static data request process
 					break;
 
 				case 0:

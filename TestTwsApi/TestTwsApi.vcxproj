@@ -161,6 +161,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="functions\historicalRequest\historicalRequest.cpp" />
+    <ClCompile Include="functions\multiThreading\multiThreading.cpp" />
     <ClCompile Include="functions\staticDataRequest\staticDataRequest.cpp" />
     <ClCompile Include="EWrapper\historicalRequestClient\historicalRequestClient.cpp" />
     <ClCompile Include="main.cpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="utilities\idGenerator\idGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="functions\multiThreading\multiThreading.hpp" />
     <ClInclude Include="recordset\recordset.hpp" />
     <ClInclude Include="recordset\tableContractRecordset\tableContractRecordset.hpp" />
     <ClInclude Include="recordset\tableHistoricalBarRecordset\tableHistoricalBarRecordset.hpp" />

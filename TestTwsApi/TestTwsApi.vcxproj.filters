@@ -51,6 +51,9 @@
     <ClCompile Include="EWrapper\historicalRequestClient\historicalRequestClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="functions\multiThreading\multiThreading.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\factory\barSizeFactory\barSizeFactory.hpp">
@@ -117,6 +120,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EWrapper\historicalRequestClient\historicalRequestClient.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="functions\multiThreading\multiThreading.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
