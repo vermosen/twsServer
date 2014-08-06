@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="historicalRequestClient\historicalRequestClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="utilities\factory\barSizeFactory\barSizeFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -36,9 +33,6 @@
     <ClCompile Include="functions\staticDataRequest\staticDataRequest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="staticDataRequestClient\staticDataRequestClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="recordset\tableContractRecordset\tableContractRecordset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -51,11 +45,14 @@
     <ClCompile Include="utilities\idGenerator\idGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EWrapper\staticDataRequestClient\staticDataRequestClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EWrapper\historicalRequestClient\historicalRequestClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="historicalRequestClient\historicalRequestClient.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="utilities\factory\barSizeFactory\barSizeFactory.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -98,9 +95,6 @@
     <ClInclude Include="functions\staticDataRequest\staticDataRequest.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="staticDataRequestClient\staticDataRequestClient.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="utilities\define.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -117,6 +111,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utilities\idGenerator\idGenerator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EWrapper\staticDataRequestClient\staticDataRequestClient.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EWrapper\historicalRequestClient\historicalRequestClient.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

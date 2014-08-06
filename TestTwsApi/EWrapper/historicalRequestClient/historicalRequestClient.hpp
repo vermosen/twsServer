@@ -4,8 +4,20 @@
 #ifndef historical_request_client_hpp
 #define historical_request_client_hpp
 
+#include <stdio.h>																		// printf()
+#include <time.h>
+
+#include <boost/shared_ptr.hpp>
+
+#include <thOth/time/DateTime.hpp>
+#include <thOth/time/timeseries.hpp>
+#include <thOth/pattern/observable.hpp>
+
+#include "EPosixClientSocket.h"
 #include "EWrapper.h"																	// TWS components
 #include "contract.h"																	
+#include "EPosixClientSocketPlatform.h"
+#include "Order.h"
 
 #include "utilities/define.hpp"
 #include "utilities/conversion/convertDateTime/convertDateTime.hpp"
@@ -13,19 +25,26 @@
 #include "utilities/factory/dataTypeFactory/dataTypeFactory.hpp"
 #include "utilities/factory/dataDurationFactory/dataDurationFactory.hpp"
 
-#include <stdio.h>																		// printf()
+#ifndef _MSC_VER
+#include <sys/time.h>
+#endif
 
-#include <boost/shared_ptr.hpp>
-#include <thOth/time/DateTime.hpp>
-#include <thOth/time/timeseries.hpp>
-#include <thOth/pattern/observable.hpp>
+#if defined __INTEL_COMPILER
+# pragma warning (disable:869)
+#elif defined __GNUC__
+# pragma GCC diagnostic ignored "-Wswitch"
+# pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif  /* __INTEL_COMPILER */
 
 namespace IB {
+
+	const int PING_DEADLINE = 2;											// seconds
+	const int SLEEP_BETWEEN_PINGS = 30;										// seconds
 
 	class EPosixClientSocket;
 	struct Contract;
 
-	struct historicalQuoteDetails {														// data structure for historical request
+	struct historicalQuoteDetails {											// data structure for historical request
 
 		TickerId id_ ;
 		double open_ ;
@@ -43,7 +62,7 @@ namespace IB {
 
 	private:
 
-		enum state {																		// client states
+		enum state {														// client states
 
 			ST_CONNECT,
 			ST_REQUEST,
@@ -55,28 +74,29 @@ namespace IB {
 		};
 
 	private:																			
-		historicalRequestClient() {};												    // private default ctor,
-		historicalRequestClient(const historicalRequestClient &) {};					// cc ctors and assignement
+		historicalRequestClient() {};										// private default ctor,
+		historicalRequestClient(const historicalRequestClient &) {};		// cc ctors and assignement
 		historicalRequestClient & operator =(const historicalRequestClient &);
 
-		void requestId() { id_ = IB::settings::instance().generator().next(); };		// request a new id
+		void requestId() { id_ = IB::settings::instance().generator().next(); };		
+																			// request a new id
 
 	public:
 
-		historicalRequestClient(const Contract &,										// public ctor
+		historicalRequestClient(const Contract &,							// public ctor
 								const thOth::dateTime &,
 								const barSize bs = barSize::oneSecond,
 								const int lenght = 1,
 								const dataDuration dur = dataDuration::day,
 								const dataType = dataType::trade);
 
-		~historicalRequestClient();														// destructor
+		~historicalRequestClient();											// destructor
 
 		// accessors
-		bool endOfHistoricalData() const { return endOfHistoricalData_; };				// end of data (public ?)
-		bool errorForRequest() const { return errorForRequest_; };						// error
+		bool endOfHistoricalData() const { return endOfHistoricalData_; };	// end of data (public ?)
+		bool errorForRequest() const { return errorForRequest_; };			// error
 		
-		thOth::timeSeries<historicalQuoteDetails> timeSeries() const{					// the time series
+		thOth::timeSeries<historicalQuoteDetails> timeSeries() const{		// the time series
 			return ts_;
 		};
 
@@ -94,9 +114,9 @@ namespace IB {
 
 	protected:
 
-		void requestHistoricalData();												// request data
+		void requestHistoricalData();										// request data
 
-		bool IsEndOfHistoricalData(const IBString& Date) {							// check if historical data is finished
+		bool IsEndOfHistoricalData(const IBString& Date) {					// check if historical data is finished
 
 			endOfHistoricalData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);
 			return endOfHistoricalData_;
@@ -105,23 +125,23 @@ namespace IB {
 
 	private:
 
-		bool endOfHistoricalData_;													// indicate whether the file has been read
-		bool errorForRequest_    ;													// error on the request
-		int marketDataType_		 ;													// market data type
-		TickerId id_			 ;													// id of the request
+		bool endOfHistoricalData_;											// indicate whether the file has been read
+		bool errorForRequest_    ;											// error on the request
+		int marketDataType_		 ;											// market data type
+		TickerId id_			 ;											// id of the request
 
-		Contract contract_		  ;													// the contract definition
-		thOth::dateTime endDate_  ;													// the end date
-		int length_               ;													// lenght of the period
-		barSize barSize_		  ;													// bar size
-		dataDuration dataDuration_;													// data duration
-		dataType dataType_		  ;													// data Type
+		Contract contract_		  ;											// the contract definition
+		thOth::dateTime endDate_  ;											// the end date
+		int length_               ;											// lenght of the period
+		barSize barSize_		  ;											// bar size
+		dataDuration dataDuration_;											// data duration
+		dataType dataType_		  ;											// data Type
 
-		thOth::timeSeries<historicalQuoteDetails> ts_  ;							// timeseries object
-		boost::shared_ptr<EPosixClientSocket> m_pClient;							// posix client
+		thOth::timeSeries<historicalQuoteDetails> ts_  ;					// timeseries object
+		boost::shared_ptr<EPosixClientSocket> m_pClient;					// posix client
 		
-		state m_state         ;														// current state
-		time_t m_sleepDeadline;														// sleep deadline
+		state m_state         ;												// current state
+		time_t m_sleepDeadline;												// sleep deadline
 
 	public:
 

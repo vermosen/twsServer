@@ -1,34 +1,9 @@
 /* Copyright (C) 2013 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
 * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-#include "historicalRequestClient.hpp"
-#include "EPosixClientSocket.h"
-
-/* In this example we just include the platform header to have select(). In real
-life you should include the needed headers from your system. */
-#include "EPosixClientSocketPlatform.h"
-#include "Contract.h"
-#include "Order.h"
-
-#include <time.h>
-
-#include <thOth/time/timeseries.hpp>
-
-#ifndef _MSC_VER
-#include <sys/time.h>
-#endif
-
-#if defined __INTEL_COMPILER
-# pragma warning (disable:869)
-#elif defined __GNUC__
-# pragma GCC diagnostic ignored "-Wswitch"
-# pragma GCC diagnostic ignored "-Wunused-parameter"
-#endif  /* __INTEL_COMPILER */
+#include "EWrapper/historicalRequestClient/historicalRequestClient.hpp"
 
 namespace IB {
-
-	const int PING_DEADLINE = 2;											// seconds
-	const int SLEEP_BETWEEN_PINGS = 30;										// seconds
 
 	historicalRequestClient::historicalRequestClient(const Contract & ct,
 		const thOth::dateTime & dt,
