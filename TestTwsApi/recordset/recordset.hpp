@@ -30,8 +30,6 @@ namespace IB {
 				recordset(MYSQL *);
 				recordset(const recordset &);
 
-				recordset() = delete;							// no default ctor
-
 				virtual ~recordset();							// virtual destructor
 
 				recordset & operator =(const recordset &);
@@ -54,6 +52,8 @@ namespace IB {
 
 			protected:
 				
+				recordset() {};									// no default ctor
+
 				MYSQL     * connection_;						// connection object
 				MYSQL_RES * reception_ ;
 

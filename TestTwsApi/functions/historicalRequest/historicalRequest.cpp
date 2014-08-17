@@ -98,7 +98,7 @@ void historicalRequest() {
 					dtStr.substr(0, 2));
 
 			thOth::dateTime::Years  yr = 
-				boost::lexical_cast<long>(
+				boost::lexical_cast<unsigned short>(
 					dtStr.substr(6, 4));
 			
 			requestDate =										// the date requested
