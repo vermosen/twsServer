@@ -29,8 +29,10 @@ namespace IB {
 
 				recordset(MYSQL *);
 				recordset(const recordset &);
-				
-				virtual ~recordset();
+
+				recordset() = delete;							// no default ctor
+
+				virtual ~recordset();							// virtual destructor
 
 				recordset & operator =(const recordset &);
 
@@ -51,14 +53,12 @@ namespace IB {
 				recordId size() const;							// potentially large number
 
 			protected:
-
-				recordset() {};									// protected default ctor
 				
 				MYSQL     * connection_;						// connection object
 				MYSQL_RES * reception_ ;
 
 				std::map<recordId, T>    records_;				// a pile of records for data management, 
-																// assumes primary key of the table is a BIGINT
+																// assumes the primary key of every table is a BIGINT
 		};
 
 		template <class T>

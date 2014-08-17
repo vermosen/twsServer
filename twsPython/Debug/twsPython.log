@@ -1,19 +1,14 @@
-﻿Build started 06/08/2014 10:47:04.
+﻿Build started 17/08/2014 08:49:30.
 Project "C:\Users\vermosen\Documents\GitHub\twsapi\twsPython\twsPython.vcxproj" on node 2 (Build target(s)).
 InitializeBuildStatus:
   Touching "Debug\twsPython.tlog\unsuccessfulbuild".
 CustomBuild:
   Performing Custom Build Tools
-ClCompile:
-  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D TWSPYTHON_EXPORTS /D _UNICODE /D UNICODE /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt contract_wrap.cxx
-  contract_wrap.cxx
-c:\python33\include\pymath.h(22): warning C4273: 'round' : inconsistent dll linkage
-          c:\program files (x86)\microsoft visual studio 12.0\vc\include\math.h(516) : see previous definition of 'round'
-c:\program files (x86)\microsoft visual studio 12.0\vc\include\xtgmath.h(206): warning C4273: 'round' : inconsistent dll linkage
-          c:\program files (x86)\microsoft visual studio 12.0\vc\include\math.h(516) : see previous definition of 'round'
-c:\program files (x86)\microsoft visual studio 12.0\vc\atlmfc\include\afxstr.h(24): fatal error C1189: #error :  afxstr.h can only be used in MFC projects.  Use atlstr.h
-Done Building Project "C:\Users\vermosen\Documents\GitHub\twsapi\twsPython\twsPython.vcxproj" (Build target(s)) -- FAILED.
+FinalizeBuildStatus:
+  Deleting file "Debug\twsPython.tlog\unsuccessfulbuild".
+  Touching "Debug\twsPython.tlog\twsPython.lastbuildstate".
+Done Building Project "C:\Users\vermosen\Documents\GitHub\twsapi\twsPython\twsPython.vcxproj" (Build target(s)).
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:02.40
+Time Elapsed 00:00:01.86

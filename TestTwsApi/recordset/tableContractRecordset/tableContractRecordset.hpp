@@ -27,7 +27,7 @@ namespace IB {
 
 			protected:
 
-				tableContractRecordset() {};
+				//tableContractRecordset() {};
 				
 		};
 	}

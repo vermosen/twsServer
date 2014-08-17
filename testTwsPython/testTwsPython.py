@@ -6,7 +6,7 @@ cmd_folder = 'C:/Users/vermosen/Documents/GitHub/twsapi/twsPython/'
 if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)
 
-from twsPython import example, ComboLeg
+from twsPython import example
 
 ex = example()
 

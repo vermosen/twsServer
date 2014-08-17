@@ -2,6 +2,7 @@
 
 void historicalRequest() {
 
+	// step 1: initialization
 	std::cout
 		<< "historical Request Test"
 		<< std::endl
@@ -19,8 +20,7 @@ void historicalRequest() {
 		std::string("contract provided: ")
 			.append(contractCode))
 
-	MYSQL * connect;											// initialize mySQL connection
-	connect = mysql_init(NULL);									// initialize the variable
+	MYSQL * connect = mysql_init(NULL);							// initialize mySQL connection
 
 	TWS_LOG(													// log
 		std::string("requesting contract details for: ")
@@ -40,7 +40,7 @@ void historicalRequest() {
 
 	if (!connect) throw std::exception("unable to reach mySQL database");
 
-	// recordset
+	// recordset`& query
 	IB::dataBase::tableContractRecordset contractRs(connect);	// table contract recordset
 
 	std::string query(											// query to run
@@ -114,12 +114,12 @@ void historicalRequest() {
 
 		} catch (std::exception & ex) {
 		
-			TWS_LOG(std::string("an error occured in historicaRequest function: ")
+			TWS_LOG(std::string("an error occured in historical Request function: ")
 				.append(ex.what()))
 
 			throw std::exception(ex.what());
 		
-		} catch (...) { 
+		} catch (...) {
 
 			TWS_LOG(std::string("an unknown error occured in historicaRequest function"))
 			throw std::exception("an unknown error occured..."); 

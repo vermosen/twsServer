@@ -197,9 +197,6 @@ C:\swigwin\swig.exe -c++ -python "%(FullPath)" </Command>
     <ClInclude Include="example.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="contract_wrap.cxx" />
-  </ItemGroup>
-  <ItemGroup>
     <CustomBuild Include="contract.i">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">echo In order to function correctly, please ensure the following environment variables are correctly set: 

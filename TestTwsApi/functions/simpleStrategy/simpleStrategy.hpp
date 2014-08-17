@@ -16,7 +16,7 @@
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 #include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
 
-// this procedure is meant to test multi-threading
-void multiThreadingTest();
+// this procedure implements a simple strategy
+void simpleStrategy();
 
 #endif

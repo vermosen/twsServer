@@ -69,10 +69,29 @@ except AttributeError:
     _newclass = 0
 
 
-SAME_POS = _twsPython.SAME_POS
-OPEN_POS = _twsPython.OPEN_POS
-CLOSE_POS = _twsPython.CLOSE_POS
-UNKNOWN_POS = _twsPython.UNKNOWN_POS
+class example(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, example, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, example, name)
+    __repr__ = _swig_repr
+    def __init__(self): 
+        this = _twsPython.new_example()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_setmethods__["a_"] = _twsPython.example_a__set
+    __swig_getmethods__["a_"] = _twsPython.example_a__get
+    if _newclass:a_ = _swig_property(_twsPython.example_a__get, _twsPython.example_a__set)
+    __swig_setmethods__["b_"] = _twsPython.example_b__set
+    __swig_getmethods__["b_"] = _twsPython.example_b__get
+    if _newclass:b_ = _swig_property(_twsPython.example_b__get, _twsPython.example_b__set)
+    def a(self, *args): return _twsPython.example_a(self, *args)
+    def b(self, *args): return _twsPython.example_b(self, *args)
+    __swig_destroy__ = _twsPython.delete_example
+    __del__ = lambda self : None;
+example_swigregister = _twsPython.example_swigregister
+example_swigregister(example)
+
 # This file is compatible with both classic and new-style classes.
 
 

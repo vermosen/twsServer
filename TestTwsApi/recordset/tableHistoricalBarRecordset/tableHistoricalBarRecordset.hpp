@@ -49,7 +49,7 @@ namespace IB {
 
 			protected:
 
-				tableHistoricalBarRecordset() {};
+				//tableHistoricalBarRecordset() {};
 				
 		};
 	}

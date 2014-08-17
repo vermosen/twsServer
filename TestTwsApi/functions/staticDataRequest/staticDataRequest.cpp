@@ -2,21 +2,21 @@
 
 void staticDataRequest() {
 
+	// step 1: initialization
 	std::cout
 		<< "please provide some contract code:"
 		<< std::endl;
 
-	int clientId     = 0;										// request Id
-	unsigned attempt = 0;										// current attempt
+	int clientId         = 0;									// request Id
+	unsigned int attempt = 0;									// current attempt
 
 	std::string contractCode; std::cin >> contractCode;			// contract is provided by the user
 
 	TWS_LOG(std::string("contract code provided: ")				// log
 		.append(contractCode))
 
-	// check if the contract is already in the table
-	MYSQL * connect;											// connection
-	connect = mysql_init(NULL);									// initialize the variable
+	// step 2: checks if the contract is already in the table
+	MYSQL * connect = mysql_init(NULL);							// connection
 
 	if (!connect)												// fails to initialize mySQL
 		throw std::exception("mySQL initialization failed");
@@ -42,6 +42,7 @@ void staticDataRequest() {
 	TWS_LOG(std::string("running query: ")						// log
 		.append(selectQuery))
 
+	// step 3: run the static data request
 	if (!rs.select(selectQuery)) {								// returns value ?
 
 		TWS_LOG(std::string("instrument not in the database"))	// log
@@ -89,8 +90,7 @@ void staticDataRequest() {
 
 					break;
 
-			}
-			else {
+			} else {
 
 				if (IB::settings::instance().verbosity() > 2)
 

@@ -6,12 +6,12 @@
 %module twsPython
 
 %{
-#include "Contract.h"
+/*#include "Contract.h"*/
 %}
 
 %{
-using IB::LegOpenClose;
-//using IB::ComboLeg;
+/*using IB::LegOpenClose;
+using IB::ComboLeg¨*/
 %}
 
 /* pick the struct from Contract.h */

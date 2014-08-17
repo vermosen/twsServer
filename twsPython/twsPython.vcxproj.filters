@@ -22,11 +22,6 @@
     <CustomBuild Include="contract.i" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="contract_wrap.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="example.h">
       <Filter>Header Files</Filter>
     </ClInclude>
