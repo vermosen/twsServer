@@ -9,13 +9,14 @@
 #define settings_hpp
 
 #include <string>
+#include <mutex>
 
 #include <thOth/pattern/singleton.hpp>
-#include <thOth/utilities/csvBuilder.hpp>
 
 #include <commonDefs.h>
 
 #include "utilities/idGenerator/idGenerator.hpp"
+#include "utilities/logger/logger.hpp"
 
 #define DEFAULTPATH "C:/Temp/"
 
@@ -30,52 +31,55 @@ namespace IB {
 			settings()							// default values
 				: verbosity_(0),
 				  port_(0),
-				  csv_(DEFAULTPATH) {};
+				  log_(DEFAULTPATH) {};
 
 		public: 
 			
 			//accessors
-			inline void verbosity(const int           v) { verbosity_ = v; };
-			inline void port     (const int           v) { port_      = v; };
-			inline void ibPort   (const int           v) { ibPort_    = v; };
+			void verbosity       (const unsigned int  v);
+			inline void port     (const unsigned int  v) { port_      = v; };
+			inline void ibPort   (const unsigned int  v) { ibPort_    = v; };
 			inline void ibHost   (const std::string & s) { ibHost_    = s; };
-			inline void logPath  (const std::string & s) { csv_.path(s)  ; };
+			inline void logPath  (const std::string & s) { log_.path(s)  ; };
 			inline void server   (const std::string & s) { server_    = s; };
 			inline void user     (const std::string & s) { user_      = s; };
 			inline void password (const std::string & s) { password_  = s; };
 			inline void dataBase (const std::string & s) { dataBase_  = s; };
 
-			inline int         verbosity() const { return verbosity_; };
-			inline int         port     () const { return port_     ; };
-			inline int         ibPort   () const { return ibPort_   ; };
-			inline std::string ibHost   () const { return ibHost_   ; };
-			inline std::string server   () const { return server_   ; };
-			inline std::string user     () const { return user_     ; };
-			inline std::string password () const { return password_ ; };
-			inline std::string dataBase () const { return dataBase_ ; };
+			unsigned int verbosity       () const;
+			inline unsigned int port     () const { return port_     ; };
+			inline unsigned int ibPort   () const { return ibPort_   ; };
+			inline std::string ibHost    () const { return ibHost_   ; };
+			inline std::string server    () const { return server_   ; };
+			inline std::string user      () const { return user_     ; };
+			inline std::string password  () const { return password_ ; };
+			inline std::string dataBase  () const { return dataBase_ ; };
 
-			inline idGenerator & generator            () { return generator_; };
-			inline thOth::utilities::csvBuilder & log () { return csv_      ; };
+			idGenerator & generator ();
+			inline logger & log () { return log_; };
 
 		private: 
 
-			int         verbosity_;			// verbosity settings				
-			idGenerator generator_;			// unique id generator
+			unsigned int verbosity_;		// verbosity settings				
+			idGenerator  generator_;		// unique id generator
 
 			// log file
-			thOth::utilities::csvBuilder csv_;
+			logger log_;
 
 			// dataBase settings
-			int         port_     ;     	// server port
-			std::string server_   ;			// db server name
-			std::string user_     ;			// user name
-			std::string password_ ;			// user password
-			std::string dataBase_ ;			// dataBase name
+			unsigned int port_     ;     	// server port
+			std::string  server_   ;		// db server name
+			std::string  user_     ;		// user name
+			std::string  password_ ;		// user password
+			std::string  dataBase_ ;		// dataBase name
 
 			// interactive broker settings
-			std::string ibHost_   ;			// interactive broker server ip
-			int         ibPort_   ;			// interactive broker server port
-	
+			std::string  ibHost_   ;		// interactive broker server ip
+			unsigned int ibPort_   ;		// interactive broker server port
+
+			// mutexes
+			mutable std::mutex verbosityMutex_;		// locks/unlocks the verbosity variable
+
 	};
 
 }

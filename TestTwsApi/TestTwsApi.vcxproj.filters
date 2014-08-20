@@ -54,6 +54,15 @@
     <ClCompile Include="functions\multiThreading\multiThreading.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="functions\simpleStrategy\simpleStrategy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\logger\logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\factory\barSizeFactory\barSizeFactory.hpp">
@@ -123,6 +132,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="functions\multiThreading\multiThreading.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="functions\simpleStrategy\simpleStrategy.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\logger\logger.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

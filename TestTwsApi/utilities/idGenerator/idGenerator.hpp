@@ -19,17 +19,12 @@ namespace IB {
 
 	public:
 
-		idGenerator();						// default ctor
-		idGenerator(const idGenerator &);	// copy ctor
-		~idGenerator() {};					// destructor
+		 idGenerator ();					// default ctor
+		~idGenerator () {};					// destructor
 		
-		idGenerator & operator =(const idGenerator &);
-											// assignement operator
-
 		TickerId next();					// the next id to generate
 
 	private:
-
 		
 		TickerId lastId_;
 

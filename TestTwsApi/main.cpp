@@ -16,7 +16,6 @@
 #include "utilities/type/all.hpp"
 
 #include <thOth/time/DateTime.hpp>									// thOth components
-#include <thOth/utilities/csvBuilder.hpp>
 #include <utilities/factory/registerAll.hpp>
 
 #include "functions/historicalRequest/historicalRequest.hpp"		// tws api test

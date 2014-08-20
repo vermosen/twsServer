@@ -16,21 +16,5 @@ namespace IB {
 		return ++lastId_;
 
 	}
-	
-	idGenerator::idGenerator(const idGenerator & o)		// copy ctor
-
-		: lastId_(o.lastId_) {}
-
-	idGenerator & idGenerator::operator =(const idGenerator & o) {
-	
-		if (&o != this) {
-		
-			lastId_ = o.lastId_;
-		
-		}
-
-		return *this;
-	
-	}
 
 }
