@@ -4,9 +4,9 @@ void acquireTickerId(std::string & result) {					// returns a message
 
 	boost::timer tt;											// timer
 	
-	float wait = 1.0 / static_cast<float>(std::random_device()());
+	float wait = (float)1 / static_cast<float>(std::random_device()());
 
-	while (tt.elapsed() < std::min(wait, float(.1)));					// wait some time
+	while (tt.elapsed() < std::min(wait, float(.1)));			// wait some time
 	
 	result
 		.append("thread number ")
@@ -54,6 +54,21 @@ void multiThreadedSetting() {
 		std::cout 
 			<< messages[i]
 			<< std::endl;
+
+	std::string str; str										// finally get the main thread id
+		.append("main thread ")
+		.append(boost::lexical_cast<std::string>(
+			std::this_thread::get_id()))
+		.append(" get the id ")
+		.append(boost::lexical_cast<std::string>(
+			IB::settings::instance().generator().next()));
+
+	std::cout 													// cout
+		<< str 
+		<< std::endl;
+
+	if (IB::settings::instance().verbosity() > 0) 				// verbose
+		TWS_LOG(str)
 
 	if (IB::settings::instance().verbosity() > 0)				// verbose
 		TWS_LOG(std::string("end of multi-threaded Settings Test"))

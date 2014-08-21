@@ -1,44 +1,34 @@
 #include "functions/multiThreadedCsvBuilder/multiThreadedCsvBuilder.hpp"
 
-// log in the thread
-void testCsv(long n) {
+void insertMatrix1(thOth::utilities::csvBuilder & csv) {								
 
-	boost::timer tt;
+	csv.add(boost::numeric::ublas::matrix<double>(100, 100, 1.0), 1, 1);
+		
+}
 
-	// wait
-	do {} while (!(tt.elapsed() > 1 / std::random_device()()));
+void insertMatrix2(thOth::utilities::csvBuilder & csv) {
 
-	TWS_LOG(boost::lexical_cast<std::string>(n))
-
+	csv.add(boost::numeric::ublas::matrix<double>(100, 100, 2.0), 2, 2);
+	
 }
 
 void multiThreadedCsvBuilder() {
 
 	std::cout
-		<< "multi-threaded csv builder Test"
+		<< "multi-threaded csv builder test"
 		<< std::endl
 		<< "-------------------------------"
 		<< std::endl;
 
-	unsigned int const min_number = 2;							// min number of threads
-	unsigned int const max_number = 20;							// max number of threads
+	thOth::utilities::csvBuilder csv(CSVNAME);					// common csvBuilder
 
-	unsigned int threadNum =									// available hardware ressources
-		std::thread::hardware_concurrency();
+	std::thread thread1(insertMatrix1, std::ref(csv));
+	std::thread thread2(insertMatrix2, std::ref(csv));
 
-	threadNum =													// defines accurate number of threads
-		std::min(std::max(threadNum, min_number), max_number);
-
-	std::vector<std::thread> threads(threadNum);				// trying to call testLog function
-
-	for (unsigned int i = 0; i < threadNum; i++)
-		threads[i] = std::thread(testCsv, i);
-			
-	for (unsigned int i = 0; i < threadNum; i++)
-		threads[i].join();
+	thread1.join(); thread2.join();
 
 	if (IB::settings::instance().verbosity() > 0)				// verbose
 
-		TWS_LOG(std::string("end of multi-threading test"))
+		TWS_LOG(std::string("end of multi-threaded csv builder test"))
 
 };
