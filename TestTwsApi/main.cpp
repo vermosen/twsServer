@@ -18,10 +18,9 @@
 #include <thOth/time/DateTime.hpp>									// thOth components
 #include <utilities/factory/registerAll.hpp>
 
-#include "functions/historicalRequest/historicalRequest.hpp"		// tws api test
-#include "functions/staticDataRequest/staticDataRequest.hpp"
-#include "functions/multiThreading/multiThreading.hpp"
-#include "utilities/settings.hpp"
+#include "functions/all.hpp"										// test functions
+
+#include "utilities/settings.hpp"									// additional 
 #include "utilities/define.hpp"
 
 // This procedure can be started manually (empty argv)
@@ -129,6 +128,8 @@ int main(int argc, char** argv) {
 					<< std::endl
 					<< "3 - multi-threading test"
 					<< std::endl
+					<< "4 - csv writing test"
+					<< std::endl
 					<< "0 - exit"
 					<< std::endl;
 
@@ -146,7 +147,7 @@ int main(int argc, char** argv) {
 					TWS_LOG(										// log
 						std::string("starting historicalRequest test"))	
 
-					historicalRequest();							// launch historical request process
+					historicalRequest();							// launches historical request process
 					break;				
 
 				case 2:
@@ -154,15 +155,23 @@ int main(int argc, char** argv) {
 					TWS_LOG(										// log
 						std::string("starting staticDataRequest test"))
 
-					staticDataRequest();							// launch static data request process
+					staticDataRequest();							// launches static data request process
 					break;
 				
 				case 3:
 
 					TWS_LOG(										// log
-						std::string("starting multi-threading test"))
+						std::string("starting multi-threaded settings test"))
 
-						multiThreadingTest();							// launch static data request process
+						multiThreadedSetting();						// launches multi-threading
+					break;
+
+				case 4:
+
+					TWS_LOG(										// log
+						std::string("starting multi-threaded csv builder test"))
+
+						multiThreadedCsvBuilder();						// launches csv writing test
 					break;
 
 				case 0:

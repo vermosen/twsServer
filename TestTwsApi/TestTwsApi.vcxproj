@@ -161,7 +161,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="functions\historicalRequest\historicalRequest.cpp" />
-    <ClCompile Include="functions\multiThreading\multiThreading.cpp" />
+    <ClCompile Include="functions\multiThreadedCsvBuilder\multiThreadedCsvBuilder.cpp" />
+    <ClCompile Include="functions\multiThreadedSetting\multiThreadedSetting.cpp" />
     <ClCompile Include="functions\simpleStrategy\simpleStrategy.cpp" />
     <ClCompile Include="functions\staticDataRequest\staticDataRequest.cpp" />
     <ClCompile Include="EWrapper\historicalRequestClient\historicalRequestClient.cpp" />
@@ -178,7 +179,9 @@
     <ClCompile Include="utilities\settings.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="functions\multiThreading\multiThreading.hpp" />
+    <ClInclude Include="functions\all.hpp" />
+    <ClInclude Include="functions\multiThreadedCsvBuilder\multiThreadedCsvBuilder.hpp" />
+    <ClInclude Include="functions\multiThreadedSetting\multiThreadedSetting.hpp" />
     <ClInclude Include="functions\simpleStrategy\simpleStrategy.hpp" />
     <ClInclude Include="recordset\recordset.hpp" />
     <ClInclude Include="recordset\tableContractRecordset\tableContractRecordset.hpp" />
