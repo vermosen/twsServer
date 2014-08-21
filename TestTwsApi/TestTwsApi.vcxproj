@@ -198,7 +198,7 @@
     <ClInclude Include="utilities\factory\dataDurationFactory\register_dataDuration.hpp" />
     <ClInclude Include="utilities\factory\dataTypeFactory\dataTypeFactory.hpp" />
     <ClInclude Include="utilities\factory\dataTypeFactory\register_dataType.hpp" />
-    <ClInclude Include="utilities\factory\registerAll.hpp" />
+    <ClInclude Include="utilities\factory\all.hpp" />
     <ClInclude Include="utilities\idGenerator\idGenerator.hpp" />
     <ClInclude Include="utilities\logger\logger.hpp" />
     <ClInclude Include="utilities\settings.hpp" />

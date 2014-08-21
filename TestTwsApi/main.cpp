@@ -16,7 +16,7 @@
 #include "utilities/type/all.hpp"
 
 #include <thOth/time/DateTime.hpp>									// thOth components
-#include <utilities/factory/registerAll.hpp>
+#include <utilities/factory/all.hpp>
 
 #include "functions/all.hpp"										// test functions
 
@@ -29,14 +29,16 @@
 //     - verbose: defines the level of verbosity
 //     - host   : define the TWS server adress
 //     - port   : define the TWS server port
-//     - log    : overload the log path
+//     - log    : overload the default log path
 //     - test   : automatically start selected test
 int main(int argc, char** argv) {
 
 	try {
 
 		static ObjectHandler::EnumTypeRegistry enumTypeRegistry;	// registry
-		IB::utilities::registerAll();								// register the factories
+		
+		IB::utilities::registerAllFactories();						// register the factories
+		
 		bool end = false; int test = 0;
 
 		IB::settings::instance().verbosity(0       );				// default settings
@@ -111,9 +113,8 @@ int main(int argc, char** argv) {
 			}
 
 		}
-
-																	// manual choice
-		do {														// loop over the choices
+																	
+		do {														// manual selection - loop over the choices
 		
 			int res = test;											// for manual definition
 
@@ -171,7 +172,7 @@ int main(int argc, char** argv) {
 					TWS_LOG(										// log
 						std::string("starting multi-threaded csv builder test"))
 
-						multiThreadedCsvBuilder();						// launches csv writing test
+						multiThreadedCsvBuilder();					// launches csv writing test
 					break;
 
 				case 0:

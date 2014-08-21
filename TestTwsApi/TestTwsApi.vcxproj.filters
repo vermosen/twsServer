@@ -77,9 +77,6 @@
     <ClInclude Include="utilities\factory\barSizeFactory\register_barSize.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\factory\registerAll.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="utilities\type\dataType.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -147,6 +144,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="functions\all.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\factory\all.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

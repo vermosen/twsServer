@@ -1,15 +1,23 @@
 #include "functions/multiThreadedSetting/multiThreadedSetting.hpp"
 
-// log in the thread
-void testLog(long n) {
+void acquireTickerId(std::string & result) {					// returns a message
 
 	boost::timer tt;											// timer
-
-	do {}														// random wait
 	
-	while (!(tt.elapsed() > 1 / std::random_device()()));
+	float wait = 1.0 / static_cast<float>(std::random_device()());
 
-	TWS_LOG(boost::lexical_cast<std::string>(n))
+	while (tt.elapsed() < std::min(wait, float(.1)));					// wait some time
+	
+	result
+		.append("thread number ")
+		.append(boost::lexical_cast<std::string>(
+			std::this_thread::get_id()))
+		.append(" get the id ")
+		.append(boost::lexical_cast<std::string>(
+			IB::settings::instance().generator().next()));
+
+	if (IB::settings::instance().verbosity() > 1)				// verbose ?
+		TWS_LOG(result)											// log
 
 }
 
@@ -30,18 +38,24 @@ void multiThreadedSetting() {
 	threadNum =													// define number of threads
 		std::min(std::max(threadNum, min_number), max_number);
 
-	threadNum = 20;												// setting to max
+	threadNum = 20;												// enforce number of threads to max
 
-	std::vector<std::thread> threads(threadNum);				// trying to call testLog function
+	std::vector<std::thread> threads (threadNum);				// trying to call testLog function
+	std::vector<std::string> messages(threadNum);				// the messages
 
-	for (unsigned int i = 0; i < threadNum; i++)
-		threads[i] = std::thread(testLog, i);
+	for (unsigned int i = 0; i < threadNum; i++)				// launches a new thread
+		threads[i] = std::thread(acquireTickerId, std::ref(messages[i]));
 			
-	for (unsigned int i = 0; i < threadNum; i++)
+	for (unsigned int i = 0; i < threadNum; i++)				// join
 		threads[i].join();
 
-	if (IB::settings::instance().verbosity() > 0)				// verbose
+	for (unsigned int i = 0; i < threadNum; i++)				// read the messages
 
+		std::cout 
+			<< messages[i]
+			<< std::endl;
+
+	if (IB::settings::instance().verbosity() > 0)				// verbose
 		TWS_LOG(std::string("end of multi-threaded Settings Test"))
 
 };
