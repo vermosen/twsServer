@@ -13,6 +13,7 @@ void historicalRequest() {
 		<< std::endl;
 
 	boost::timer tt;											// timer
+
 	int clientId = 0; unsigned attempt = 0;						// request Id
 
 	std::string contractCode; std::cin >> contractCode;			// provided code

@@ -25,22 +25,21 @@ namespace IB {
 		template <class T>
 		class recordset {
 
+			typedef typename std::map<recordId, T>::const_iterator const_iterator;
+
 			public:
 
-				recordset(MYSQL *);
-				recordset(const recordset &);
+				recordset(MYSQL *);								// ctor
+				recordset(const recordset &);					// copy ctor
 
 				virtual ~recordset();							// virtual destructor
 
 				recordset & operator =(const recordset &);
 
+				// database methods
 				virtual bool select(const std::string &) = 0;	// return true if the select statement is non empty
-
 				virtual bool insert(const T &) = 0;				// insert method
-				bool insert(const std::vector<T> &);
-
-				// definition
-				typedef typename std::map<recordId, T>::const_iterator const_iterator;
+				bool insert(const std::vector<T> &);			// bulk insert
 
 				// iterators
 				typename const_iterator cbegin() const;
@@ -48,19 +47,21 @@ namespace IB {
 				typename const_iterator begin () const { return cbegin(); };
 				typename const_iterator end   () const { return cend  (); };
 
-				recordId size() const;							// potentially large number
+				recordId size() const;
 
 			protected:
-				
-				recordset() {};									// no default ctor
 
-				MYSQL     * connection_;						// connection object
+				recordset() {};									// protected default ctor
+
+				MYSQL     * connection_;						// connection objects
 				MYSQL_RES * reception_ ;
 
-				std::map<recordId, T>    records_;				// a pile of records for data management, 
+				std::map<recordId, T> records_;					// a pile of records for data management, 
 																// assumes the primary key of every table is a BIGINT
+																// otherwise some internal key will be allocated
 		};
 
+		// implementation
 		template <class T>
 		recordset<T>::recordset(MYSQL * connection) : connection_(connection){};
 		
@@ -81,7 +82,7 @@ namespace IB {
 			if (this != &o) {
 
 				// copy stuff
-				// DO NOT COPY FIELDS AND RECORDS HERE
+				// DO NOT DUPLICATE FIELDS AND RECORDS HERE
 				connection_ = o.connection_;
 				reception_  = o.reception_ ;
 

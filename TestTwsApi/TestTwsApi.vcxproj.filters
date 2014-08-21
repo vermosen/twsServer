@@ -57,16 +57,16 @@
     <ClCompile Include="functions\multiThreadedSetting\multiThreadedSetting.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="requestClient\historicalRequestClient\historicalRequestClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="requestClient\staticDataRequestClient\staticDataRequestClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="requestClient\requestClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="utilities\settings\settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="request\historicalRequestClient\historicalRequestClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="request\staticDataRequestClient\staticDataRequestClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="request\request.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -143,16 +143,16 @@
     <ClInclude Include="utilities\factory\all.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="requestClient\historicalRequestClient\historicalRequestClient.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="requestClient\staticDataRequestClient\staticDataRequestClient.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="requestClient\requestClient.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="utilities\settings\settings.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="request\historicalRequestClient\historicalRequestClient.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="request\staticDataRequestClient\staticDataRequestClient.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="request\request.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

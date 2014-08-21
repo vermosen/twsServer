@@ -11,7 +11,7 @@
 #include "utilities/type/all.hpp"
 #include "utilities/define.hpp"
 #include "utilities/settings/settings.hpp"
-#include "requestClient/historicalRequestClient/historicalRequestClient.hpp"
+#include "request/historicalRequestClient/historicalRequestClient.hpp"
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 #include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
 
