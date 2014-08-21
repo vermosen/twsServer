@@ -29,6 +29,8 @@ void multiThreadedSetting() {
 		<< "----------------------------"
 		<< std::endl;
 
+	boost::timer tt;											// timer
+
 	unsigned int const min_number = 2;							// min number of threads
 	unsigned int const max_number = 20;							// max number of threads
 
@@ -71,6 +73,7 @@ void multiThreadedSetting() {
 		TWS_LOG(str)
 
 	if (IB::settings::instance().verbosity() > 0)				// verbose
-		TWS_LOG(std::string("end of multi-threaded Settings Test"))
-
+		TWS_LOG(std::string("multi-threaded settings test executed in ")
+			.append(boost::lexical_cast<std::string>(tt.elapsed()))
+			.append(" seconds"))
 };

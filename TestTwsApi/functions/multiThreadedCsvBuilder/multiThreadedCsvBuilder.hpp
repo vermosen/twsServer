@@ -13,9 +13,11 @@
 #include "utilities/settings.hpp"
 #include "utilities/define.hpp"
 
-#define CSVNAME  "C://Temp/test.csv"
+#define CSVPATH  "C://Temp/"
 
 // this procedure is meant to test multi-threading
+// it separates a lin alg calculation in two pieces
+// and merge the resulting values
 void multiThreadedCsvBuilder();
 
 #endif

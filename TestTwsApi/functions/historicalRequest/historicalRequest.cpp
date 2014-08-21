@@ -12,6 +12,7 @@ void historicalRequest() {
 		<< "please provide some contract code : "
 		<< std::endl;
 
+	boost::timer tt;											// timer
 	int clientId = 0; unsigned attempt = 0;						// request Id
 
 	std::string contractCode; std::cin >> contractCode;			// provided code
@@ -236,7 +237,9 @@ void historicalRequest() {
 	}
 
 	if (IB::settings::instance().verbosity() > 0)				// verbose
-
-		TWS_LOG(std::string("end of historical data request"))
+		TWS_LOG(												// log
+			std::string("historical data download test completed in ")
+				.append(boost::lexical_cast<std::string>(tt.elapsed()))
+				.append(" seconds"))
 
 };

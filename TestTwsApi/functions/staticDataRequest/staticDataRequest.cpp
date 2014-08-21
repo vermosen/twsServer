@@ -10,6 +10,8 @@ void staticDataRequest() {
 	int clientId         = 0;									// request Id
 	unsigned int attempt = 0;									// current attempt
 
+	boost::timer tt;											// timer
+
 	std::string contractCode; std::cin >> contractCode;			// contract is provided by the user
 
 	TWS_LOG(std::string("contract code provided: ")				// log
@@ -144,6 +146,7 @@ void staticDataRequest() {
 	if (IB::settings::instance().verbosity() > 0)					// message
 			
 		TWS_LOG(													// log
-			std::string("static data download test completed"))
-
+			std::string("static data download test completed in ")
+				.append(boost::lexical_cast<std::string>(tt.elapsed()))
+				.append(" seconds"))
 };

@@ -4,6 +4,7 @@
 #include <thread>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/timer.hpp>
 
 // thOth components
 #include <thOth/time/DateTime.hpp>

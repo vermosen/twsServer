@@ -1,14 +1,32 @@
 #include "functions/multiThreadedCsvBuilder/multiThreadedCsvBuilder.hpp"
 
-void insertMatrix1(thOth::utilities::csvBuilder & csv) {								
+void insertUpperMatrix(thOth::utilities::csvBuilder & csv) {								
 
-	csv.add(boost::numeric::ublas::matrix<double>(100, 100, 1.0), 1, 1);
+	boost::numeric::ublas::matrix<double> upperMatrix(50, 100, 0.0);
+
+	for (unsigned int i = 0; i < upperMatrix.size1(); i++) {	// upper half matrix
+	
+		for (unsigned int j = 0; j < upperMatrix.size2(); j++)
+			upperMatrix(i, j) = log((i + 1) * (j + 1));
+	
+	}
+
+	csv.add(upperMatrix, 1, 1);
 		
 }
 
-void insertMatrix2(thOth::utilities::csvBuilder & csv) {
+void insertLowerMatrix(thOth::utilities::csvBuilder & csv) {
 
-	csv.add(boost::numeric::ublas::matrix<double>(100, 100, 2.0), 2, 2);
+	boost::numeric::ublas::matrix<double> lowerMatrix(50, 100, 0.0);
+
+	for (unsigned int i = 0; i < lowerMatrix.size1(); i++) {	// lower half matrix
+
+		for (unsigned int j = 0; j < lowerMatrix.size2(); j++)
+			lowerMatrix(i, j) = log((i + 51) * (j + 1));
+
+	}
+
+	csv.add(lowerMatrix, 51, 1);
 	
 }
 
@@ -20,15 +38,26 @@ void multiThreadedCsvBuilder() {
 		<< "-------------------------------"
 		<< std::endl;
 
-	thOth::utilities::csvBuilder csv(CSVNAME);					// common csvBuilder
+	boost::timer tt;											// timer
 
-	std::thread thread1(insertMatrix1, std::ref(csv));
-	std::thread thread2(insertMatrix2, std::ref(csv));
+	thOth::utilities::csvBuilder csv(							// shared csv file
+		std::string(CSVPATH)
+		.append("csvTest")
+		.append("_")
+		.append(boost::posix_time::to_iso_string(
+			boost::posix_time::second_clock::local_time()))
+		.append("_")
+		.append(".csv"));
 
-	thread1.join(); thread2.join();
+	std::thread thread2(insertUpperMatrix, std::ref(csv));
+	std::thread thread1(insertLowerMatrix, std::ref(csv));
+
+	thread2.join(); thread1.join();
 
 	if (IB::settings::instance().verbosity() > 0)				// verbose
 
-		TWS_LOG(std::string("end of multi-threaded csv builder test"))
+		TWS_LOG(std::string("multi-threaded csv builder test executed in ")
+			.append(boost::lexical_cast<std::string>(tt.elapsed()))
+			.append(" seconds"))
 
 };
