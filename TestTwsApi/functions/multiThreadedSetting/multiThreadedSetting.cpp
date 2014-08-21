@@ -2,11 +2,9 @@
 
 void acquireTickerId(std::string & result) {					// returns a message
 
-	boost::timer tt;											// timer
-	
-	float wait = (float)1 / static_cast<float>(std::random_device()());
-
-	while (tt.elapsed() < std::min(wait, float(.1)));			// wait some time
+	std::this_thread::sleep_for(								// sleep for a random time
+		std::chrono::milliseconds(
+			std::random_device()()));
 	
 	result
 		.append("thread number ")
@@ -31,7 +29,7 @@ void multiThreadedSetting() {
 
 	boost::timer tt;											// timer
 
-	unsigned int const min_number = 2;							// min number of threads
+	unsigned int const min_number =  2;							// min number of threads
 	unsigned int const max_number = 20;							// max number of threads
 
 	unsigned int threadNum =									// available hardware ressources
@@ -48,7 +46,7 @@ void multiThreadedSetting() {
 	for (unsigned int i = 0; i < threadNum; i++)				// launches a new thread
 		threads[i] = std::thread(acquireTickerId, std::ref(messages[i]));
 			
-	for (unsigned int i = 0; i < threadNum; i++)				// join
+	for (unsigned int i = 0; i < threadNum; i++)				// join threads
 		threads[i].join();
 
 	for (unsigned int i = 0; i < threadNum; i++)				// read the messages

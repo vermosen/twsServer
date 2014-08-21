@@ -5,7 +5,7 @@
  *
  */
 
-#include "utilities/settings.hpp"
+#include "utilities/settings/settings.hpp"
 
 namespace IB {
 

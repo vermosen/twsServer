@@ -19,7 +19,7 @@
 #include "Contract.h"
 
 #include "utilities/conversion/convertDateTime/convertDateTime.hpp"
-#include "utilities/settings.hpp"
+#include "utilities/settings/settings.hpp"
 
 #ifndef _MSC_VER
 #include <sys/time.h>
@@ -34,8 +34,8 @@
 
 namespace IB {
 
-	const int PING_DEADLINE_S = 2;							// seconds
-	const int SLEEP_BETWEEN_PINGS_S = 30;						// seconds
+	const int PING_DEADLINE_S       = 2 ;												// seconds
+	const int SLEEP_BETWEEN_PINGS_S = 30;												// seconds
 
 	class EPosixClientSocket;
 	struct Contract;
@@ -44,7 +44,7 @@ namespace IB {
 
 	private:
 
-		enum state {																		// client states
+		enum state {																	// client states
 
 			ST_CONNECT,
 			ST_REQUEST,

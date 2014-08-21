@@ -1,11 +1,12 @@
 /* Copyright (C) 2013 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
 * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-#include "EWrapper/historicalRequestClient/historicalRequestClient.hpp"
+#include "requestClient/historicalRequestClient/historicalRequestClient.hpp"
 
 namespace IB {
 
-	historicalRequestClient::historicalRequestClient(const Contract & ct,
+	historicalRequestClient::historicalRequestClient(
+		const Contract & ct,
 		const thOth::dateTime & dt,
 		const barSize bar,
 		const int length,

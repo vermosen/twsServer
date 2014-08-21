@@ -10,7 +10,7 @@
 
 // twsapi
 #include "utilities/type/all.hpp"
-#include "utilities/settings.hpp"
+#include "utilities/settings/settings.hpp"
 #include "utilities/define.hpp"
 
 #define CSVPATH  "C://Temp/"

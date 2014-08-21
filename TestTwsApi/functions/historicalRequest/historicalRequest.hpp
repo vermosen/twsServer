@@ -9,9 +9,9 @@
 
 // twsapi
 #include "utilities/type/all.hpp"
-#include "utilities/settings.hpp"
 #include "utilities/define.hpp"
-#include "EWrapper/historicalRequestClient/historicalRequestClient.hpp"
+#include "utilities/settings/settings.hpp"
+#include "requestClient/historicalRequestClient/historicalRequestClient.hpp"
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 #include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
 

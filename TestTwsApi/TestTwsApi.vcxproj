@@ -165,18 +165,19 @@
     <ClCompile Include="functions\multiThreadedSetting\multiThreadedSetting.cpp" />
     <ClCompile Include="functions\simpleStrategy\simpleStrategy.cpp" />
     <ClCompile Include="functions\staticDataRequest\staticDataRequest.cpp" />
-    <ClCompile Include="EWrapper\historicalRequestClient\historicalRequestClient.cpp" />
+    <ClCompile Include="requestClient\historicalRequestClient\historicalRequestClient.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="recordset\tableContractRecordset\tableContractRecordset.cpp" />
     <ClCompile Include="recordset\tableHistoricalBarRecordset\tableHistoricalBarRecordset.cpp" />
-    <ClCompile Include="EWrapper\staticDataRequestClient\staticDataRequestClient.cpp" />
+    <ClCompile Include="requestClient\requestClient.cpp" />
+    <ClCompile Include="requestClient\staticDataRequestClient\staticDataRequestClient.cpp" />
     <ClCompile Include="utilities\conversion\convertDateTime\convertDateTime.cpp" />
     <ClCompile Include="utilities\factory\barSizeFactory\barSizeFactory.cpp" />
     <ClCompile Include="utilities\factory\dataDurationFactory\dataDurationFactory.cpp" />
     <ClCompile Include="utilities\factory\dataTypeFactory\dataTypeFactory.cpp" />
     <ClCompile Include="utilities\idGenerator\idGenerator.cpp" />
     <ClCompile Include="utilities\logger\logger.cpp" />
-    <ClCompile Include="utilities\settings.cpp" />
+    <ClCompile Include="utilities\settings\settings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="functions\all.hpp" />
@@ -186,12 +187,13 @@
     <ClInclude Include="recordset\recordset.hpp" />
     <ClInclude Include="recordset\tableContractRecordset\tableContractRecordset.hpp" />
     <ClInclude Include="recordset\tableHistoricalBarRecordset\tableHistoricalBarRecordset.hpp" />
+    <ClInclude Include="requestClient\requestClient.hpp" />
     <ClInclude Include="utilities\conversion\convertDateTime\convertDateTime.hpp" />
     <ClInclude Include="utilities\define.hpp" />
     <ClInclude Include="functions\historicalRequest\historicalRequest.hpp" />
     <ClInclude Include="functions\staticDataRequest\staticDataRequest.hpp" />
-    <ClInclude Include="EWrapper\historicalRequestClient\historicalRequestClient.hpp" />
-    <ClInclude Include="EWrapper\staticDataRequestClient\staticDataRequestClient.hpp" />
+    <ClInclude Include="requestClient\historicalRequestClient\historicalRequestClient.hpp" />
+    <ClInclude Include="requestClient\staticDataRequestClient\staticDataRequestClient.hpp" />
     <ClInclude Include="utilities\factory\barSizeFactory\barSizeFactory.hpp" />
     <ClInclude Include="utilities\factory\barSizeFactory\register_barSize.hpp" />
     <ClInclude Include="utilities\factory\dataDurationFactory\dataDurationFactory.hpp" />
@@ -201,7 +203,7 @@
     <ClInclude Include="utilities\factory\all.hpp" />
     <ClInclude Include="utilities\idGenerator\idGenerator.hpp" />
     <ClInclude Include="utilities\logger\logger.hpp" />
-    <ClInclude Include="utilities\settings.hpp" />
+    <ClInclude Include="utilities\settings\settings.hpp" />
     <ClInclude Include="utilities\type\all.hpp" />
     <ClInclude Include="utilities\type\barSize.hpp" />
     <ClInclude Include="utilities\type\dataDuration.hpp" />

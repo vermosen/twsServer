@@ -12,15 +12,13 @@
 #define PORT     3308
 #define LOGPATH  "C://Temp/"
 
-#include "contract.h"												// TWS library
-#include "utilities/type/all.hpp"
-
 #include <thOth/time/DateTime.hpp>									// thOth components
 #include <utilities/factory/all.hpp>
 
+#include "contract.h"												// TWS library
 #include "functions/all.hpp"										// test functions
-
-#include "utilities/settings.hpp"									// additional 
+#include "utilities/type/all.hpp"
+#include "utilities/settings/settings.hpp"							// additional 
 #include "utilities/define.hpp"
 
 // This procedure can be started manually (empty argv)

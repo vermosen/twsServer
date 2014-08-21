@@ -9,7 +9,7 @@
 
 #include <thOth/time/DateTime.hpp>
 
-#include "utilities/settings.hpp"
+#include "utilities/settings/settings.hpp"
 
 // build logging string macro
 #define TWS_LOG(X) \

@@ -8,9 +8,9 @@
 #include <thOth/time/DateTime.hpp>
 
 #include "utilities/type/all.hpp"
-#include "utilities/settings.hpp"
+#include "utilities/settings/settings.hpp"
 #include "utilities/define.hpp"
-#include "EWrapper/staticDataRequestClient/staticDataRequestClient.hpp"
+#include "requestClient/staticDataRequestClient/staticDataRequestClient.hpp"
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 
 // this procedure is meant to request 
