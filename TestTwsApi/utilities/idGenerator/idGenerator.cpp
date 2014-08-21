@@ -13,6 +13,8 @@ namespace IB {
 
 	TickerId idGenerator::next() {
 
+		std::lock_guard<std::mutex> guard(idMutex_);
+
 		return ++lastId_;
 
 	}

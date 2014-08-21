@@ -37,24 +37,25 @@ namespace IB {
 		public: 
 			
 			//accessors
-			void verbosity       (const unsigned int  v);
-			void port            (const unsigned int  v);
-			void ibPort          (const unsigned int  v);
-			inline void ibHost   (const std::string & s) { ibHost_    = s; };
-			inline void logPath  (const std::string & s) { log_.path(s)  ; };
-			inline void server   (const std::string & s) { server_    = s; };
-			inline void user     (const std::string & s) { user_      = s; };
-			inline void password (const std::string & s) { password_  = s; };
-			inline void dataBase (const std::string & s) { dataBase_  = s; };
+			void verbosity (const unsigned int  v);
+			void port      (const unsigned int  v);
+			void ibPort    (const unsigned int  v);
+			void ibHost    (const std::string & s);
+			void server    (const std::string & s);
+			void user      (const std::string & s);
+			void password  (const std::string & s);
+			void dataBase  (const std::string & s);
 
-			unsigned int verbosity      () const;
-			unsigned int port           () const;
-			unsigned int ibPort         () const;
-			inline std::string ibHost   () const { return ibHost_   ; };
-			inline std::string server   () const { return server_   ; };
-			inline std::string user     () const { return user_     ; };
-			inline std::string password () const { return password_ ; };
-			inline std::string dataBase () const { return dataBase_ ; };
+			inline void logPath(const std::string & s) { log_.path(s); };
+
+			unsigned int verbosity () const;
+			unsigned int port      () const;
+			unsigned int ibPort    () const;
+			std::string ibHost     () const;
+			std::string server     () const;
+			std::string user       () const;
+			std::string password   () const;
+			std::string dataBase   () const;
 
 			inline idGenerator & generator () { return generator_; };
 			inline logger      & log       () { return log_      ; };
@@ -81,8 +82,11 @@ namespace IB {
 			mutable std::mutex verbosityMutex_;		// locks/unlocks the verbosity variable
 			mutable std::mutex portMutex_     ;		// locks/unlocks the port variable
 			mutable std::mutex ibPortMutex_   ;		// locks/unlocks the ib port variable
-
-
+			mutable std::mutex ibHostMutex_   ;		// locks/unlocks the ib host variable
+			mutable std::mutex serverMutex_   ;		// locks/unlocks the server variable
+			mutable std::mutex userMutex_     ;		// locks/unlocks the user variable
+			mutable std::mutex passwordMutex_ ;		// locks/unlocks the password variable
+			mutable std::mutex dataBaseMutex_;		// locks/unlocks the database variable
 	};
 
 }

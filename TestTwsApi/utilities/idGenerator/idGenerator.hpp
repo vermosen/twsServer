@@ -8,13 +8,15 @@
 #ifndef id_generator_hpp
 #define id_generator_hpp
 
+#include <mutex>
+
 #include <thOth/pattern/singleton.hpp>
 
 #include <commonDefs.h>
 
 namespace IB {
 
-	// a basic id generator
+	// a basic id generator with concurrency management
 	class idGenerator : public thOth::singleton<idGenerator> {
 
 	public:
@@ -27,6 +29,7 @@ namespace IB {
 	private:
 		
 		TickerId lastId_;
+		std::mutex idMutex_;
 
 	};
 
