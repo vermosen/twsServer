@@ -1,17 +1,17 @@
-﻿Build started 21/08/2014 12:26:54.
-Project "C:\Users\vermosen\Documents\GitHub\twsapi\twsPython\twsPython.vcxproj" on node 2 (Build target(s)).
-InitializeBuildStatus:
-  Touching "Release\twsPython.tlog\unsuccessfulbuild".
-CustomBuild:
-  Performing Custom Build Tools
-  In order to function correctly, please ensure the following environment variables are correctly set: 
-  PYTHON_INCLUDE: C:\Python33\include 
-  PYTHON_LIB: C:\Python33\libs\python33.lib 
-FinalizeBuildStatus:
-  Deleting file "Release\twsPython.tlog\unsuccessfulbuild".
-  Touching "Release\twsPython.tlog\twsPython.lastbuildstate".
-Done Building Project "C:\Users\vermosen\Documents\GitHub\twsapi\twsPython\twsPython.vcxproj" (Build target(s)).
+﻿Build started 25/08/2014 12:31:35.
+     1>Project "C:\Users\vermosen\Documents\GitHub\twsapi\twsPython\twsPython.vcxproj" on node 2 (Build target(s)).
+     1>InitializeBuildStatus:
+         Touching "Release\twsPython.tlog\unsuccessfulbuild".
+       CustomBuild:
+         Performing Custom Build Tools
+         In order to function correctly, please ensure the following environment variables are correctly set: 
+         PYTHON_INCLUDE: C:\Python33\include 
+         PYTHON_LIB: C:\Python33\libs\python33.lib 
+       FinalizeBuildStatus:
+         Deleting file "Release\twsPython.tlog\unsuccessfulbuild".
+         Touching "Release\twsPython.tlog\twsPython.lastbuildstate".
+     1>Done Building Project "C:\Users\vermosen\Documents\GitHub\twsapi\twsPython\twsPython.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.75
+Time Elapsed 00:00:00.74

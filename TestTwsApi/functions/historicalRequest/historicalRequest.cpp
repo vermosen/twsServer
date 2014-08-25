@@ -186,9 +186,10 @@ void historicalRequest() {
 
 				TWS_LOG(std::string("sleeping ")				// log
 					.append(boost::lexical_cast<std::string>(SLEEP_TIME))
-					.append(" seconds before next attempt "))
+					.append(" milli-seconds before next attempt "))
 
-				sleep(SLEEP_TIME);
+				boost::this_thread::sleep_for(								// sleep for 100 ms
+					boost::chrono::milliseconds(SLEEP_TIME));
 
 		}
 

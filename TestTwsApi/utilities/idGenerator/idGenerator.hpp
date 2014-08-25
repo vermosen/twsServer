@@ -8,7 +8,8 @@
 #ifndef id_generator_hpp
 #define id_generator_hpp
 
-#include <mutex>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/lock_guard.hpp>
 
 #include <thOth/pattern/singleton.hpp>
 
@@ -29,7 +30,7 @@ namespace IB {
 	private:
 		
 		TickerId lastId_;
-		std::mutex idMutex_;
+		boost::mutex idMutex_;
 
 	};
 

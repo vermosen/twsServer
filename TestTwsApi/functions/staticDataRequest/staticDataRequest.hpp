@@ -3,6 +3,7 @@
 
 #include <boost/lexical_cast.hpp>
 #include <boost/timer.hpp>
+#include <boost/thread.hpp>
 
 // thOth components
 #include <thOth/time/DateTime.hpp>

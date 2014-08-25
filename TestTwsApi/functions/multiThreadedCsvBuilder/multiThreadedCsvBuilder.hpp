@@ -2,8 +2,8 @@
 #define tws_function_multi_threaded_csv_builder
 
 #include <thread>
-#include <random>
 
+#include <boost/thread.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/timer.hpp>
 #include <boost/numeric/ublas/matrix.hpp>

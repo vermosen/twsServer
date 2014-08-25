@@ -49,8 +49,8 @@ void multiThreadedCsvBuilder() {
 		.append("_")
 		.append(".csv"));
 
-	std::thread thread2(insertUpperMatrix, std::ref(csv));
-	std::thread thread1(insertLowerMatrix, std::ref(csv));
+	boost::thread thread2(insertUpperMatrix, boost::ref(csv));
+	boost::thread thread1(insertLowerMatrix, boost::ref(csv));
 
 	thread2.join(); thread1.join();
 

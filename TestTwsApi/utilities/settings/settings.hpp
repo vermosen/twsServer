@@ -9,7 +9,9 @@
 #define settings_hpp
 
 #include <string>
-#include <mutex>
+
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/lock_guard.hpp>
 
 #include <thOth/pattern/singleton.hpp>
 
@@ -79,14 +81,14 @@ namespace IB {
 			unsigned int ibPort_   ;				// interactive broker server port
 
 			// mutexes
-			mutable std::mutex verbosityMutex_;		// locks/unlocks the verbosity variable
-			mutable std::mutex portMutex_     ;		// locks/unlocks the port variable
-			mutable std::mutex ibPortMutex_   ;		// locks/unlocks the ib port variable
-			mutable std::mutex ibHostMutex_   ;		// locks/unlocks the ib host variable
-			mutable std::mutex serverMutex_   ;		// locks/unlocks the server variable
-			mutable std::mutex userMutex_     ;		// locks/unlocks the user variable
-			mutable std::mutex passwordMutex_ ;		// locks/unlocks the password variable
-			mutable std::mutex dataBaseMutex_;		// locks/unlocks the database variable
+			mutable boost::mutex verbosityMutex_;	// locks/unlocks the verbosity variable
+			mutable boost::mutex portMutex_;		// locks/unlocks the port variable
+			mutable boost::mutex ibPortMutex_;		// locks/unlocks the ib port variable
+			mutable boost::mutex ibHostMutex_;		// locks/unlocks the ib host variable
+			mutable boost::mutex serverMutex_;		// locks/unlocks the server variable
+			mutable boost::mutex userMutex_;		// locks/unlocks the user variable
+			mutable boost::mutex passwordMutex_;	// locks/unlocks the password variable
+			mutable boost::mutex dataBaseMutex_;	// locks/unlocks the database variable
 	};
 
 }

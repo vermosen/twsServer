@@ -21,14 +21,6 @@
 
 
 const unsigned MAX_ATTEMPT = 1;				// maximum number of connection attemps
-const unsigned SLEEP_TIME  = 3;				// sleep time between two connections
-
-// sleep macro
-#ifdef _WIN32
-//#include <windows.h>						// link bug
-#define sleep( seconds) Sleep( seconds * 1000);
-#else
-#include <unistd.h>
-#endif
+const unsigned SLEEP_TIME  = 2000;			// sleep time in ms between two connections
 
 #endif

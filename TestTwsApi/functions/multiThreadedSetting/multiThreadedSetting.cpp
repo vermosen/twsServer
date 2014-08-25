@@ -2,14 +2,13 @@
 
 void acquireTickerId(std::string & result) {					// returns a message
 
-	std::this_thread::sleep_for(								// sleep for a random time
-		std::chrono::milliseconds(
-			std::random_device()()));
+	boost::this_thread::sleep_for(								// sleep for a random time
+		boost::chrono::milliseconds(100));
 	
 	result
 		.append("thread number ")
 		.append(boost::lexical_cast<std::string>(
-			std::this_thread::get_id()))
+			boost::this_thread::get_id()))
 		.append(" get the id ")
 		.append(boost::lexical_cast<std::string>(
 			IB::settings::instance().generator().next()));
@@ -33,18 +32,18 @@ void multiThreadedSetting() {
 	unsigned int const max_number = 20;							// max number of threads
 
 	unsigned int threadNum =									// available hardware ressources
-		std::thread::hardware_concurrency();
+		boost::thread::hardware_concurrency();
 
 	threadNum =													// define number of threads
 		std::min(std::max(threadNum, min_number), max_number);
 
 	threadNum = 20;												// enforce number of threads to max
 
-	std::vector<std::thread> threads (threadNum);				// trying to call testLog function
-	std::vector<std::string> messages(threadNum);				// the messages
+	std::vector<boost::thread> threads (threadNum);				// trying to call testLog function
+	std::vector<std::string>  messages (threadNum);				// the messages
 
 	for (unsigned int i = 0; i < threadNum; i++)				// launches a new thread
-		threads[i] = std::thread(acquireTickerId, std::ref(messages[i]));
+		threads[i] = boost::thread(acquireTickerId, std::ref(messages[i]));
 			
 	for (unsigned int i = 0; i < threadNum; i++)				// join threads
 		threads[i].join();
@@ -58,7 +57,7 @@ void multiThreadedSetting() {
 	std::string str; str										// finally get the main thread id
 		.append("main thread ")
 		.append(boost::lexical_cast<std::string>(
-			std::this_thread::get_id()))
+			boost::this_thread::get_id()))
 		.append(" get the id ")
 		.append(boost::lexical_cast<std::string>(
 			IB::settings::instance().generator().next()));
