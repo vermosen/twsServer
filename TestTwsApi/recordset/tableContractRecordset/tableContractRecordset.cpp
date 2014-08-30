@@ -17,12 +17,10 @@ namespace IB {
 
 		tableContractRecordset & tableContractRecordset::operator=(const tableContractRecordset & o) {
 		
-			recordset::operator=(o);						// call the parent class =
-
 			if (this != &o) {
-			
-				// copy some stuff
-				records_ = o.records_;
+				
+				recordset::operator=(o);						// call the parent class =
+				records_ = o.records_  ;						// copy local stuff
 
 			}
 
@@ -30,7 +28,7 @@ namespace IB {
 		
 		}
 
-		bool tableContractRecordset::select(const std::string & selectStr) {
+		bool tableContractRecordset::selectQ(const std::string & selectStr) {
 		
 			mysql_query(												// query to run
 				connection_,
@@ -768,5 +766,15 @@ namespace IB {
 
 		}
 
+		bool tableContractRecordset::deleteQ(const std::string & deleteStr) {
+
+			mysql_query(												// query to run
+				connection_,
+				deleteStr.c_str());
+
+			// todo: error management
+			return true;
+
+		}
 	}
 }

@@ -18,15 +18,15 @@ void historicalRequest() {
 
 	std::string contractCode; std::cin >> contractCode;			// provided code
 
-	TWS_LOG(													// log
+	TWS_LOG_V(													// log
 		std::string("contract provided: ")
-			.append(contractCode))
+			.append(contractCode), 0)
 
 	MYSQL * connect = mysql_init(NULL);							// initialize mySQL connection
 
-	TWS_LOG(													// log
+	TWS_LOG_V(													// log
 		std::string("requesting contract details for: ")
-		.append(contractCode))
+		.append(contractCode), 0)
 
 	if (!connect)												// fails to initialize mySQL
 		throw std::exception("mySQL initialization failed");
@@ -45,18 +45,18 @@ void historicalRequest() {
 	// recordset`& query
 	IB::dataBase::tableContractRecordset contractRs(connect);	// table contract recordset
 
-	std::string query(											// query to run
+	std::string selectQuery(									// query to run
 		"SELECT * FROM table_contract WHERE contract_symbol = '");
-		query.append(contractCode);
-		query.append("'");
+		selectQuery.append(contractCode);
+		selectQuery.append("'");
 
-	TWS_LOG(std::string("running query: ")						// log
-		.append(query))
+	TWS_LOG_V(std::string("running query: ")					// log
+		.append(selectQuery), 0)
 
-	if (!contractRs.select(query))								// query succeeded ?
+	if (!contractRs.selectQ(selectQuery))						// query succeeded ?
 		throw std::exception("instrument request failed");	
 		
-	query = "";													// for later usage
+	selectQuery = "";											// for later usage
 
 	if (contractRs.size() == 0)									// symbol found ?
 		throw std::exception("symbol not found");
@@ -67,7 +67,7 @@ void historicalRequest() {
 	IB::dataBase::recordId id = contractRs.cbegin()->first;		// contract Id
 	IB::ContractDetails contract = contractRs.cbegin()->second;	// contract
 	
-	TWS_LOG(													// log
+	TWS_LOG_V(													// log
 		std::string("contract details: ")
 			.append(contract.summary.symbol)
 			.append(", ")
@@ -77,7 +77,7 @@ void historicalRequest() {
 			.append(", ")
 			.append(contract.summary.currency)
 			.append(", ")
-			.append(contract.summary.primaryExchange));
+			.append(contract.summary.primaryExchange), 0);
 
 	// step 2: date of the request
 	std::cout << "Please provide a request date (MM/dd/yyyy):"	// message
@@ -111,19 +111,19 @@ void historicalRequest() {
 		
 		} catch (boost::bad_lexical_cast & ex) {
 
-			TWS_LOG(std::string("bad lexical cast exception")
-				.append(ex.what()))
+			TWS_LOG_V(std::string("bad lexical cast exception")
+				.append(ex.what()), 0)
 
 		} catch (std::exception & ex) {
 		
-			TWS_LOG(std::string("an error occured in historical Request function: ")
-				.append(ex.what()))
+			TWS_LOG_V(std::string("an error occured in historical Request function: ")
+				.append(ex.what()), 0)
 
 			throw std::exception(ex.what());
 		
 		} catch (...) {
 
-			TWS_LOG(std::string("an unknown error occured in historicaRequest function"))
+			TWS_LOG_V(std::string("an unknown error occured in historicaRequest function"), 0)
 			throw std::exception("an unknown error occured..."); 
 		
 		};
@@ -131,8 +131,8 @@ void historicalRequest() {
 	};
 
 	// step 3: download data
-	TWS_LOG(std::string("requesting IB data for date: ")		// log
-		.append(boost::lexical_cast<std::string>(*requestDate)))
+	TWS_LOG_V(std::string("requesting IB data for date: ")		// log
+		.append(boost::lexical_cast<std::string>(*requestDate)), 0)
 
 	contract.summary.exchange = "SMART";						// setting exchange to SMART
 
@@ -151,12 +151,10 @@ void historicalRequest() {
 
 		++attempt;
 
-		if (IB::settings::instance().verbosity() > 0)			// verbose ?
-
-			TWS_LOG(std::string("attempt number ")				// log
-				.append(boost::lexical_cast<std::string>(attempt))
-				.append(" out of ")
-				.append(boost::lexical_cast<std::string>(MAX_ATTEMPT)))
+		TWS_LOG_V(std::string("attempt number ")				// log
+			.append(boost::lexical_cast<std::string>(attempt))
+			.append(" out of ")
+			.append(boost::lexical_cast<std::string>(MAX_ATTEMPT)), 0)
 
 		client.connect(											// client is connecting
 			IB::settings::instance().ibHost().c_str(),
@@ -169,12 +167,10 @@ void historicalRequest() {
 
 		if (client.endOfHistoricalData()) {						// download succedded
 
-			if (IB::settings::instance().verbosity() > 0)
-
-				TWS_LOG(std::string("attempt number ")			// log
-					.append(boost::lexical_cast<std::string>(attempt))
-					.append("download successful. \
-						Trying to store data in the database"))
+			TWS_LOG_V(std::string("attempt number ")			// log
+				.append(boost::lexical_cast<std::string>(attempt))
+				.append("download successful. \
+					Trying to store data in the database"), 0)
 					
 			bars = client.bars();
 
@@ -196,7 +192,7 @@ void historicalRequest() {
 	// step 4: check for previous import: contract Id * dateframe * exchange
 	IB::dataBase::tableHistoricalBarRecordset barRs(connect);	// table contract recordset
 
-	query.append(												// query to run
+	selectQuery.append(											// query to run
 		"SELECT * FROM table_historical_bar WHERE (contract_ID = '")
 		.append(boost::lexical_cast<std::string>(id))
 		.append("' AND exchange = '")
@@ -207,17 +203,27 @@ void historicalRequest() {
 		.append(boost::lexical_cast<std::string>(bars.rbegin()->barEnd()))
 		.append("')");
 
-	TWS_LOG(std::string("query to launch: ")					// log
-		.append(query))
+	TWS_LOG_V(std::string("query to launch: ")					// log
+		.append(selectQuery), 0)
 
 	try {
 
-		// if succedded, there are item to delete
-
-		if (barRs.select(query) == true) {
+		if (barRs.selectQ(selectQuery) == true) {				// if succedded, there are item to delete
 		
-			// TODO: deletion phase
-			TWS_LOG("previous import found, deleting data")
+			TWS_LOG_V("previous import found, deleting data", 0)// deletion phase
+
+			std::string deleteQuery; deleteQuery
+				.append("DELETE * FROM table_historical_bar WHERE (contract_ID = '")
+				.append(boost::lexical_cast<std::string>(id))
+				.append("' AND exchange = '")
+				.append(contract.summary.exchange)
+				.append("' AND bar_start > '")
+				.append(boost::lexical_cast<std::string>(bars.begin()->barStart()))
+				.append("' AND bar_end < '")
+				.append(boost::lexical_cast<std::string>(bars.rbegin()->barEnd()))
+				.append("')");
+
+			barRs.deleteQ(deleteQuery);							// run the delete statement
 		
 		}
 		

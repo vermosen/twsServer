@@ -50,8 +50,9 @@ namespace IB {
 				recordset & operator =(const recordset &);
 
 				// database methods
-				virtual bool select(const std::string &) = 0;	// return true if the select statement is non empty
-				virtual bool insert(const T			  &) = 0;	// insert method
+				virtual bool selectQ(const std::string &) = 0;	// return true if the select statement is non empty
+				virtual bool deleteQ(const std::string &) = 0;	// return true if the delete statement succeed
+				virtual bool insert(const T			   &) = 0;	// insert method
 				bool insert(const std::vector<T> &);			// bulk insert
 
 				// iterators

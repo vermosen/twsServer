@@ -21,8 +21,8 @@ namespace IB {
 
 				tableContractRecordset & operator =(const tableContractRecordset &);
 
-
-				bool select(const std::string &);						// run a select statement
+				bool selectQ(const std::string &   );					// run a select statement
+				bool deleteQ(const std::string &   );					// run a select statement
 				bool insert(const ContractDetails &);					// insert a contract detail in the database
 
 			protected:

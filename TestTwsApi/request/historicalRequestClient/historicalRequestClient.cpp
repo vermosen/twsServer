@@ -205,22 +205,22 @@ namespace IB {
 
 		if (errorCode == 1100) {											// "Connectivity between IB and TWS has been lost"
 
-			TWS_LOG(std::string("Connectivity error: ")						// log
-				.append(errorString))
+			TWS_LOG_V(std::string("Connectivity error: ")						// log
+				.append(errorString), 0)
 
 				disconnect();
 
-		} else if (errorCode == 200) {										// ""
+		} else if (errorCode == 200) {											// ""
 
-			TWS_LOG(std::string("Request error: ")							// log
-				.append(errorString))
+			TWS_LOG_V(std::string("Request error: ")							// log
+				.append(errorString), 0)
 
 				disconnect();
 
 		} else {
 
-			TWS_LOG(std::string("request information: ")					// log
-				.append(errorString))
+			TWS_LOG_V(std::string("request information: ")					// log
+				.append(errorString), 1)
 		
 		}
 			

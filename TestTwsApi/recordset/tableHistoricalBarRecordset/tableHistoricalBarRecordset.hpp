@@ -44,8 +44,10 @@ namespace IB {
 
 				tableHistoricalBarRecordset & operator =(const tableHistoricalBarRecordset &);
 
-				bool select(const std::string &);						// run a select statement
-				bool insert(const barRecord   &);						// insert a bar
+				bool selectQ(const std::string &);						// run a select statement
+				bool deleteQ(const std::string &);						// delete records 
+				bool insert (const barRecord   &);						// insert a bar
+				
 
 			protected:
 

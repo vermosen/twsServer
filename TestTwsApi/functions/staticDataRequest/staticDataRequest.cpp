@@ -45,7 +45,7 @@ void staticDataRequest() {
 		.append(selectQuery))
 
 	// step 3: run the static data request
-	if (!rs.select(selectQuery)) {								// returns value ?
+	if (!rs.selectQ(selectQuery)) {								// returns value ?
 
 		TWS_LOG(std::string("instrument not in the database"))	// log
 		IB::Contract contract;									// contract to request
@@ -85,58 +85,51 @@ void staticDataRequest() {
 
 			if (client.endOfStaticData()) {						// download succedded
 
-				if (IB::settings::instance().verbosity() > 0)
+				TWS_LOG_V(										// log
+					std::string("download successful"), 0)	
 
-					TWS_LOG(									// log
-						std::string("download successful"))	
-
-					break;
+				break;
 
 			} else {
 
-				if (IB::settings::instance().verbosity() > 2)
-
-					TWS_LOG(std::string("sleeping ")			// log
+				TWS_LOG_V(std::string("sleeping ")				// log
 					.append(boost::lexical_cast<std::string>(SLEEP_TIME))
-					.append(" seconds before next attempt"))
+					.append(" seconds before next attempt"), 0)
 
-					boost::this_thread::sleep_for(								// sleep for 100 ms
-						boost::chrono::milliseconds(SLEEP_TIME));
+				boost::this_thread::sleep_for(					// sleep for 100 ms
+					boost::chrono::milliseconds(SLEEP_TIME));
 
 			}
 
 		}														// end of for loop
 
-		
-		if (IB::settings::instance().verbosity() > 0)			// verbosity ?
-
-			TWS_LOG(											// partially log the contract details
-			std::string("contract details: (symbol) ")
-			.append(client.contract().symbol)
-			.append(", (secType) ")
-			.append(client.contract().secType)
-			.append(", (currency) ")
-			.append(client.contract().currency)
-			.append(", (primary exchange) ")
-			.append(client.contract().primaryExchange)
-			.append(", (bondType) ")
-			.append(client.contractDetails().bondType)
-			.append(", (callable) ")
-			.append(boost::lexical_cast<std::string>(client.contractDetails().callable))
-			.append(", (category) ")
-			.append(client.contractDetails().category)
-			.append(", (contractMonth) ")
-			.append(client.contractDetails().contractMonth)
-			.append("..."))
+		TWS_LOG_V(												// partially log the contract details
+		std::string("contract details: (symbol) ")
+		.append(client.contract().symbol)
+		.append(", (secType) ")
+		.append(client.contract().secType)
+		.append(", (currency) ")
+		.append(client.contract().currency)
+		.append(", (primary exchange) ")
+		.append(client.contract().primaryExchange)
+		.append(", (bondType) ")
+		.append(client.contractDetails().bondType)
+		.append(", (callable) ")
+		.append(boost::lexical_cast<std::string>(client.contractDetails().callable))
+		.append(", (category) ")
+		.append(client.contractDetails().category)
+		.append(", (contractMonth) ")
+		.append(client.contractDetails().contractMonth)
+		.append("..."), 1)
 
 
-			// insert into the database
-			TWS_LOG(												// log
-			std::string("attempt to insert contract details"))
+		// insert into the database
+		TWS_LOG_V(													// log
+			std::string("attempt to insert contract details"), 0)
 
 			if (!rs.insert(client.contractDetails()))				// tries to insert 
 
-				TWS_LOG(std::string("insert failed"))
+				TWS_LOG_V(std::string("insert failed"), 0)
 
 	} else {
 	
@@ -144,10 +137,9 @@ void staticDataRequest() {
 
 	}
 
-	if (IB::settings::instance().verbosity() > 0)					// message
-			
-		TWS_LOG(													// log
-			std::string("static data download test completed in ")
-				.append(boost::lexical_cast<std::string>(tt.elapsed()))
-				.append(" seconds"))
+	TWS_LOG_V(														// log
+		std::string("static data download test completed in ")
+			.append(boost::lexical_cast<std::string>(tt.elapsed()))
+			.append(" seconds"), 0)
+
 };

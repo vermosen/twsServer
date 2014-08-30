@@ -25,13 +25,11 @@ namespace IB {
 		tableHistoricalBarRecordset::~tableHistoricalBarRecordset() {};
 
 		tableHistoricalBarRecordset & tableHistoricalBarRecordset::operator=(const tableHistoricalBarRecordset & o) {
-		
-			recordset::operator=(o);						// call the parent class =
 
 			if (this != &o) {
 			
-				// copy some stuff
-				records_ = o.records_;
+				recordset::operator=(o);						// call the parent class =
+				records_ = o.records_  ;						// copy local stuff
 
 			}
 
@@ -39,7 +37,7 @@ namespace IB {
 		
 		}
 
-		bool tableHistoricalBarRecordset::select(const std::string & selectStr) {
+		bool tableHistoricalBarRecordset::selectQ(const std::string & selectStr) {
 		
 			mysql_query(												// query to run
 				connection_,
@@ -209,6 +207,17 @@ namespace IB {
 
 			return true;												// return true otherwise
 
+		}
+
+		bool tableHistoricalBarRecordset::deleteQ(const std::string & deleteStr) {
+		
+			mysql_query(												// query to run
+				connection_,
+				deleteStr.c_str());
+
+			// todo: error management
+			return true;
+		
 		}
 	}
 }
