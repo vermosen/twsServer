@@ -18,6 +18,6 @@
 
 // this procedure is meant to request 
 // missing historical data about a given contract
-void historicalRequest();
+void historicalRequest(const std::string &, const std::string &);
 
 #endif

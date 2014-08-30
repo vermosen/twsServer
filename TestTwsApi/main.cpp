@@ -58,6 +58,8 @@ int main(int argc, char** argv) {
 
 		TWS_LOG(std::string("starting TwsApiTest"))					// log
 
+		std::string opt1, opt2;										// optional fields
+
 		for (int i = 1; i < argc; i++) {							// deals with optional arguments
 			
 			std::string arg(argv[i]);								// current std::string
@@ -110,6 +112,24 @@ int main(int argc, char** argv) {
 
 			}
 
+			if (arg.substr(1, 4) == "opt1") {						// expects -opt1=toto
+
+				std::string str(arg.substr(6, arg.length() - 6));	// the value
+				opt1 = str;											// set the opt1 value
+				TWS_LOG(std::string("sets opt1 value to ")			// log
+					.append(str))
+
+			}
+
+			if (arg.substr(1, 4) == "opt2") {						// expects -opt1=toto
+
+				std::string str(arg.substr(6, arg.length() - 6));	// the value
+				opt2 = str;											// set the opt2 value
+				TWS_LOG(std::string("sets opt2 value to ")			// log
+					.append(str))
+
+			}
+
 		}
 																	
 		do {														// manual selection - loop over the choices
@@ -148,7 +168,7 @@ int main(int argc, char** argv) {
 					TWS_LOG(										// log
 						std::string("starting historicalRequest test"))	
 
-					historicalRequest();							// launches historical request process
+					historicalRequest(opt1, opt2);					// launches historical request process
 					break;				
 
 				case 2:

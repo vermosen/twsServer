@@ -304,11 +304,13 @@ namespace IB {
 
 				fieldStr.append("CONTRACT_ISIN,");
 				INSERT_SQL_STR(valueStr, details.summary.secId)
+				valueStr.append(",");
 			
 				if (details.cusip != "") {
 				
 					fieldStr.append("CONTRACT_CUSIP,");
 					INSERT_SQL_STR(valueStr, details.cusip)
+					valueStr.append(",");
 
 				}
 
@@ -318,6 +320,7 @@ namespace IB {
 
 				fieldStr.append("CONTRACT_CUSIP,");
 				INSERT_SQL_STR(valueStr, details.summary.secId)
+				valueStr.append(",");
 
 			} else
 
@@ -325,11 +328,13 @@ namespace IB {
 
 				fieldStr.append("CONTRACT_SEDOL,");
 				INSERT_SQL_STR(valueStr, details.summary.secId)
+				valueStr.append(",");
 
 				if (details.cusip != "") {
 
 					fieldStr.append("CONTRACT_CUSIP,");
 					INSERT_SQL_STR(valueStr, details.cusip)
+					valueStr.append(",");
 
 				}
 
@@ -339,68 +344,63 @@ namespace IB {
 
 				fieldStr.append("CONTRACT_RIC,");
 				INSERT_SQL_STR(valueStr, details.summary.secId)
+				valueStr.append(",");
 
 				if (details.cusip != "") {
 
 					fieldStr.append("CONTRACT_CUSIP,");
 					INSERT_SQL_STR(valueStr, details.cusip)
-				}
+					valueStr.append(",");
 
-			}
-			else {													// in case nothng provided but the cusip is provided
+				}
+			} else {													// in case nothng provided but the cusip is provided
 				
 				if (details.cusip != "") {
 
 					fieldStr.append("CONTRACT_CUSIP,");
 					INSERT_SQL_STR(valueStr, details.cusip)
+					valueStr.append(",");
 
 				}
-
 			}
 
-			if (details.summary.conId != 0) {						// isin provided
+			if (details.summary.conId != 0) {							// isin provided
 
 				fieldStr.append("CONTRACT_IBID,");
-
-				valueStr
-					.append("'")
-					.append(boost::lexical_cast<std::string>(
-						details.summary.conId))
-					.append("',");
+				INSERT_SQL_NUM(valueStr, details.summary.conId)
+				valueStr.append(",");
 
 			}
 
 			if (details.summary.symbol != "") {						// symbol provided
 
 				fieldStr.append("CONTRACT_SYMBOL,");
-
 				INSERT_SQL_STR(valueStr, details.summary.symbol)
+				valueStr.append(",");
 
 			}
 
 			if (details.summary.secType != "") {					// sectype provided
 
 				fieldStr.append("CONTRACT_SECTYPE,");
-
 				INSERT_SQL_STR(valueStr, details.summary.secType)
+				valueStr.append(",");
 
 			}
 
 			if (details.summary.expiry != "") {						// sectype provided
 
 				fieldStr.append("CONTRACT_EXPIRY,");
-
 				INSERT_SQL_STR(valueStr, details.summary.expiry)
+				valueStr.append(",");
 
 			}
 
 			if (details.summary.strike != 0.0) {					// strike provided
 
 				fieldStr.append("CONTRACT_STRIKE,");
-
-				valueStr
-					.append(boost::lexical_cast<std::string>(details.summary.strike))
-					.append("',");
+				INSERT_SQL_NUM(valueStr, details.summary.strike)
+				valueStr.append(",");
 
 			}
 
@@ -423,203 +423,192 @@ namespace IB {
 			if (details.summary.multiplier != "") {					// multiplier
 
 				fieldStr.append("CONTRACT_MULTIPLIER,");
-
 				INSERT_SQL_STR(valueStr, details.summary.multiplier)
+				valueStr.append(",");
 
 			}
 
 			if (details.summary.primaryExchange != "") {			// primary exchange
 
 				fieldStr.append("CONTRACT_PRIMARY_EXCHANGE,");
-
 				INSERT_SQL_STR(valueStr, details.summary.primaryExchange)
+				valueStr.append(",");
 
 			}
 
 			if (details.summary.currency != "") {					// currency
 
 				fieldStr.append("CONTRACT_CURRENCY,");
-
 				INSERT_SQL_STR(valueStr, details.summary.currency)
+				valueStr.append(",");
 
 			}
 			
 			if (details.summary.tradingClass != "") {				// trading class
 
 				fieldStr.append("CONTRACT_TRADING_CLASS,");
-
 				INSERT_SQL_STR(valueStr, details.summary.tradingClass)
+				valueStr.append(",");
 
 			}
 
 			if (details.marketName != "") {							// market name
 
 				fieldStr.append("CONTRACT_DETAILS_MARKET_NAME,");
-
 				INSERT_SQL_STR(valueStr, details.marketName)
+				valueStr.append(",");
 
 			}
 
 			if (details.minTick != 0.0) {							// market name
 
 				fieldStr.append("CONTRACT_DETAILS_MINTICK,");
-
-				valueStr
-					.append(boost::lexical_cast<std::string>(details.minTick))
-					.append(",");
+				INSERT_SQL_NUM(valueStr, details.minTick)
+				valueStr.append(",");
 
 			}
 			
 			if (details.orderTypes != "") {							// order type string (long)
 
 				fieldStr.append("CONTRACT_DETAILS_ORDERTYPES,");
-
 				INSERT_SQL_STR(valueStr, details.orderTypes)
+				valueStr.append(",");
 
 			}
 
 			if (details.validExchanges != "") {						// valid exchanges
 
 				fieldStr.append("CONTRACT_DETAILS_VALID_EXCHANGES,");
-
 				INSERT_SQL_STR(valueStr, details.validExchanges)
+				valueStr.append(",");
 
 			}
 			
 			if (details.priceMagnifier != 0.0) {					// price magnifier
 
 				fieldStr.append("CONTRACT_DETAILS_PRICE_MAGNIFIER,");
-
-				valueStr
-					.append("")
-					.append(boost::lexical_cast<std::string>(details.priceMagnifier))
-					.append(",");
-
+				INSERT_SQL_NUM(valueStr, details.priceMagnifier)
+				valueStr.append(",");
+				
 			}
 			
 			if (details.underConId != 0) {							// valid exchanges
 
 				fieldStr.append("CONTRACT_DETAILS_UNDERLYING_CONTRACT_ID,");
-
-				valueStr
-					.append("'")
-					.append(boost::lexical_cast<std::string>(details.underConId))
-					.append("',");
+				INSERT_SQL_NUM(valueStr, details.underConId)
+				valueStr.append(",");
 
 			}
 
 			if (details.longName != "") {							// valid exchanges
 
 				fieldStr.append("CONTRACT_DETAILS_LONG_NAME,");
-
 				INSERT_SQL_STR(valueStr, details.longName)
-
+				valueStr.append(",");
+			
 			}
 
 			if (details.contractMonth != "") {						// valid exchanges
 
 				fieldStr.append("CONTRACT_DETAILS_MONTH,");
-
 				INSERT_SQL_STR(valueStr, details.contractMonth)
+				valueStr.append(",");
 
 			}
 
 			if (details.industry != "") {							// industry
 
 				fieldStr.append("CONTRACT_DETAILS_INDUSTRY,");
-				
 				INSERT_SQL_STR(valueStr, details.industry)
+				valueStr.append(",");
 
 			}
 
 			if (details.category != "") {							// category
 
 				fieldStr.append("CONTRACT_DETAILS_CATEGORY,");
-
 				INSERT_SQL_STR(valueStr, details.category)
+				valueStr.append(",");
 
 			}
 
 			if (details.subcategory != "") {						// subcategory
 
 				fieldStr.append("CONTRACT_DETAILS_SUBCATEGORY,");
-
 				INSERT_SQL_STR(valueStr, details.subcategory)
+				valueStr.append(",");
 
 			}
 
 			if (details.timeZoneId != "") {						// timezone Id
 
 				fieldStr.append("CONTRACT_DETAILS_TIMEZONE_ID,");
-
 				INSERT_SQL_STR(valueStr, details.timeZoneId)
+				valueStr.append(",");
 
 			}
 
 			if (details.tradingHours != "") {					// timezone Id
 
 				fieldStr.append("CONTRACT_DETAILS_TRADINGHOURS,");
-
 				INSERT_SQL_STR(valueStr, details.tradingHours)
+				valueStr.append(",");
 
 			}
 
 			if (details.liquidHours != "") {						// timezone Id
 
 				fieldStr.append("CONTRACT_DETAILS_LIQUIDHOURS,");
-
 				INSERT_SQL_STR(valueStr, details.liquidHours)
+				valueStr.append(",");
 
 			}
 
 			if (details.evRule != "") {								// ev rule
 
 				fieldStr.append("CONTRACT_DETAILS_EVRULE,");
-
 				INSERT_SQL_STR(valueStr, details.evRule)
+				valueStr.append(",");
 
 			}
 
 			if (details.evMultiplier != 0.0) {						// ev multiplier
 
 				fieldStr.append("CONTRACT_DETAILS_EVRULE_MULTIPLIER,");
-
-				valueStr
-					.append("'")
-					.append(boost::lexical_cast<std::string>(details.evMultiplier))
-					.append("',");
+				INSERT_SQL_NUM(valueStr, details.evMultiplier)
+				valueStr.append(",");
 
 			}
 
 			if (details.ratings != "") {						// ratings
 
 				fieldStr.append("CONTRACT_DETAILS_BOND_RATINGS,");
-
 				INSERT_SQL_STR(valueStr, details.ratings)
+				valueStr.append(",");
 
 			}
 
 			if (details.descAppend != "") {						// description
 
 				fieldStr.append("CONTRACT_DETAILS_BOND_DESCRIPTION,");
-
 				INSERT_SQL_STR(valueStr, details.descAppend)
+				valueStr.append(",");
 
 			}
 
 			if (details.bondType != "") {						// type
 
 				fieldStr.append("CONTRACT_DETAILS_BOND_TYPE,");
-
 				INSERT_SQL_STR(valueStr, details.bondType)
+				valueStr.append(",");
 
 			}
 
 			if (details.couponType != "") {						// description
 
 				fieldStr.append("CONTRACT_DETAILS_BOND_COUPONTYPE,");
-
 				INSERT_SQL_STR(valueStr, details.couponType)
+				valueStr.append(",");
 
 			}
 
@@ -663,11 +652,8 @@ namespace IB {
 			if (details.coupon != 0.0) {						// coupon
 
 				fieldStr.append("CONTRACT_DETAILS_BOND_COUPON,");
-
-				valueStr
-					.append("'")
-					.append(boost::lexical_cast<std::string>(details.coupon))
-					.append("',");
+				INSERT_SQL_NUM(valueStr, details.evMultiplier)
+				valueStr.append(",");
 
 			}
 
@@ -693,32 +679,32 @@ namespace IB {
 			if (details.maturity != "") {						// maturity
 
 				fieldStr.append("CONTRACT_DETAILS_BOND_MATURITY,");
-
 				INSERT_SQL_STR(valueStr, details.maturity)
+				valueStr.append(",");
 
 			}
 			
 			if (details.issueDate != "") {						// issue date
 
 				fieldStr.append("CONTRACT_DETAILS_BOND_ISSUEDATE,");
-				
 				INSERT_SQL_STR(valueStr, details.issueDate)
+				valueStr.append(",");
 
 			}
 			
 			if (details.nextOptionDate != "") {						// next option date
 
 				fieldStr.append("CONTRACT_DETAILS_BOND_NEXTOPTIONDATE,");
-
 				INSERT_SQL_STR(valueStr, details.nextOptionDate)
+				valueStr.append(",");
 
 			}
 
 			if (details.nextOptionType != "") {						// next option type
 
 				fieldStr.append("CONTRACT_DETAILS_BOND_NEXTOPTIONTYPE,");
-
 				INSERT_SQL_STR(valueStr, details.nextOptionType)
+				valueStr.append(",");
 
 			}
 			
@@ -744,8 +730,8 @@ namespace IB {
 			if (details.notes != "") {						// next option type
 
 				fieldStr.append("CONTRACT_DETAILS_BOND_NOTE,");
-
 				INSERT_SQL_STR(valueStr, details.notes)
+				valueStr.append(",");
 
 			}
 

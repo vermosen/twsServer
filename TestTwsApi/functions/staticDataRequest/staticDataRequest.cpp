@@ -36,10 +36,10 @@ void staticDataRequest() {
 
 	IB::dataBase::tableContractRecordset rs(connect);			// the recordset object
 	
-	std::string selectQuery(									// the query
-		"SELECT * FROM table_contract WHERE contract_symbol = '");
-	selectQuery.append(contractCode)
-		.append("'");
+	// the query
+	std::string selectQuery("SELECT * FROM \
+		table_contract WHERE contract_symbol = ");
+	INSERT_SQL_STR(selectQuery, contractCode)
 
 	TWS_LOG(std::string("running query: ")						// log
 		.append(selectQuery))
@@ -58,9 +58,7 @@ void staticDataRequest() {
 
 		IB::staticDataRequestClient client(contract);			// request the contract 
 
-		if (IB::settings::instance().verbosity() > 0)
-
-			TWS_LOG(std::string("connecting to tws server"))	// log
+		TWS_LOG_V(std::string("connecting to tws server"), 0)	// log
 
 		for (;;) {												// loop over attemps
 
@@ -85,9 +83,7 @@ void staticDataRequest() {
 
 			if (client.endOfStaticData()) {						// download succedded
 
-				TWS_LOG_V(										// log
-					std::string("download successful"), 0)	
-
+				TWS_LOG_V(std::string("download successful"), 0)// log	
 				break;
 
 			} else {

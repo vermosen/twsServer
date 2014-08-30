@@ -1,6 +1,7 @@
 #include "functions/historicalRequest/historicalRequest.hpp"
 
-void historicalRequest() {
+void historicalRequest(const std::string & opt1,
+					   const std::string & opt2) {
 
 	// step 1: initialization
 	std::cout
@@ -8,15 +9,26 @@ void historicalRequest() {
 		<< std::endl
 		<< "-----------------------"
 		<< std::endl
-		<< std::endl
-		<< "please provide some contract code : "
 		<< std::endl;
-
+		
 	boost::timer tt;											// timer
 
 	int clientId = 0; unsigned attempt = 0;						// request Id
 
-	std::string contractCode; std::cin >> contractCode;			// provided code
+	std::string contractCode; if (opt1.empty()) {				// optionally provided
+
+		std::cout
+			<< "please provide some contract code : "
+			<< std::endl;
+
+		std::cin >> contractCode;								// user
+
+	} else {
+
+		contractCode = opt1;
+	
+	}
+	
 
 	TWS_LOG_V(													// log
 		std::string("contract provided: ")
@@ -80,10 +92,21 @@ void historicalRequest() {
 			.append(contract.summary.primaryExchange), 0);
 
 	// step 2: date of the request
-	std::cout << "Please provide a request date (MM/dd/yyyy):"	// message
-			  << std::endl;
+	std::string dtStr; if (opt2.empty()) {				// optionally provided
 
-	std::string dtStr; std::cin >> dtStr;
+		std::cout										// message
+			<< "Please provide a request date (MM/dd/yyyy):"	
+			<< std::endl;
+
+		std::cin >> dtStr;								// user
+
+	}
+	else {
+
+		dtStr = opt2;
+
+	}
+
 	std::shared_ptr<thOth::dateTime> requestDate;				// the date requested
 
 	// TODO: overload the >> operator for datetime
@@ -192,16 +215,15 @@ void historicalRequest() {
 	// step 4: check for previous import: contract Id * dateframe * exchange
 	IB::dataBase::tableHistoricalBarRecordset barRs(connect);	// table contract recordset
 
-	selectQuery.append(											// query to run
-		"SELECT * FROM table_historical_bar WHERE (contract_ID = '")
-		.append(boost::lexical_cast<std::string>(id))
-		.append("' AND exchange = '")
-		.append(contract.summary.exchange)
-		.append("' AND bar_start > '")
-		.append(boost::lexical_cast<std::string>(bars.begin()->barStart()))
-		.append("' AND bar_end < '")
-		.append(boost::lexical_cast<std::string>(bars.rbegin()->barEnd()))
-		.append("')");
+	selectQuery.append("SELECT * FROM table_historical_bar WHERE (contract_ID = ");
+		INSERT_SQL_NUM(selectQuery, id)
+		selectQuery.append(" AND exchange = ");
+		INSERT_SQL_STR(selectQuery, contract.summary.exchange)
+		selectQuery.append(" AND bar_start >= ");
+		INSERT_SQL_DATE(selectQuery, bars.begin()->barStart())
+		selectQuery.append(" AND bar_end <= ");
+		INSERT_SQL_DATE(selectQuery, bars.rbegin()->barEnd())
+		selectQuery.append(")");
 
 	TWS_LOG_V(std::string("query to launch: ")					// log
 		.append(selectQuery), 0)
@@ -212,16 +234,16 @@ void historicalRequest() {
 		
 			TWS_LOG_V("previous import found, deleting data", 0)// deletion phase
 
-			std::string deleteQuery; deleteQuery
-				.append("DELETE * FROM table_historical_bar WHERE (contract_ID = '")
-				.append(boost::lexical_cast<std::string>(id))
-				.append("' AND exchange = '")
-				.append(contract.summary.exchange)
-				.append("' AND bar_start > '")
-				.append(boost::lexical_cast<std::string>(bars.begin()->barStart()))
-				.append("' AND bar_end < '")
-				.append(boost::lexical_cast<std::string>(bars.rbegin()->barEnd()))
-				.append("')");
+			std::string deleteQuery;						// delete query
+				deleteQuery.append("DELETE FROM TABLE_HISTORICAL_BAR WHERE (CONTRACT_ID = ");
+				INSERT_SQL_NUM(deleteQuery, id)
+				deleteQuery.append(" AND EXCHANGE = ");
+				INSERT_SQL_STR(deleteQuery, contract.summary.exchange)
+				deleteQuery.append(" AND BAR_START >= ");
+				INSERT_SQL_DATE(deleteQuery, bars.begin()->barStart())
+				deleteQuery.append(" AND BAR_END <= ");
+				INSERT_SQL_DATE(deleteQuery, bars.rbegin()->barEnd())
+				deleteQuery.append(")");
 
 			barRs.deleteQ(deleteQuery);							// run the delete statement
 		
@@ -231,8 +253,11 @@ void historicalRequest() {
 					
 		// nothing to erase, go to the next step
 
-	}
-	catch (std::exception & ex) {								// any other mistake -> throw
+	} catch (IB::dataBase::selectQueryExceptionUnknownField & ex) {
+
+		// problem with a field
+
+	} catch (std::exception & ex) {								// any other mistake -> throw
 	
 		throw ex;				
 	

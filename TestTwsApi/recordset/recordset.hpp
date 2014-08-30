@@ -16,18 +16,17 @@
 #define INSERT_SQL_STR(X,Y) \
 	X.append("'" )          \
 	 .append(Y   )          \
-	 .append("',");
+	 .append("'");
 
 // insert a num value
-#define INSERT_SQL_NUM(X,Y)                        \
-	 X.append(boost::lexical_cast<std::string>(Y)) \
-	  .append(",");
+#define INSERT_SQL_NUM(X,Y) \
+	 X.append(boost::lexical_cast<std::string>(Y));
 
 // insert a date value
-#define INSERT_SQL_DATE(X,Y)                      \
-	X.append("'")                                 \
-	 .append(boost::posix_time::to_iso_string(Y)) \
-	 .append("',");
+#define INSERT_SQL_DATE(X,Y)     \
+	X.append("'")                \
+	 .append(convertDateTime_sql(Y)) \
+	 .append("'");
 
 namespace IB {
 

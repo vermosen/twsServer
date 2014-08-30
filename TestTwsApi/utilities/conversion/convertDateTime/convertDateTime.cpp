@@ -46,3 +46,28 @@ IB::IBString convertDateTime(const thOth::dateTime & date) {
 
 
 };
+
+thOth::dateTime convertDateTime_sql(const std::string & dtStr) {
+
+	return thOth::dateTime(								// smallest increments is second
+		thOth::dateTime::Years(boost::lexical_cast<int>(dtStr.substr(0, 4))),
+		thOth::dateTime::Months(boost::lexical_cast<int>(dtStr.substr(5, 2))),
+		thOth::dateTime::Days(boost::lexical_cast<int>(dtStr.substr(8, 2))),
+		thOth::dateTime::Hours(boost::lexical_cast<int>(dtStr.substr(11, 2))),
+		thOth::dateTime::Minutes(boost::lexical_cast<int>(dtStr.substr(14, 2))),
+		thOth::dateTime::Seconds(boost::lexical_cast<int>(dtStr.substr(17, 2))));
+
+}
+
+std::string convertDateTime_sql(const thOth::dateTime & date) {
+
+	std::string temp = boost::posix_time::to_iso_string(date);
+
+	std::string sql(""); sql
+		.append(temp.substr(0, 8))
+		//.append(" ")
+		.append(temp.substr(9, 6));
+
+	return sql;
+
+}

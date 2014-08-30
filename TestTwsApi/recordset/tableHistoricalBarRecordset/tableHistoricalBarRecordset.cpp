@@ -67,50 +67,52 @@ namespace IB {
 				for (unsigned long i = 0;								// loop over the fields
 					i < reception_->field_count; i++) {	
 
+					std::string field(reception_->fields[i].name);
+
 					if (std::string(reception_->fields[i].name)
-						== "bar_id" && row[i] != NULL)
+						== "BAR_ID" && row[i] != NULL)
 						barId = boost::lexical_cast<recordId>(row[i]);
 
 					else if (std::string(reception_->fields[i].name)
-						== "contract_id" && row[i] != NULL)
+						== "CONTRACT_ID" && row[i] != NULL)
 						instrumentId = boost::lexical_cast<recordId>(row[i]);
 
 					else if (std::string(reception_->fields[i].name)
-						== "bar_start" && row[i] != NULL)
-						startDate = convertDateTime(IB::IBString(row[i]));
+						== "BAR_START" && row[i] != NULL)
+						startDate = convertDateTime_sql(std::string(row[i]));
 
 					else if (std::string(reception_->fields[i].name)
-						== "bar_end" && row[i] != NULL)
-						endDate   = convertDateTime(IB::IBString(row[i]));
+						== "BAR_END" && row[i] != NULL)
+						endDate = convertDateTime_sql(std::string(row[i]));
 
 					else if (std::string(reception_->fields[i].name)
-						== "open" && row[i] != NULL)
+						== "OPEN" && row[i] != NULL)
 						open = boost::lexical_cast<thOth::real>(row[i]);
 
 					else if (std::string(reception_->fields[i].name)
-						== "close" && row[i] != NULL)
-						open = boost::lexical_cast<thOth::real>(row[i]);
-
-					else if (std::string(reception_->fields[i].name)
-						== "close" && row[i] != NULL)
+						== "CLOSE" && row[i] != NULL)
 						close = boost::lexical_cast<thOth::real>(row[i]);
 
 					else if (std::string(reception_->fields[i].name)
-						== "high" && row[i] != NULL)
+						== "HIGH" && row[i] != NULL)
 						high = boost::lexical_cast<thOth::real>(row[i]);
 
 					else if (std::string(reception_->fields[i].name)
-						== "low" && row[i] != NULL)
+						== "LOW" && row[i] != NULL)
 						low = boost::lexical_cast<thOth::real>(row[i]);
 					
 					else if (std::string(reception_->fields[i].name)
-						== "volume" && row[i] != NULL)
+						== "VOLUME" && row[i] != NULL)
 						volume = boost::lexical_cast<thOth::real>(row[i]);
+
+					else if (std::string(reception_->fields[i].name)
+						== "EXCHANGE" && row[i] != NULL)
+						exchange = boost::lexical_cast<std::string>(row[i]);
 
 					else
 
 						throw selectQueryExceptionUnknownField();
-						//std::exception("unknown field provided");
+
 
 				}
 
@@ -138,62 +140,40 @@ namespace IB {
 			std::string fieldStr, valueStr;								// the two fields to build together
 
 			fieldStr.append("CONTRACT_ID,");							// contract id
-
-			INSERT_SQL_STR(
-				valueStr,
-				boost::lexical_cast<std::string>(rec.instrumentIdentifier()))
+			INSERT_SQL_NUM(valueStr,rec.instrumentIdentifier())
+			valueStr.append(",");
 
 			fieldStr.append("BAR_START,");								// barStart
-
-			INSERT_SQL_DATE(
-				valueStr, 
-				rec.bar().barStart())
-
+			INSERT_SQL_DATE(valueStr, rec.bar().barStart())
+			valueStr.append(",");
+			
 			fieldStr.append("BAR_END,");								// barEnd
-
-			INSERT_SQL_DATE(
-				valueStr, 
-				rec.bar().barEnd())
+			INSERT_SQL_DATE(valueStr, rec.bar().barEnd())
+			valueStr.append(",");
 			
 			fieldStr.append("OPEN,");									// open
-
-			INSERT_SQL_NUM(
-				valueStr, 
-				rec.bar().open())
+			INSERT_SQL_NUM(valueStr, rec.bar().open())
+			valueStr.append(",");
 			
 			fieldStr.append("CLOSE,");									// close
+			INSERT_SQL_NUM(valueStr, rec.bar().close())
+			valueStr.append(",");
 
-			INSERT_SQL_NUM(
-				valueStr,
-				rec.bar().close())
-			
 			fieldStr.append("HIGH,");									// close
-
-			INSERT_SQL_NUM(
-				valueStr,
-				rec.bar().high())
+			INSERT_SQL_NUM(valueStr, rec.bar().high())
+			valueStr.append(",");
 
 			fieldStr.append("LOW,");									// close
+			INSERT_SQL_NUM(valueStr, rec.bar().low())
+			valueStr.append(",");
 
-			INSERT_SQL_NUM(
-				valueStr,
-				rec.bar().low())
+			fieldStr.append("VOLUME,");									// volume
+			INSERT_SQL_NUM(valueStr, rec.bar().volume())
+			valueStr.append(",");
 
-			fieldStr.append("VOLUME,");									// close
+			fieldStr.append("EXCHANGE");								// exchange
+			INSERT_SQL_STR(valueStr,rec.exchange())
 
-			INSERT_SQL_NUM(
-				valueStr,
-				rec.bar().volume())
-
-			fieldStr.append("EXCHANGE");								// close
-
-			INSERT_SQL_STR(
-				valueStr,
-				boost::lexical_cast<std::string>(
-				rec.exchange()))
-
-			valueStr.pop_back();										// remove the last colon
-			
 			std::string insertStatement("INSERT INTO table_historical_bar (");
 			
 			insertStatement
@@ -211,10 +191,12 @@ namespace IB {
 
 		bool tableHistoricalBarRecordset::deleteQ(const std::string & deleteStr) {
 		
-			mysql_query(												// query to run
-				connection_,
-				deleteStr.c_str());
+			if (mysql_query(connection_, deleteStr.c_str()) != 0) {		// throw on an error
 
+				std::string tt(mysql_error(connection_));
+				throw std::exception(mysql_error(connection_));
+
+			}
 			// todo: error management
 			return true;
 		
