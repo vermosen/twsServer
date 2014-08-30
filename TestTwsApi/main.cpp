@@ -169,30 +169,30 @@ int main(int argc, char** argv) {
 
 				case 4:
 
-					TWS_LOG(										// log
-						std::string("starting multi-threaded csv builder test"))
+					TWS_LOG_V(										// log
+						std::string("starting multi-threaded csv builder test"), 0)
 
 						multiThreadedCsvBuilder();					// launches csv writing test
 					break;
 
 				case 5:
 
-					TWS_LOG(										// log
-						std::string("starting debug test"))
+					TWS_LOG_V(										// log
+						std::string("starting debug test"), 0)
 
 						debug();									// launches csv writing test
 					break;
 
 				case 0:
 
-					TWS_LOG(std::string("manual exit"))				// log
+					TWS_LOG_V(std::string("manual exit"), 0)		// log
 					end = true;										// stop the server
 					break;
 
 				default:											// unknown, invalid
 
-					TWS_LOG(										// log
-						std::string("invalid selection"))
+					TWS_LOG_V(										// log
+						std::string("invalid selection"), 0)
 
 					std::cout
 						<< "invalid selection, please try again"
@@ -206,24 +206,24 @@ int main(int argc, char** argv) {
 
 	} catch (std::exception & e) {									// exception management
 			
-		TWS_LOG(													// log
+		TWS_LOG_V(													// log
 			std::string("an error occured: ")
-				.append(e.what()))
+				.append(e.what()), 0)
 
-		TWS_LOG(std::string("exiting with code 1"))					// log
+		TWS_LOG_V(std::string("exiting with code 1"), 0)					// log
 		return 1;
 
 	} catch (...) {													// unknown error
 	
-		TWS_LOG(std::string("an unknown error occured"))			// log
-		TWS_LOG(std::string("exiting with code 1"))					// log
+		TWS_LOG_V(std::string("an unknown error occured"), 0)			// log
+		TWS_LOG_V(std::string("exiting with code 1"), 0)					// log
 		return 1;
 
 	}
 
 	if (IB::settings::instance().verbosity() > 0) {					// exit
 
-		TWS_LOG(std::string("end of TwsApiTest"))
+		TWS_LOG_V(std::string("end of TwsApiTest"), 0)
 		system("pause");
 
 	}

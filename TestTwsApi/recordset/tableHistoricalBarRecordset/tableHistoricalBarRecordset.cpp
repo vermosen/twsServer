@@ -147,50 +147,45 @@ namespace IB {
 
 			fieldStr.append("BAR_START,");								// barStart
 
-			INSERT_SQL_STR(
+			INSERT_SQL_DATE(
 				valueStr, 
-				convertDateTime(rec.bar().barStart()))
-			
+				rec.bar().barStart())
+
 			fieldStr.append("BAR_END,");								// barEnd
 
-			INSERT_SQL_STR(
+			INSERT_SQL_DATE(
 				valueStr, 
-				convertDateTime(rec.bar().barEnd()))
+				rec.bar().barEnd())
 			
 			fieldStr.append("OPEN,");									// open
 
-			INSERT_SQL_STR(
+			INSERT_SQL_NUM(
 				valueStr, 
-				boost::lexical_cast<std::string>(
-					rec.bar().open()))
+				rec.bar().open())
 			
 			fieldStr.append("CLOSE,");									// close
 
-			INSERT_SQL_STR(
+			INSERT_SQL_NUM(
 				valueStr,
-				boost::lexical_cast<std::string>(
-					rec.bar().close()))
+				rec.bar().close())
 			
 			fieldStr.append("HIGH,");									// close
 
-			INSERT_SQL_STR(
+			INSERT_SQL_NUM(
 				valueStr,
-				boost::lexical_cast<std::string>(
-					rec.bar().high()))
+				rec.bar().high())
 
 			fieldStr.append("LOW,");									// close
 
-			INSERT_SQL_STR(
+			INSERT_SQL_NUM(
 				valueStr,
-				boost::lexical_cast<std::string>(
-					rec.bar().low()))
+				rec.bar().low())
 
 			fieldStr.append("VOLUME,");									// close
 
-			INSERT_SQL_STR(
+			INSERT_SQL_NUM(
 				valueStr,
-				boost::lexical_cast<std::string>(
-					rec.bar().volume()))
+				rec.bar().volume())
 
 			fieldStr.append("EXCHANGE");								// close
 
@@ -201,7 +196,7 @@ namespace IB {
 
 			valueStr.pop_back();										// remove the last colon
 			
-			std::string insertStatement("INSERT INTO table_contract (");
+			std::string insertStatement("INSERT INTO table_historical_bar (");
 			
 			insertStatement
 				.append(fieldStr)

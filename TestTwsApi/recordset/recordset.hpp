@@ -12,10 +12,21 @@
 
 #include "recordset/recordsetException/recordsetException.hpp"
 
-// insert a string field
+// insert a string value
 #define INSERT_SQL_STR(X,Y) \
 	X.append("'" )          \
 	 .append(Y   )          \
+	 .append("',");
+
+// insert a num value
+#define INSERT_SQL_NUM(X,Y)                        \
+	 X.append(boost::lexical_cast<std::string>(Y)) \
+	  .append(",");
+
+// insert a date value
+#define INSERT_SQL_DATE(X,Y)                      \
+	X.append("'")                                 \
+	 .append(boost::posix_time::to_iso_string(Y)) \
 	 .append("',");
 
 namespace IB {
