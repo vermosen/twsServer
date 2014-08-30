@@ -79,7 +79,7 @@ void staticDataRequest() {
 
 			while (client.isConnected()) client.processMessages();
 
-			if (attempt >= MAX_ATTEMPT)							// max attemps reached
+			if (attempt > MAX_ATTEMPT)							// max attemps reached
 
 				throw std::exception("failed to connect after max attempts");
 

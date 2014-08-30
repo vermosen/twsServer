@@ -161,6 +161,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="functions\debug\debug.cpp" />
     <ClCompile Include="functions\historicalRequest\historicalRequest.cpp" />
     <ClCompile Include="functions\multiThreadedCsvBuilder\multiThreadedCsvBuilder.cpp" />
     <ClCompile Include="functions\multiThreadedSetting\multiThreadedSetting.cpp" />
@@ -182,10 +183,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="functions\all.hpp" />
+    <ClInclude Include="functions\debug\debug.hpp" />
     <ClInclude Include="functions\multiThreadedCsvBuilder\multiThreadedCsvBuilder.hpp" />
     <ClInclude Include="functions\multiThreadedSetting\multiThreadedSetting.hpp" />
     <ClInclude Include="functions\simpleStrategy\simpleStrategy.hpp" />
     <ClInclude Include="recordset\recordset.hpp" />
+    <ClInclude Include="recordset\recordsetException\recordsetException.hpp" />
     <ClInclude Include="recordset\tableContractRecordset\tableContractRecordset.hpp" />
     <ClInclude Include="recordset\tableHistoricalBarRecordset\tableHistoricalBarRecordset.hpp" />
     <ClInclude Include="request\request.hpp" />

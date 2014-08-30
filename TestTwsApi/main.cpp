@@ -129,6 +129,8 @@ int main(int argc, char** argv) {
 					<< std::endl
 					<< "4 - csv writing test"
 					<< std::endl
+					<< "5 - debug test"
+					<< std::endl
 					<< "0 - exit"
 					<< std::endl;
 
@@ -171,6 +173,14 @@ int main(int argc, char** argv) {
 						std::string("starting multi-threaded csv builder test"))
 
 						multiThreadedCsvBuilder();					// launches csv writing test
+					break;
+
+				case 5:
+
+					TWS_LOG(										// log
+						std::string("starting debug test"))
+
+						debug();									// launches csv writing test
 					break;
 
 				case 0:

@@ -12,6 +12,7 @@
 #include <thOth/time/DateTime.hpp>
 #include <thOth/time/timeseries.hpp>
 #include <thOth/pattern/observable.hpp>
+#include <thOth/bar/bar.hpp>
 
 #include "EPosixClientSocket.h"
 #include "EWrapper.h"																	// TWS components
@@ -42,20 +43,6 @@ namespace IB {
 
 	class EPosixClientSocket;
 	struct Contract;
-
-	struct historicalQuoteDetails {											// data structure for historical request
-
-		TickerId id_ ;
-		double open_ ;
-		double high_ ;
-		double low_  ;
-		double close_;
-		int volume_  ;
-		int barCount_;
-		double WAP_  ;
-		int hasGaps_ ;
-
-	};
 
 	class historicalRequestClient : public EWrapper, thOth::observable {
 
@@ -92,19 +79,17 @@ namespace IB {
 		~historicalRequestClient();											// destructor
 
 		// accessors
-		bool endOfHistoricalData() const { return endOfHistoricalData_; };	// end of data (public ?)
-		bool errorForRequest() const { return errorForRequest_; };			// error
+		bool endOfHistoricalData () const { return endOfHistoricalData_; };	// end of data (public ?)
+		bool errorForRequest     () const { return errorForRequest_    ; };	// error
 		
-		thOth::timeSeries<historicalQuoteDetails> timeSeries() const{		// the time series
-			return ts_;
-		};
+		std::vector<thOth::bar> bars() const { return bars_; };				// the set of bars
 
 		void processMessages();
 
 	public:
 
-		bool connect(const char * host, unsigned int port, int clientId = 0);
-		void disconnect() const;
+		bool connect    (const char * host, unsigned int port, int clientId = 0);
+		void disconnect () const;
 		bool isConnected() const;
 
 	private:
@@ -136,7 +121,7 @@ namespace IB {
 		dataDuration dataDuration_;											// data duration
 		dataType dataType_		  ;											// data Type
 
-		thOth::timeSeries<historicalQuoteDetails> ts_  ;					// timeseries object
+		std::vector<thOth::bar> bars_;										// bars
 		boost::shared_ptr<EPosixClientSocket> m_pClient;					// posix client
 		
 		state m_state         ;												// current state

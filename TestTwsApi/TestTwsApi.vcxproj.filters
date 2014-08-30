@@ -69,6 +69,9 @@
     <ClCompile Include="request\request.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="functions\debug\debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\factory\barSizeFactory\barSizeFactory.hpp">
@@ -113,9 +116,6 @@
     <ClInclude Include="recordset\tableContractRecordset\tableContractRecordset.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="recordset\recordset.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="recordset\tableHistoricalBarRecordset\tableHistoricalBarRecordset.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -153,6 +153,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="request\request.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recordset\recordset.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recordset\recordsetException\recordsetException.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="functions\debug\debug.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

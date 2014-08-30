@@ -10,6 +10,8 @@
 
 #include <thOth/time/DateTime.hpp>
 
+#include "recordset/recordsetException/recordsetException.hpp"
+
 // insert a string field
 #define INSERT_SQL_STR(X,Y) \
 	X.append("'" )          \
@@ -38,7 +40,7 @@ namespace IB {
 
 				// database methods
 				virtual bool select(const std::string &) = 0;	// return true if the select statement is non empty
-				virtual bool insert(const T &) = 0;				// insert method
+				virtual bool insert(const T			  &) = 0;	// insert method
 				bool insert(const std::vector<T> &);			// bulk insert
 
 				// iterators

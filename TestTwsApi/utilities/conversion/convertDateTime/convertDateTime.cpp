@@ -3,11 +3,11 @@
 thOth::dateTime convertDateTime(const IB::IBString & dtStr) {
 
 	return thOth::dateTime(								// smallest increments is second
-		thOth::dateTime::Years(boost::lexical_cast<int>(dtStr.substr(0, 4))),
-		thOth::dateTime::Months(boost::lexical_cast<int>(dtStr.substr(4, 2))),
-		thOth::dateTime::Days(boost::lexical_cast<int>(dtStr.substr(6, 2))),
-		thOth::dateTime::Hours(boost::lexical_cast<int>(dtStr.substr(10, 2))),
-		thOth::dateTime::Minutes(boost::lexical_cast<int>(dtStr.substr(13, 2))),
+		thOth::dateTime::Years  (boost::lexical_cast<int>(dtStr.substr(0 , 4))) ,
+		thOth::dateTime::Months (boost::lexical_cast<int>(dtStr.substr(4 , 2))) ,
+		thOth::dateTime::Days   (boost::lexical_cast<int>(dtStr.substr(6 , 2))) ,
+		thOth::dateTime::Hours  (boost::lexical_cast<int>(dtStr.substr(10, 2))) ,
+		thOth::dateTime::Minutes(boost::lexical_cast<int>(dtStr.substr(13, 2))) ,
 		thOth::dateTime::Seconds(boost::lexical_cast<int>(dtStr.substr(16, 2))));
 
 };

@@ -31,7 +31,7 @@ namespace IB {
 		// member copy
 		if (this != &o) {
 		
-			ts_                  = o.ts_                 ;
+			bars_                = o.bars_               ;
 			endOfHistoricalData_ = o.endOfHistoricalData_;
 			errorForRequest_     = o.errorForRequest_    ;
 			marketDataType_      = o.marketDataType_     ;
@@ -240,24 +240,22 @@ namespace IB {
 		
 		if (IsEndOfHistoricalData(date)) {									// control for EoF
 
+			std::sort(bars_.begin(), bars_.end());							// sorting the bars
 			notifyObservers();
 			disconnect();
 			return;
 
 		}
-																			
-		ts_.insert(std::pair<thOth::dateTime, IB::historicalQuoteDetails>(	// copy the current date in the container		
-			convertDateTime(date),
-			IB::historicalQuoteDetails{
-			reqId,
-			open,
-			high,
-			low,
-			close,
-			volume,
-			barCount,
-			WAP,
-			hasGaps }));
+
+		bars_.push_back(
+			thOth::bar(
+				convertDateTime(date),
+				convertDateTime(date) + ToTimeDuration(barSize_),
+				open,
+				close,
+				high,
+				low,
+				volume));
 
 	}
 

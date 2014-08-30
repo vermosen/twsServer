@@ -10,6 +10,8 @@
 
 #include <IBString.h>
 
+#include <boost/date_time.hpp>
+
 namespace IB {
 	
 	enum barSize : unsigned int{
@@ -48,9 +50,31 @@ namespace IB {
 			case oneHour       : return "1 hour"     ;
 			case oneDay        : return "1 day"      ;
 			case unknownSize   : return "unkown size";
-
 			default            : return "unkown size";
 		
+		}
+	}
+
+	// conversion into the corresponding boost::posix_time::time_duration
+	inline const boost::posix_time::time_duration ToTimeDuration(barSize v) {
+
+		switch (v) {
+
+			case oneSecond      : return boost::posix_time::seconds(1)    ;
+			case fiveSeconds    : return boost::posix_time::seconds(5)    ;
+			case fifteenSeconds : return boost::posix_time::seconds(15)   ;
+			case thirtySeconds  : return boost::posix_time::seconds(30)   ;
+			case oneMinute      : return boost::posix_time::minutes(1)    ;
+			case twoMinutes     : return boost::posix_time::minutes(2)    ;
+			case threeMinutes   : return boost::posix_time::minutes(3)    ;
+			case fiveMinutes    : return boost::posix_time::minutes(5)    ;
+			case fifteenMinutes : return boost::posix_time::minutes(15)	  ;
+			case thirtyMinutes  : return boost::posix_time::minutes(30)   ;
+			case oneHour        : return boost::posix_time::hours(1)      ;
+			case oneDay         : return boost::posix_time::hours(24)     ;
+			case unknownSize    : throw std::exception("unknown bar size");
+			default             : throw std::exception("unknown bar size");
+
 		}
 	}
 }

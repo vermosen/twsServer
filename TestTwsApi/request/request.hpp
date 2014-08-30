@@ -45,6 +45,8 @@ namespace IB {
 	struct Contract;
 
 	// base class for any concrete Ewrapper implementation
+	// TODO: use observable functionality to call for receiver
+	// TODO: turn into a template
 	class request : public EWrapper, thOth::observable {
 
 	private:

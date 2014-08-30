@@ -14,23 +14,23 @@ namespace IB {
 
 		class barRecord {
 
-			public:
+		public:
 
-				barRecord(recordId id, 
-						  const thOth::bar & bar,
-						  const std::string & exchange);
-				barRecord(const barRecord &);
-				~barRecord() {};
+			barRecord(recordId id,
+				const thOth::bar & bar,
+				const std::string & exchange);
+			barRecord(const barRecord &);
+			~barRecord() {};
 
-				recordId instrumentIdentifier() const { return id_; };
-				thOth::bar bar() const { return bar_; };
-				std::string exchange() const { return exchange_; };
+			recordId instrumentIdentifier() const { return id_; };
+			thOth::bar bar() const { return bar_; };
+			std::string exchange() const { return exchange_; };
 
-			protected:
+		protected:
 
-				recordId    id_      ;
-				thOth::bar  bar_     ;
-				std::string exchange_;
+			recordId    id_;											// instrument db identifier
+			thOth::bar  bar_;
+			std::string exchange_;
 
 		};
 
@@ -45,7 +45,7 @@ namespace IB {
 				tableHistoricalBarRecordset & operator =(const tableHistoricalBarRecordset &);
 
 				bool select(const std::string &);						// run a select statement
-				bool insert(const barRecord &  );						// insert an historical bar
+				bool insert(const barRecord   &);						// insert a bar
 
 			protected:
 

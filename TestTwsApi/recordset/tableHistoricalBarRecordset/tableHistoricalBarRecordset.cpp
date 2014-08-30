@@ -48,10 +48,10 @@ namespace IB {
 			reception_ = mysql_store_result(connection_);
 		
 			if (!reception_)											// sql statement failed
-				return false;
+				throw selectQueryExceptionSelectFailed();
 
 			if (reception_->row_count == 0)								// no record
-				return false;
+				throw selectQueryExceptionNoSelection();
 
 			MYSQL_ROW row;
 
@@ -111,7 +111,8 @@ namespace IB {
 
 					else
 
-						std::exception("unknown field provided");
+						throw selectQueryExceptionUnknownField();
+						//std::exception("unknown field provided");
 
 				}
 

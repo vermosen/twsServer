@@ -5,5 +5,6 @@
 #include "functions/staticDataRequest/staticDataRequest.hpp"
 #include "functions/multiThreadedSetting/multiThreadedSetting.hpp"
 #include "functions/multiThreadedCsvBuilder/multiThreadedCsvBuilder.hpp"
+#include "functions/debug/debug.hpp"
 
 #endif

@@ -143,9 +143,9 @@ void historicalRequest() {
 		1, IB::dataDuration::day,								// period length and type
 		IB::dataType::trade);									// data type
 
-	thOth::timeSeries<IB::historicalQuoteDetails> ts;			// time series
+	std::vector<thOth::bar> bars;								// the bars
 
-	TWS_LOG("connecting to the server")							// log
+	TWS_LOG_V("connecting to the server", 2)					// log
 
 	for (;;) {													// loop over attemps
 
@@ -162,9 +162,9 @@ void historicalRequest() {
 			IB::settings::instance().ibHost().c_str(),
 			IB::settings::instance().ibPort(), clientId);
 
-		while (client.isConnected()) client.processMessages();
+		while (client.isConnected()) client.processMessages();	// TODO: turn into asynchronous
 
-		if (attempt >= MAX_ATTEMPT)								// max attemps reached
+		if (attempt > MAX_ATTEMPT)								// max attemps reached
 			throw std::exception("failed to connect after max attempts");
 
 		if (client.endOfHistoricalData()) {						// download succedded
@@ -176,29 +176,24 @@ void historicalRequest() {
 					.append("download successful. \
 						Trying to store data in the database"))
 					
-			ts = client.timeSeries();
+			bars = client.bars();
 
 			break;
 
 		} else {
 
-			if (IB::settings::instance().verbosity() > 2)
+			TWS_LOG_V(std::string("sleeping ")					// log
+				.append(boost::lexical_cast<std::string>(SLEEP_TIME))
+				.append(" milli-seconds before next attempt "), 2)
 
-				TWS_LOG(std::string("sleeping ")				// log
-					.append(boost::lexical_cast<std::string>(SLEEP_TIME))
-					.append(" milli-seconds before next attempt "))
-
-				boost::this_thread::sleep_for(								// sleep for 100 ms
-					boost::chrono::milliseconds(SLEEP_TIME));
+			boost::this_thread::sleep_for(						// sleep for 100 ms
+				boost::chrono::milliseconds(SLEEP_TIME));
 
 		}
 
 	}
 
-	// step 4: check for previous import
-	// strategy: check on the contract Id * date * exchange
-	thOth::dateTime first = ts.begin()->first;					// first date
-	thOth::dateTime last = ts.rbegin()->first;					// last date
+	// step 4: check for previous import: contract Id * dateframe * exchange
 	IB::dataBase::tableHistoricalBarRecordset barRs(connect);	// table contract recordset
 
 	query.append(												// query to run
@@ -206,42 +201,65 @@ void historicalRequest() {
 		.append(boost::lexical_cast<std::string>(id))
 		.append("' AND exchange = '")
 		.append(contract.summary.exchange)
-		.append("' AND bar_start > ");
+		.append("' AND bar_start > '")
+		.append(boost::lexical_cast<std::string>(bars.begin()->barStart()))
+		.append("' AND bar_end < '")
+		.append(boost::lexical_cast<std::string>(bars.rbegin()->barEnd()))
+		.append("')");
 
-	TWS_LOG(std::string("running query: ")						// log
+	TWS_LOG(std::string("query to launch: ")					// log
 		.append(query))
 
-	if (!barRs.select(query))									// query succeeded ?
-		throw std::exception("instrument request failed");
+	try {
 
-	if (barRs.size() > 0)										// symbol found ?
-		throw std::exception("data already found,aborting import");
+		// if succedded, there are item to delete
 
-	if (IB::settings::instance().verbosity() > 0)				// verbose
-		TWS_LOG(std::string("writing database"))
-
-	for (thOth::timeSeries<IB::historicalQuoteDetails>::const_iterator
-		It = ts.cbegin(); It != ts.cend(); It++) {
+		if (barRs.select(query) == true) {
 		
-	if (IB::settings::instance().verbosity() > 1)				//verbose
+			// TODO: deletion phase
+			TWS_LOG("previous import found, deleting data")
+		
+		}
+		
+	} catch (IB::dataBase::selectQueryExceptionNoSelection & ex) {
+					
+		// nothing to erase, go to the next step
 
-		TWS_LOG(std::string("new data: d: ")
-			.append(boost::lexical_cast<std::string>(It->first))
+	}
+	catch (std::exception & ex) {								// any other mistake -> throw
+	
+		throw ex;				
+	
+	}
+
+	// step 5: insert new data to the table
+	TWS_LOG_V(std::string("writing database"), 0)
+
+	for (std::vector<thOth::bar>::const_iterator 
+		It = bars.cbegin(); It != bars.cend(); It++) {
+
+		barRs.insert(
+			IB::dataBase::barRecord(
+				id,
+				*It,
+				contract.summary.exchange));
+		
+		TWS_LOG_V(std::string("new data: d: ")
+			.append(boost::lexical_cast<std::string>(It->barStart()))
 			.append(", p: ")
-			.append(boost::lexical_cast<std::string>(It->second.close_))
+			.append(boost::lexical_cast<std::string>(It->close()))
 			.append(", h: ")
-			.append(boost::lexical_cast<std::string>(It->second.high_))
+			.append(boost::lexical_cast<std::string>(It->high()))
 			.append(", l: ")
-			.append(boost::lexical_cast<std::string>(It->second.low_))
+			.append(boost::lexical_cast<std::string>(It->low()))
 			.append(", v: ")
-			.append(boost::lexical_cast<std::string>(It->second.volume_)))
+			.append(boost::lexical_cast<std::string>(It->volume())), 1)
 
 	}
 
-	if (IB::settings::instance().verbosity() > 0)				// verbose
-		TWS_LOG(												// log
-			std::string("historical data download test completed in ")
-				.append(boost::lexical_cast<std::string>(tt.elapsed()))
-				.append(" seconds"))
+	TWS_LOG_V(												// log
+		std::string("historical data download test completed in ")
+			.append(boost::lexical_cast<std::string>(tt.elapsed()))
+			.append(" seconds"), 0)
 
 };
