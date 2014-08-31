@@ -181,15 +181,14 @@ void historicalRequest(const std::string & opt1,
 
 		client.connect(											// client is connecting
 			IB::settings::instance().ibHost().c_str(),
-			IB::settings::instance().ibPort(),
-			IB::settings::instance().idGen().next());
+			IB::settings::instance().ibPort());
 
 		while (client.isConnected()) client.processMessages();	// TODO: turn into asynchronous
 
 		if (attempt > MAX_ATTEMPT)								// max attemps reached
 			throw std::exception("failed to connect after max attempts");
 
-		if (client.endOfHistoricalData()) {						// download succedded
+		if (client.endOfData()) {								// download succedded
 
 			TWS_LOG_V(std::string("attempt number ")			// log
 				.append(boost::lexical_cast<std::string>(attempt))

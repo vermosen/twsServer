@@ -1,18 +1,26 @@
 #include "functions/staticDataRequest/staticDataRequest.hpp"
 
-void staticDataRequest() {
+void staticDataRequest(const std::string & opt) {
 
 	// step 1: initialization
-	std::cout
-		<< "please provide some contract code:"
-		<< std::endl;
+	std::string contractCode; if (opt.empty()) {				// optionally provided
 
-	int clientId         = 0;									// request Id
+		std::cout
+			<< "please provide some contract code : "
+			<< std::endl;
+
+		std::cin >> contractCode;								// user
+
+	}
+	else {
+
+		contractCode = opt;
+
+	}
+
 	unsigned int attempt = 0;									// current attempt
 
 	boost::timer tt;											// timer
-
-	std::string contractCode; std::cin >> contractCode;			// contract is provided by the user
 
 	TWS_LOG(std::string("contract code provided: ")				// log
 		.append(contractCode))
@@ -73,7 +81,7 @@ void staticDataRequest() {
 
 				client.connect(
 				IB::settings::instance().ibHost().c_str(),
-				IB::settings::instance().ibPort(), clientId);	// TODO: test if we have to provide connection id here
+				IB::settings::instance().ibPort());				// TODO: test if we have to provide connection id here
 
 			while (client.isConnected()) client.processMessages();
 

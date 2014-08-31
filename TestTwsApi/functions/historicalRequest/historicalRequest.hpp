@@ -22,6 +22,7 @@
 // missing historical data about a given contract
 // opt1: contract name
 // opt2: date string
-void historicalRequest(const std::string & opt1 = std::string(""), const std::string & opt2 = std::string(""));
+void historicalRequest(const std::string & opt1 = std::string(""),
+					   const std::string & opt2 = std::string(""));
 
 #endif

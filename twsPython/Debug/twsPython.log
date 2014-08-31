@@ -1,4 +1,4 @@
-﻿Build started 31/08/2014 16:56:45.
+﻿Build started 31/08/2014 18:03:52.
      1>Project "C:\Users\vermosen\Documents\GitHub\twsapi\twsPython\twsPython.vcxproj" on node 2 (Build target(s)).
      1>InitializeBuildStatus:
          Touching "Debug\twsPython.tlog\unsuccessfulbuild".
@@ -11,4 +11,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.85
+Time Elapsed 00:00:00.83

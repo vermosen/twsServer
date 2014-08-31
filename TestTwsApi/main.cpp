@@ -141,9 +141,9 @@ int main(int argc, char** argv) {
 				std::cout											// message
 					<< "Please select an activity: "
 					<< std::endl
-					<< "1 - historical data request"
+					<< "1 - static data test"
 					<< std::endl
-					<< "2 - static data test"
+					<< "2 - historical data request"
 					<< std::endl
 					<< "3 - multi-threading test"
 					<< std::endl
@@ -164,20 +164,20 @@ int main(int argc, char** argv) {
 			switch (res) {											// switch over the tests available
 			
 				case 1:
+
+					TWS_LOG(										// log
+						std::string("starting staticDataRequest test"))
+
+					staticDataRequest(opt1);						// launches static data request process
+					break;
+
+				case 2:
 				
 					TWS_LOG(										// log
 						std::string("starting historicalRequest test"))	
 
 					historicalRequest(opt1, opt2);					// launches historical request process
 					break;				
-
-				case 2:
-
-					TWS_LOG(										// log
-						std::string("starting staticDataRequest test"))
-
-					staticDataRequest();							// launches static data request process
-					break;
 				
 				case 3:
 

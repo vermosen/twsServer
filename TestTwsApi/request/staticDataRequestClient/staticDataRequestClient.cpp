@@ -5,8 +5,6 @@
 
 namespace IB {
 
-	///////////////////////////////////////////////////////////
-	// member funcs
 	staticDataRequestClient::staticDataRequestClient(const Contract & ct) : request(ct) {};
 
 	void staticDataRequestClient::requestStaticData() {

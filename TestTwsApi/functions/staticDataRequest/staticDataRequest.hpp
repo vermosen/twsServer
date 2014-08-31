@@ -16,6 +16,7 @@
 
 // this procedure is meant to request 
 // missing static data about a given contract
-void staticDataRequest();
+// opt1
+void staticDataRequest(const std::string & = std::string(""));
 
 #endif
