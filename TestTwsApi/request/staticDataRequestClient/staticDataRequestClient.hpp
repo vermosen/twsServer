@@ -4,10 +4,10 @@
 #ifndef static_data_request_client_hpp
 #define static_data_request_client_hpp
 
+#include <memory>
+
 #include <stdio.h>																	// printf()
 #include <time.h>
-
-#include <boost/shared_ptr.hpp>
 
 #include "request/request.hpp"
 #include "utilities/conversion/convertDateTime/convertDateTime.hpp"
@@ -35,27 +35,23 @@ namespace IB {
 
 		void processMessages();														// request interface
 
-
-		// maybe useless, check Ewrapper interface
-		bool endOfStaticData(const IBString& Date) {								// check if static request has been achieve
-
-			endOfStaticData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);// todo: check for request achivement
-			return endOfStaticData_;
-
-		}
-
 	private:
 
 		void requestStaticData();													// request static data
 		bool endOfStaticData_;														// indicate whether the file has been read
 		ContractDetails contractDetails_;											// the contract details returned
 
-		boost::shared_ptr<EPosixClientSocket> m_pClient;							// posix client
 		state m_state;																// current state
 		time_t m_sleepDeadline;														// sleep deadline
 
 		// implemented interface
 		void contractDetails(int reqId, const ContractDetails& contractDetails);
+		bool endOfStaticData(const IBString& Date) {								// check if static request has been achieve
+
+			endOfStaticData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);// todo: check for request achivement
+			return endOfStaticData_;
+
+		}
 
 		// not implemented
 		void tickPrice(TickerId tickerId, TickType field, double price, int canAutoExecute) {};
