@@ -11,63 +11,27 @@
 
 #include <thOth/time/DateTime.hpp>
 #include <thOth/time/timeseries.hpp>
-#include <thOth/pattern/observable.hpp>
 #include <thOth/bar/bar.hpp>
 
-#include "EPosixClientSocket.h"
-#include "EWrapper.h"																	// TWS components
-#include "contract.h"																	
-#include "EPosixClientSocketPlatform.h"
-
-#include 
-#include "utilities/define.hpp"
+#include "request/request.hpp"
 #include "utilities/conversion/convertDateTime/convertDateTime.hpp"
 #include "utilities/factory/barSizeFactory/barSizeFactory.hpp"							// factories
 #include "utilities/factory/dataTypeFactory/dataTypeFactory.hpp"
 #include "utilities/factory/dataDurationFactory/dataDurationFactory.hpp"
 
-#ifndef _MSC_VER
-#include <sys/time.h>
-#endif
-
-#if defined __INTEL_COMPILER
-# pragma warning (disable:869)
-#elif defined __GNUC__
-# pragma GCC diagnostic ignored "-Wswitch"
-# pragma GCC diagnostic ignored "-Wunused-parameter"
-#endif  /* __INTEL_COMPILER */
-
 namespace IB {
-
-	const int PING_DEADLINE_H = 2;											// seconds
-	const int SLEEP_BETWEEN_PINGS_H = 30;									// seconds
 
 	class EPosixClientSocket;
 	struct Contract;
 
-	class historicalRequestClient : public EWrapper, thOth::observable {
+	class historicalRequestClient : public request {
 
-	private:
+	private:			
 
-		enum state {														// client states
-
-			ST_CONNECT,
-			ST_REQUEST,
-			ST_REQUEST_ACK,
-			ST_PING,
-			ST_PING_ACK,
-			ST_IDLE
-
-		};
-
-	private:																			
-		historicalRequestClient() {};										// private default ctor,
-		historicalRequestClient(const historicalRequestClient &) {};		// cc ctors and assignement
-		historicalRequestClient & operator =(const historicalRequestClient &);
-
-		void requestId() { id_ = IB::settings::instance().idGen().next(); };
-																			// request a new id
-
+		historicalRequestClient() = delete;										// no default, cc ctor and assignement op
+		historicalRequestClient(const historicalRequestClient &) = delete;
+		historicalRequestClient & operator =(const historicalRequestClient &) = delete;
+																			
 	public:
 
 		historicalRequestClient(const Contract &,							// public ctor
@@ -79,10 +43,7 @@ namespace IB {
 
 		~historicalRequestClient();											// destructor
 
-		// accessors
-		bool endOfHistoricalData () const { return endOfHistoricalData_; };	// end of data (public ?)
-		bool errorForRequest     () const { return errorForRequest_    ; };	// error
-		
+		// accessors	
 		std::vector<thOth::bar> bars() const { return bars_; };				// the set of bars
 
 		void processMessages();
@@ -92,10 +53,6 @@ namespace IB {
 		bool connect    (const char * host, unsigned int port, int clientId = 0);
 		void disconnect () const;
 		bool isConnected() const;
-
-	private:
-
-		void reqCurrentTime();
 
 	protected:
 
@@ -127,8 +84,6 @@ namespace IB {
 		
 		state m_state         ;												// current state
 		time_t m_sleepDeadline;												// sleep deadline
-
-	public:
 
 		// Ewrapper implentation
 		void tickPrice(TickerId tickerId, TickType field, double price, int canAutoExecute);

@@ -4,116 +4,55 @@
 #ifndef static_data_request_client_hpp
 #define static_data_request_client_hpp
 
-#include <stdio.h>																		// printf()
+#include <stdio.h>																	// printf()
 #include <time.h>
 
 #include <boost/shared_ptr.hpp>
 
-#include <thOth/time/DateTime.hpp>
-#include <thOth/time/timeseries.hpp>
-#include <thOth/pattern/observable.hpp>
-
-#include "EWrapper.h"																	// TWS components
-#include "EPosixClientSocket.h"
-#include "EPosixClientSocketPlatform.h"
-#include "Contract.h"
-
+#include "request/request.hpp"
 #include "utilities/conversion/convertDateTime/convertDateTime.hpp"
-#include "utilities/settings/settings.hpp"
-
-#ifndef _MSC_VER
-#include <sys/time.h>
-#endif
-
-#if defined __INTEL_COMPILER
-# pragma warning (disable:869)
-#elif defined __GNUC__
-# pragma GCC diagnostic ignored "-Wswitch"
-# pragma GCC diagnostic ignored "-Wunused-parameter"
-#endif  /* __INTEL_COMPILER */
 
 namespace IB {
-
-	const int PING_DEADLINE_S       = 2 ;												// seconds
-	const int SLEEP_BETWEEN_PINGS_S = 30;												// seconds
 
 	class EPosixClientSocket;
 	struct Contract;
 
-	class staticDataRequestClient : public EWrapper, thOth::observable {
-
-	private:
-
-		enum state {																	// client states
-
-			ST_CONNECT,
-			ST_REQUEST,
-			ST_REQUEST_ACK,
-			ST_PING,
-			ST_PING_ACK,
-			ST_IDLE
-
-		};
+	class staticDataRequestClient : public request {
 
 	private:														
-		staticDataRequestClient() {};													// private default ctor
-		staticDataRequestClient(const staticDataRequestClient &) {};					// cc ctors and assignement
-		staticDataRequestClient & operator =(const staticDataRequestClient &);
-
-		void requestId() { id_ = IB::settings::instance().idGen().next(); };		// request a new id
+		staticDataRequestClient() = delete;											// no default ctor, cc ctor 
+		staticDataRequestClient(const staticDataRequestClient &) = delete;			// or assignement operator	
+		staticDataRequestClient & operator =(const staticDataRequestClient &) = delete;
 
 	public:
 
 		staticDataRequestClient(const Contract &);
-		~staticDataRequestClient();														// destructor
+		~staticDataRequestClient();													// destructor
 
 		// accessors
-		bool endOfStaticData() const { return endOfStaticData_; };						// end of data (public ?)
-		bool errorForRequest() const { return errorForRequest_; };						// error
-		
-		Contract        contract()        const { return contract_       ; };			// contract
-		ContractDetails contractDetails() const { return contractDetails_; };			// contract detailss
+		bool			endOfStaticData() const { return endOfStaticData_; };		// end of data (public ?)
+		ContractDetails contractDetails() const { return contractDetails_; };		// contract details
 
-		void processMessages();
+		void processMessages();														// request interface
 
-		bool connect(
-			const char * host, 
-			unsigned int port,
-			int clientId = 0);
-		void disconnect () const;
-		bool isConnected() const;
 
-	private:
-
-		void reqCurrentTime();
-
-	protected:
-
-		void requestStaticData();													// request static data
-
-		// maybe useless
-		bool IsEndOfStaticData(const IBString& Date) {								// check if static request has been achieve
+		// maybe useless, check Ewrapper interface
+		bool endOfStaticData(const IBString& Date) {								// check if static request has been achieve
 
 			endOfStaticData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);// todo: check for request achivement
 			return endOfStaticData_;
-		
+
 		}
 
 	private:
 
+		void requestStaticData();													// request static data
 		bool endOfStaticData_;														// indicate whether the file has been read
-		bool errorForRequest_;														// error on the request
-		int marketDataType_  ;														// market data type
-		
-		Contract contract_				;											// the initial contract definition
 		ContractDetails contractDetails_;											// the contract details returned
-		TickerId id_					;											// id of the request
 
 		boost::shared_ptr<EPosixClientSocket> m_pClient;							// posix client
 		state m_state;																// current state
 		time_t m_sleepDeadline;														// sleep deadline
-
-	public:
 
 		// Ewrapper implentation
 		void tickPrice(TickerId tickerId, TickType field, double price, int canAutoExecute);
@@ -141,7 +80,6 @@ namespace IB {
 		void nextValidId(OrderId orderId);
 		void contractDetails(int reqId, const ContractDetails& contractDetails);
 		void bondContractDetails(int reqId, const ContractDetails& contractDetails);
-		void contractDetailsEnd(int reqId);
 		void execDetails(int reqId, const Contract& contract, const Execution& execution);
 		void execDetailsEnd(int reqId);
 		void error(const int id, const int errorCode, const IBString errorString);
@@ -161,7 +99,6 @@ namespace IB {
 		void scannerDataEnd(int reqId);
 		void realtimeBar(TickerId reqId, long time, double open, double high, double low, double close,
 			long volume, double wap, int count);
-		void currentTime(long time);
 		void fundamentalData(TickerId reqId, const IBString& data);
 		void deltaNeutralValidation(int reqId, const UnderComp& underComp);
 		void tickSnapshotEnd(int reqId);
@@ -171,6 +108,7 @@ namespace IB {
 		void positionEnd();
 		void accountSummary(int reqId, const IBString& account, const IBString& tag, const IBString& value, const IBString& curency);
 		void accountSummaryEnd(int reqId);
+
 
 	};
 

@@ -5,79 +5,23 @@
 
 namespace IB {
 
-	historicalRequestClient::historicalRequestClient(
+	historicalRequestClient::historicalRequestClient(						// ctor
 		const Contract & ct,
 		const thOth::dateTime & dt,
 		const barSize bar,
 		const int length,
 		const dataDuration dur,
-		const dataType type)
-
-		: m_pClient(new EPosixClientSocket(this)),
-		  m_state        (ST_CONNECT),
-		  m_sleepDeadline(0         ),
-		  contract_      (ct        ),
-		  endDate_       (dt        ),
-		  length_        (length    ),
-		  barSize_       (bar       ),
-		  dataDuration_  (dur       ),
-		  dataType_      (type      ) {}
-
-	historicalRequestClient::~historicalRequestClient() {}
-
-	historicalRequestClient & historicalRequestClient::operator = (
-		const historicalRequestClient & o) {
-	
-		// member copy
-		if (this != &o) {
+		const dataType type) 
 		
-			bars_                = o.bars_               ;
-			endOfHistoricalData_ = o.endOfHistoricalData_;
-			errorForRequest_     = o.errorForRequest_    ;
-			marketDataType_      = o.marketDataType_     ;
-
-			contract_            = o.contract_           ;
-			endDate_             = o.endDate_			 ;
-			length_				 = o.length_			 ;
-			barSize_			 = o.barSize_			 ;
-			dataDuration_		 = o.dataDuration_		 ;
-			dataType_			 = o.dataType_			 ;
-
-			m_pClient            = o.m_pClient           ;
-			m_state              = o.m_state             ;
-			m_sleepDeadline      = o.m_sleepDeadline     ;
-
-			id_ = 0;														// set the new request id to 0
-
-		}
-	
-		return *this;
-	
-	};
-
-	bool historicalRequestClient::connect(const char *host, unsigned int port, int clientId) {
-
-		bool bRes = m_pClient->eConnect2(host, port, clientId);				// trying to connect
-		return bRes;
-
-	}
-
-	void historicalRequestClient::disconnect() const {
-
-		m_pClient->eDisconnect();
-
-	}
-
-	bool historicalRequestClient::isConnected() const {
-
-		return m_pClient->isConnected();
-
-	}
+		: request       (ct    ),
+		  endDate_      (dt    ),
+		  length_       (length),
+		  barSize_      (bar   ),
+		  dataDuration_ (dur   ),
+		  dataType_     (type  ) {}
 
 	void historicalRequestClient::requestHistoricalData() {
 	
-		requestId();														// generates a new id
-
 		m_pClient->reqHistoricalData(										// call the corresponding EClientSocketBase method
 			id_,															// request id
 			contract_,														// contract
@@ -168,64 +112,6 @@ namespace IB {
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////
-	// methods
-	void historicalRequestClient::reqCurrentTime()
-	{
-
-		m_sleepDeadline = time(NULL) + PING_DEADLINE_H;						// set ping deadline to "now + n seconds"
-		m_state = ST_PING_ACK;
-		m_pClient->reqCurrentTime();
-
-	}
-
-	void historicalRequestClient::nextValidId(OrderId orderId) {
-	
-		m_state = ST_REQUEST;
-	
-	}
-
-	void historicalRequestClient::currentTime(long time) {
-
-		if (m_state == ST_PING_ACK) {
-			
-			time_t t = (time_t)time;
-			struct tm * timeinfo = localtime(&t);
-			time_t now = ::time(NULL);
-			m_sleepDeadline = now + SLEEP_BETWEEN_PINGS_H;
-			m_state = ST_IDLE;
-
-		}
-	}
-
-	void historicalRequestClient::error(
-		const int id, 
-		const int errorCode, 
-		const IBString errorString) {
-
-		if (errorCode == 1100) {											// "Connectivity between IB and TWS has been lost"
-
-			TWS_LOG_V(std::string("Connectivity error: ")						// log
-				.append(errorString), 0)
-
-				disconnect();
-
-		} else if (errorCode == 200) {											// ""
-
-			TWS_LOG_V(std::string("Request error: ")							// log
-				.append(errorString), 0)
-
-				disconnect();
-
-		} else {
-
-			TWS_LOG_V(std::string("request information: ")					// log
-				.append(errorString), 1)
-		
-		}
-			
-	}
-
 	void historicalRequestClient::historicalData(
 		TickerId reqId,
 		const IBString& date,
@@ -240,7 +126,7 @@ namespace IB {
 		
 		if (IsEndOfHistoricalData(date)) {									// control for EoF
 
-			std::sort(bars_.begin(), bars_.end());							// sorting the bars
+			std::sort(bars_.begin(), bars_.end());							// finally sorting the bars
 			notifyObservers();
 			disconnect();
 			return;
