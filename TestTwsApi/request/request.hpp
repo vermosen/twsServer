@@ -70,7 +70,7 @@ namespace IB {
 
 		inline void requestId() { id_ = IB::settings::instance().idGen().next(); };	// request a new interactive broker id
 		void reqCurrentTime();														// get the current time (TODO: use stl)
-		bool IsEndOfData(const IBString& Date);										// usefull ?
+		//bool IsEndOfData(const IBString& Date);										// usefull ?
 
 		virtual void processMessages() = 0;											// pure virtual method
 
@@ -111,6 +111,7 @@ namespace IB {
 		void contractDetailsEnd(int reqId);
 		void error(const int id, const int errorCode, const IBString errorString);
 		void currentTime(long time);
+		void nextValidId(OrderId orderId);
 
 		// not implemented
 		virtual void tickPrice( TickerId tickerId, TickType field, double price, int canAutoExecute) = 0;
@@ -135,7 +136,6 @@ namespace IB {
 			double unrealizedPNL, double realizedPNL, const IBString& accountName) = 0;
 		virtual void updateAccountTime(const IBString& timeStamp) = 0;
 		virtual void accountDownloadEnd(const IBString& accountName) = 0;
-		virtual void nextValidId( OrderId orderId) = 0;
 		virtual void contractDetails( int reqId, const ContractDetails& contractDetails) = 0;
 		virtual void bondContractDetails( int reqId, const ContractDetails& contractDetails) = 0;
 		virtual void execDetails( int reqId, const Contract& contract, const Execution& execution) =0;

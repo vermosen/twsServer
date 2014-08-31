@@ -99,7 +99,7 @@ namespace IB {
 		int reqId,
 		const ContractDetails& contractDetails) {
 
-		endOfStaticData_ = true;
+		endOfData_ = true;
 		disconnect();
 		contractDetails_ = contractDetails;
 		notifyObservers();

@@ -54,7 +54,6 @@ namespace IB {
 
 	private:
 
-		bool endOfHistoricalData_ ;											// indicate whether the file has been read
 		thOth::dateTime endDate_  ;											// the end date
 		int length_               ;											// lenght of the period
 		barSize barSize_		  ;											// bar size
@@ -62,18 +61,15 @@ namespace IB {
 		dataType dataType_		  ;											// data Type
 
 		std::vector<thOth::bar> bars_;										// bars
-		
-		state m_state         ;												// current state
-		time_t m_sleepDeadline;												// sleep deadline
 
 		// implemented interface
 		void historicalData(TickerId reqId, const IBString& date, double open, double high,
 			double low, double close, int volume, int barCount, double WAP, int hasGaps);
 
-		bool IsEndOfHistoricalData(const IBString& Date) {					// check if historical data is finished
+		bool isEndOfHistoricalData(const IBString& Date) {					// check if historical data is finished
 
-			endOfHistoricalData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);
-			return endOfHistoricalData_;
+			endOfData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);
+			return endOfData_;
 
 		}
 
@@ -100,7 +96,6 @@ namespace IB {
 			double unrealizedPNL, double realizedPNL, const IBString& accountName) {};
 		void updateAccountTime(const IBString& timeStamp) {};
 		void accountDownloadEnd(const IBString& accountName) {};
-		void nextValidId(OrderId orderId) {};
 		void contractDetails(int reqId, const ContractDetails& contractDetails) {};
 		void bondContractDetails(int reqId, const ContractDetails& contractDetails) {};
 		void execDetails(int reqId, const Contract& contract, const Execution& execution) {};

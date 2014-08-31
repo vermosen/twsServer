@@ -89,7 +89,7 @@ void staticDataRequest(const std::string & opt) {
 
 				throw std::exception("failed to connect after max attempts");
 
-			if (client.endOfStaticData()) {						// download succedded
+			if (client.endOfData()) {							// download succedded
 
 				TWS_LOG_V(std::string("download successful"), 0)// log	
 				break;

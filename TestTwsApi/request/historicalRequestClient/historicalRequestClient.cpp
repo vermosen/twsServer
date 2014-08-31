@@ -62,17 +62,17 @@ namespace IB {
 
 				disconnect();
 				return;
-			
+
 			}
-			
+
 			break;
-		
+
 		case ST_IDLE:
 			if (m_sleepDeadline < now) {
 
 				m_state = ST_PING;
 				return;
-			
+
 			}
 			break;
 		}
@@ -100,13 +100,13 @@ namespace IB {
 				return;
 			}
 
-			if (FD_ISSET(m_pClient->fd(), &writeSet))				
+			if (FD_ISSET(m_pClient->fd(), &writeSet))
 				m_pClient->onSend();										// socket is ready for writing
 
 			if (m_pClient->fd() < 0)
 				return;
 
-			if (FD_ISSET(m_pClient->fd(), &readSet))				
+			if (FD_ISSET(m_pClient->fd(), &readSet))
 				m_pClient->onReceive();										// socket is ready for reading
 
 		}
@@ -124,7 +124,7 @@ namespace IB {
 		double WAP,
 		int hasGaps) {
 		
-		if (IsEndOfHistoricalData(date)) {									// control for EoF
+		if (isEndOfHistoricalData(date)) {									// control for EoF
 
 			std::sort(bars_.begin(), bars_.end());							// finally sorting the bars
 			notifyObservers();

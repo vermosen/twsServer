@@ -30,7 +30,6 @@ namespace IB {
 		~staticDataRequestClient() {};												// destructor
 
 		// accessors
-		bool			endOfStaticData() const { return endOfStaticData_; };		// end of data (public ?)
 		ContractDetails contractDetails() const { return contractDetails_; };		// contract details
 
 		void processMessages();														// request interface
@@ -38,20 +37,16 @@ namespace IB {
 	private:
 
 		void requestStaticData();													// request static data
-		bool endOfStaticData_;														// indicate whether the file has been read
 		ContractDetails contractDetails_;											// the contract details returned
-
-		state m_state;																// current state
-		time_t m_sleepDeadline;														// sleep deadline
 
 		// implemented interface
 		void contractDetails(int reqId, const ContractDetails& contractDetails);
-		bool endOfStaticData(const IBString& Date) {								// check if static request has been achieve
+		//bool endOfStaticData(const IBString& Date) {								// check if static request has been achieve
 
-			endOfStaticData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);// todo: check for request achivement
-			return endOfStaticData_;
+		//	endOfStaticData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);// todo: check for request achivement
+		//	return endOfStaticData_;
 
-		}
+		//}
 
 		// not implemented
 		void tickPrice(TickerId tickerId, TickType field, double price, int canAutoExecute) {};
@@ -76,7 +71,6 @@ namespace IB {
 			double unrealizedPNL, double realizedPNL, const IBString& accountName) {};
 		void updateAccountTime(const IBString& timeStamp) {};
 		void accountDownloadEnd(const IBString& accountName) {};
-		void nextValidId(OrderId orderId) {};
 		void bondContractDetails(int reqId, const ContractDetails& contractDetails) {};
 		void execDetails(int reqId, const Contract& contract, const Execution& execution) {};
 		void execDetailsEnd(int reqId) {};

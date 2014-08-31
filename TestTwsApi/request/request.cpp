@@ -33,12 +33,12 @@ namespace IB {
 
 	}
 
-	bool request::IsEndOfData(const IBString& Date) {						// check if static request has been achieve
+	//bool request::IsEndOfData(const IBString& Date) {						// check if static request has been achieve
 
-		endOfData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);	// todo: check for request achivement
-		return endOfData_;
+	//	endOfData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);	// todo: check for request achivement
+	//	return endOfData_;
 
-	}
+	//}
 
 	void request::nextValidId(OrderId orderId) {
 
