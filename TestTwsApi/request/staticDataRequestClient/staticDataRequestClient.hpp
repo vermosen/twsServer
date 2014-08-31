@@ -60,7 +60,7 @@ namespace IB {
 		staticDataRequestClient(const staticDataRequestClient &) {};					// cc ctors and assignement
 		staticDataRequestClient & operator =(const staticDataRequestClient &);
 
-		void requestId() { id_ = IB::settings::instance().generator().next(); };		// request a new id
+		void requestId() { id_ = IB::settings::instance().idGen().next(); };		// request a new id
 
 	public:
 

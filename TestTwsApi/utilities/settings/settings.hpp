@@ -59,8 +59,8 @@ namespace IB {
 			std::string password   () const;
 			std::string dataBase   () const;
 
-			inline idGenerator & generator () { return generator_; };
-			inline logger      & log       () { return log_      ; };
+			inline idGenerator & idGen () { return generator_; };
+			inline logger      & log   () { return log_      ; };
 
 		private: 
 

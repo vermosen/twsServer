@@ -161,6 +161,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="functions\bulkImport\bulkImport.cpp" />
     <ClCompile Include="functions\debug\debug.cpp" />
     <ClCompile Include="functions\historicalRequest\historicalRequest.cpp" />
     <ClCompile Include="functions\multiThreadedCsvBuilder\multiThreadedCsvBuilder.cpp" />
@@ -183,6 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="functions\all.hpp" />
+    <ClInclude Include="functions\bulkImport\bulkImport.hpp" />
     <ClInclude Include="functions\debug\debug.hpp" />
     <ClInclude Include="functions\multiThreadedCsvBuilder\multiThreadedCsvBuilder.hpp" />
     <ClInclude Include="functions\multiThreadedSetting\multiThreadedSetting.hpp" />

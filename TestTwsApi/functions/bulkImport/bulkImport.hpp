@@ -1,7 +1,5 @@
-#ifndef tws_function_historical_request
-#define tws_function_historical_request
-
-#include <functional>
+#ifndef tws_bulk_import
+#define tws_bulk_import
 
 #include <boost/lexical_cast.hpp>
 #include <boost/timer.hpp>
@@ -19,9 +17,8 @@
 #include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
 
 // this procedure is meant to request 
-// missing historical data about a given contract
-// opt1: contract name
-// opt2: date string
-void historicalRequest(const std::string & opt1 = std::string(""), const std::string & opt2 = std::string(""));
+// historical data for all the contracts in the database
+// opt1: date string
+void bulkImport(const std::string & opt1 = std::string(""));
 
 #endif

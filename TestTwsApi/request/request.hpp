@@ -38,8 +38,8 @@
 
 namespace IB {
 
-	const int PING_DEADLINE_R = 2;														// seconds
-	const int SLEEP_BETWEEN_PINGS_R = 30;												// seconds
+	const int PING_DEADLINE       = 2;														// seconds
+	const int SLEEP_BETWEEN_PINGS = 30;														// seconds
 
 	class EPosixClientSocket;
 	struct Contract;
@@ -47,7 +47,7 @@ namespace IB {
 	// base class for any concrete Ewrapper implementation
 	// TODO: use observable functionality to call for receiver
 	// TODO: turn into a template
-	class request : public EWrapper, thOth::observable {
+	class request : public EWrapper {
 
 	private:
 
@@ -68,7 +68,7 @@ namespace IB {
 		request              (const request &) = delete;								// no copy ctor
 		request & operator = (const request &) = delete;								// no assignement operator
 
-		inline void requestId() { id_ = IB::settings::instance().generator().next(); };	// request a new interactive broker id
+		inline void requestId() { id_ = IB::settings::instance().idGen().next(); };		// request a new interactive broker id
 		void reqCurrentTime();															// get the current time (TODO: use stl)
 
 	public:

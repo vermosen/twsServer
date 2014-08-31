@@ -11,9 +11,9 @@ void historicalRequest(const std::string & opt1,
 		<< std::endl
 		<< std::endl;
 		
-	boost::timer tt;											// timer
+	boost::timer tt;											// set a timer
 
-	int clientId = 0; unsigned attempt = 0;						// request Id
+	unsigned int attempt = 0;									// number of attempts
 
 	std::string contractCode; if (opt1.empty()) {				// optionally provided
 
@@ -181,7 +181,8 @@ void historicalRequest(const std::string & opt1,
 
 		client.connect(											// client is connecting
 			IB::settings::instance().ibHost().c_str(),
-			IB::settings::instance().ibPort(), clientId);
+			IB::settings::instance().ibPort(),
+			IB::settings::instance().idGen().next());
 
 		while (client.isConnected()) client.processMessages();	// TODO: turn into asynchronous
 
@@ -234,7 +235,7 @@ void historicalRequest(const std::string & opt1,
 		
 			TWS_LOG_V("previous import found, deleting data", 0)// deletion phase
 
-			std::string deleteQuery;						// delete query
+			std::string deleteQuery;							// delete query
 				deleteQuery.append("DELETE FROM TABLE_HISTORICAL_BAR WHERE (CONTRACT_ID = ");
 				INSERT_SQL_NUM(deleteQuery, id)
 				deleteQuery.append(" AND EXCHANGE = ");
@@ -250,12 +251,13 @@ void historicalRequest(const std::string & opt1,
 		}
 		
 	} catch (IB::dataBase::selectQueryExceptionNoSelection & ex) {
-					
-		// nothing to erase, go to the next step
+																// nothing to erase, go to the next step
+		TWS_LOG_V("selectQueryExceptionNoSelection raised, \
+				   continuing current procedure", 2)
 
 	} catch (IB::dataBase::selectQueryExceptionUnknownField & ex) {
-
-		// problem with a field
+																// problem with a field, throw
+		throw ex;
 
 	} catch (std::exception & ex) {								// any other mistake -> throw
 	

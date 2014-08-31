@@ -11,7 +11,7 @@ void acquireTickerId(std::string & result) {					// returns a message
 			boost::this_thread::get_id()))
 		.append(" get the id ")
 		.append(boost::lexical_cast<std::string>(
-			IB::settings::instance().generator().next()));
+			IB::settings::instance().idGen().next()));
 
 	if (IB::settings::instance().verbosity() > 1)				// verbose ?
 		TWS_LOG(result)											// log
@@ -60,7 +60,7 @@ void multiThreadedSetting() {
 			boost::this_thread::get_id()))
 		.append(" get the id ")
 		.append(boost::lexical_cast<std::string>(
-			IB::settings::instance().generator().next()));
+			IB::settings::instance().idGen().next()));
 
 	std::cout 													// cout
 		<< str 

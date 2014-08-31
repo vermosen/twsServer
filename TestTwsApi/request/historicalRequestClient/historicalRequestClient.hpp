@@ -19,6 +19,7 @@
 #include "contract.h"																	
 #include "EPosixClientSocketPlatform.h"
 
+#include 
 #include "utilities/define.hpp"
 #include "utilities/conversion/convertDateTime/convertDateTime.hpp"
 #include "utilities/factory/barSizeFactory/barSizeFactory.hpp"							// factories
@@ -64,7 +65,7 @@ namespace IB {
 		historicalRequestClient(const historicalRequestClient &) {};		// cc ctors and assignement
 		historicalRequestClient & operator =(const historicalRequestClient &);
 
-		void requestId() { id_ = IB::settings::instance().generator().next(); };		
+		void requestId() { id_ = IB::settings::instance().idGen().next(); };
 																			// request a new id
 
 	public:
