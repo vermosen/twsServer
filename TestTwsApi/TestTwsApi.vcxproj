@@ -166,7 +166,7 @@
     <ClCompile Include="functions\historicalRequest\historicalRequest.cpp" />
     <ClCompile Include="functions\multiThreadedCsvBuilder\multiThreadedCsvBuilder.cpp" />
     <ClCompile Include="functions\multiThreadedSetting\multiThreadedSetting.cpp" />
-    <ClCompile Include="functions\simpleStrategy\simpleStrategy.cpp" />
+    <ClCompile Include="functions\historyFileCreation\historyFileCreation.cpp" />
     <ClCompile Include="functions\staticDataRequest2\staticDataRequest2.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -192,7 +192,7 @@
     <ClInclude Include="functions\debug\debug.hpp" />
     <ClInclude Include="functions\multiThreadedCsvBuilder\multiThreadedCsvBuilder.hpp" />
     <ClInclude Include="functions\multiThreadedSetting\multiThreadedSetting.hpp" />
-    <ClInclude Include="functions\simpleStrategy\simpleStrategy.hpp" />
+    <ClInclude Include="functions\historyFileCreation\historyFileCreation.hpp" />
     <ClInclude Include="functions\staticDataRequest2\staticDataRequest2.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

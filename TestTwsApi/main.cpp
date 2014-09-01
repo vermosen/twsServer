@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
 
 		IB::settings::instance().logPath(							// log path
 			std::string(LOGPATH)
-				.append("TwsApiTest")
+				.append("TwsApiServerTest")
 				.append("_")
 				.append(boost::posix_time::to_iso_string(
 					boost::posix_time::second_clock::local_time()))
@@ -141,11 +141,11 @@ int main(int argc, char** argv) {
 				std::cout											// message
 					<< "Please select an activity: "
 					<< std::endl
-					<< "1 - static data test"
+					<< "1 - static data request"
 					<< std::endl
 					<< "2 - historical data request"
 					<< std::endl
-					<< "3 - simple strategy test"
+					<< "3 - history file creation"
 					<< std::endl
 					<< "4 - multi-threading test"
 					<< std::endl
@@ -168,7 +168,7 @@ int main(int argc, char** argv) {
 				case 1:
 
 					TWS_LOG_V(										// log
-						std::string("starting staticDataRequest test"), 0)
+						std::string("starting static data request"), 0)
 
 					staticDataRequest(opt1);						// launches static data request process
 					break;
@@ -176,7 +176,7 @@ int main(int argc, char** argv) {
 				case 2:
 				
 					TWS_LOG_V(										// log
-						std::string("starting historicalRequest test"), 0)	
+						std::string("starting historical request"), 0)	
 
 					historicalRequest(opt1, opt2);					// launches historical request process
 					break;				
@@ -184,9 +184,9 @@ int main(int argc, char** argv) {
 				case 3:
 
 					TWS_LOG_V(										// log
-						std::string("starting simple strategy test"), 0)
+						std::string("starting history file creation"), 0)
 
-					simpleStrategy(opt1);							// launches simple strategy test
+					historyFileCreation(opt1);						// launches history file creation process
 					break;
 
 				case 4:

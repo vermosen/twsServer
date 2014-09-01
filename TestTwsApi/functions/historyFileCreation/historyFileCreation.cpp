@@ -1,14 +1,14 @@
-#include "functions/simpleStrategy/simpleStrategy.hpp"
+#include "functions/historyFileCreation/historyFileCreation.hpp"
 
 // this procedure implements a simple strategy
 // and computes a few key figures
-void simpleStrategy(const std::string & opt) {
+void historyFileCreation(const std::string & opt) {
 
 	// step 1: initialization
 	std::cout
-		<< "Simple strategy test"
+		<< "History File Creation"
 		<< std::endl
-		<< "--------------------"
+		<< "---------------------"
 		<< std::endl
 		<< std::endl;
 
@@ -92,8 +92,8 @@ void simpleStrategy(const std::string & opt) {
 			for (std::map<IB::dataBase::recordId, IB::dataBase::barRecord>::const_iterator It
 				= historicalRs.cbegin(); It != historicalRs.cend(); It++)
 			
-				bars.push_back(std::move(It->second.bar()));		// insert bars, move ?
-		
+				//bars.push_back(std::move(It->second.bar()));		// insert bars, move ?
+				bars.push_back(It->second.bar());		// insert bars, move ?
 		}	
 	
 	} catch (IB::dataBase::recordsetException & ex) {
@@ -104,7 +104,37 @@ void simpleStrategy(const std::string & opt) {
 	}
 	
 	// step 4: creates a csv file containing the data
-	// ...
+	std::string csvPath(											// csv path
+		std::string("C://Temp/")
+			.append(opt)
+			.append("_")
+			.append("bars")
+			.append(".csv"));
+
+	thOth::utilities::csvBuilder csv(csvPath);						// csv file
+
+	csv.add(std::string("bar start"), 1, 1);						// titles
+	csv.add(std::string("bar end"  ), 1, 2);
+	csv.add(std::string("open"     ), 1, 3);
+	csv.add(std::string("close"    ), 1, 4);
+	csv.add(std::string("high"     ), 1, 5);
+	csv.add(std::string("low"      ), 1, 6);
+	csv.add(std::string("volume"   ), 1, 7);
+
+	long i = 2;	for (std::vector<thOth::bar>::const_iterator It		// insert data
+		= bars.cbegin(); It != bars.cend(); It++; i++) {
+	
+		csv.add(boost::lexical_cast<std::string>(It->barStart()), i, 1);
+		csv.add(boost::lexical_cast<std::string>(It->barEnd  ()), i, 2);
+		
+		csv.add(It->open  (), i, 3);
+		csv.add(It->close (), i, 4);
+		csv.add(It->high  (), i, 5);
+		csv.add(It->low   (), i, 6);
+		csv.add(It->volume(), i, 7);
+		
+	}
+	
 	TWS_LOG_V(														// log
 		std::string("simple strategy test completed in ")
 		.append(boost::lexical_cast<std::string>(tt.elapsed()))
