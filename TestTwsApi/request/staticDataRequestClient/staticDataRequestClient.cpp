@@ -5,7 +5,7 @@
 
 namespace IB {
 
-	staticDataRequestClient::staticDataRequestClient(const Contract & ct) : request(ct) {};
+	staticDataRequestClient::staticDataRequestClient(const Contract & ct) : requestClient(ct) {};
 
 	void staticDataRequestClient::requestStaticData() {
 	

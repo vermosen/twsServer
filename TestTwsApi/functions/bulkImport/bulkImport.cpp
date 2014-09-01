@@ -133,7 +133,6 @@ void bulkImport(const std::string & opt1) {
 			1, IB::dataDuration::day,							// period length and type
 			IB::dataType::trade);								// data type
 	
-
 	}
 
 	TWS_LOG_V("connecting to the server", 2)					// log

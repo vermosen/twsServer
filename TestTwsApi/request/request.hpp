@@ -37,8 +37,8 @@
 
 namespace IB {
 
-	const int PING_DEADLINE       = 2;													// seconds
-	const int SLEEP_BETWEEN_PINGS = 30;													// seconds
+	const int PING_DEADLINE       = 2;												// seconds
+	const int SLEEP_BETWEEN_PINGS = 30;												// seconds
 
 	class EPosixClientSocket;
 	struct Contract;
@@ -46,14 +46,14 @@ namespace IB {
 	// base class for any concrete Ewrapper implementation
 	// TODO: use observable functionality to call for receiver
 	// TODO: turn into a template
-	class request : public EWrapper, 
+	class requestClient : public EWrapper,
 					public thOth::observable {
 
 	private:
 
-		request              (               ) = delete;							// no default ctor
-		request              (const request &) = delete;							// no copy ctor
-		request & operator = (const request &) = delete;							// no assignement operator
+		requestClient              (                     ) = delete;				// no default ctor
+		requestClient			   (const requestClient &) = delete;				// no copy ctor
+		requestClient & operator = (const requestClient &) = delete;				// no assignement operator
 
 	protected:
 
@@ -70,14 +70,13 @@ namespace IB {
 
 		inline void requestId() { id_ = IB::settings::instance().idGen().next(); };	// request a new interactive broker id
 		void reqCurrentTime();														// get the current time (TODO: use stl)
-		//bool IsEndOfData(const IBString& Date);										// usefull ?
 
 		virtual void processMessages() = 0;											// pure virtual method
 
 	public:
 
-		request(const Contract &);													// provides the contract
-		virtual ~request() {};																// destructor
+		requestClient(const Contract &);											// provides the contract
+		virtual ~requestClient() {};												// destructor
 
 		// accessors
 		bool endOfData     () const { return endOfData_     ; };					// end of data flag

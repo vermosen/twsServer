@@ -13,8 +13,7 @@ void acquireTickerId(std::string & result) {					// returns a message
 		.append(boost::lexical_cast<std::string>(
 			IB::settings::instance().idGen().next()));
 
-	if (IB::settings::instance().verbosity() > 1)				// verbose ?
-		TWS_LOG(result)											// log
+	TWS_LOG_V(result, 1)										// log
 
 }
 
@@ -54,23 +53,15 @@ void multiThreadedSetting() {
 			<< messages[i]
 			<< std::endl;
 
-	std::string str; str										// finally get the main thread id
-		.append("main thread ")
+	TWS_LOG_V(std::string("main thread ")
 		.append(boost::lexical_cast<std::string>(
 			boost::this_thread::get_id()))
 		.append(" get the id ")
 		.append(boost::lexical_cast<std::string>(
-			IB::settings::instance().idGen().next()));
+			IB::settings::instance().idGen().next())), 0)
 
-	std::cout 													// cout
-		<< str 
-		<< std::endl;
+	TWS_LOG_V(std::string("multi-threaded settings test executed in ")
+		.append(boost::lexical_cast<std::string>(tt.elapsed()))
+		.append(" seconds"), 0)
 
-	if (IB::settings::instance().verbosity() > 0) 				// verbose
-		TWS_LOG(str)
-
-	if (IB::settings::instance().verbosity() > 0)				// verbose
-		TWS_LOG(std::string("multi-threaded settings test executed in ")
-			.append(boost::lexical_cast<std::string>(tt.elapsed()))
-			.append(" seconds"))
 };

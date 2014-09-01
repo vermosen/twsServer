@@ -13,7 +13,7 @@ namespace IB {
 		const dataDuration dur,
 		const dataType type) 
 		
-		: request       (ct    ),
+		: requestClient (ct),
 		  endDate_      (dt    ),
 		  length_       (length),
 		  barSize_      (bar   ),

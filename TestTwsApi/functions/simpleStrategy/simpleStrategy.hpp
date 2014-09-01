@@ -13,8 +13,11 @@
 #include "utilities/type/all.hpp"
 #include "utilities/settings/settings.hpp"
 #include "utilities/define.hpp"
+#include "recordset/tableContractRecordset/tableContractRecordset.hpp"
+#include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
 
 // this procedure implements a simple strategy
-void simpleStrategy();
+// opt1: name of the contract to study
+void simpleStrategy(const std::string & opt = std::string(""));
 
 #endif

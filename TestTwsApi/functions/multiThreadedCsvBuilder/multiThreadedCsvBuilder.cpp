@@ -56,8 +56,8 @@ void multiThreadedCsvBuilder() {
 
 	if (IB::settings::instance().verbosity() > 0)				// verbose
 
-		TWS_LOG(std::string("multi-threaded csv builder test executed in ")
+		TWS_LOG_V(std::string("multi-threaded csv builder test executed in ")
 			.append(boost::lexical_cast<std::string>(tt.elapsed()))
-			.append(" seconds"))
+			.append(" seconds"), 0)
 
 };

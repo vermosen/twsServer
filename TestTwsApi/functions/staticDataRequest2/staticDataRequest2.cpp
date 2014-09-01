@@ -1,6 +1,6 @@
-#include "functions/staticDataRequest/staticDataRequest.hpp"
+#include "functions/staticDataRequest2/staticDataRequest2.hpp"
 
-void staticDataRequest(const std::string & opt) {
+void staticDataRequest2(const std::string & opt) {
 
 	// step 1: initialization
 	std::string contractCode; if (opt.empty()) {				// optionally provided
@@ -22,8 +22,8 @@ void staticDataRequest(const std::string & opt) {
 
 	boost::timer tt;											// timer
 
-	TWS_LOG_V(std::string("contract code provided: ")			// log
-		.append(contractCode), 0)
+	TWS_LOG(std::string("contract code provided: ")				// log
+		.append(contractCode))
 
 	// step 2: checks if the contract is already in the table
 	MYSQL * connect = mysql_init(NULL);							// connection
@@ -49,14 +49,13 @@ void staticDataRequest(const std::string & opt) {
 		table_contract WHERE contract_symbol = ");
 	INSERT_SQL_STR(selectQuery, contractCode)
 
-	TWS_LOG_V(std::string("running query: ")					// log
-		.append(selectQuery), 0)
+	TWS_LOG(std::string("running query: ")						// log
+		.append(selectQuery))
 
 	// step 3: run the static data request
 	if (!rs.selectQ(selectQuery)) {								// returns value ?
 
-		TWS_LOG_V(												// log
-			std::string("instrument not in the database"), 0)
+		TWS_LOG(std::string("instrument not in the database"))	// log
 		IB::Contract contract;									// contract to request
 
 		contract.symbol          = contractCode.c_str();		// attempt with contract default values
@@ -75,10 +74,10 @@ void staticDataRequest(const std::string & opt) {
 
 			if (IB::settings::instance().verbosity() > 0)
 
-				TWS_LOG_V(std::string("attempt number ")		// log
-					.append(boost::lexical_cast<std::string>(attempt))
-					.append(" out of ")
-					.append(boost::lexical_cast<std::string>(MAX_ATTEMPT)), 0)
+				TWS_LOG(std::string("attempt number ")			// log
+				.append(boost::lexical_cast<std::string>(attempt))
+				.append(" out of ")
+				.append(boost::lexical_cast<std::string>(MAX_ATTEMPT)))
 
 				client.connect(
 				IB::settings::instance().ibHost().c_str(),
@@ -109,23 +108,24 @@ void staticDataRequest(const std::string & opt) {
 		}														// end of for loop
 
 		TWS_LOG_V(												// partially log the contract details
-			std::string("contract details: (symbol) ")
-			.append(client.contract().symbol)
-			.append(", (secType) ")
-			.append(client.contract().secType)
-			.append(", (currency) ")
-			.append(client.contract().currency)
-			.append(", (primary exchange) ")
-			.append(client.contract().primaryExchange)
-			.append(", (bondType) ")
-			.append(client.contractDetails().bondType)
-			.append(", (callable) ")
-			.append(boost::lexical_cast<std::string>(client.contractDetails().callable))
-			.append(", (category) ")
-			.append(client.contractDetails().category)
-			.append(", (contractMonth) ")
-			.append(client.contractDetails().contractMonth)
-			.append("..."), 1)
+		std::string("contract details: (symbol) ")
+		.append(client.contract().symbol)
+		.append(", (secType) ")
+		.append(client.contract().secType)
+		.append(", (currency) ")
+		.append(client.contract().currency)
+		.append(", (primary exchange) ")
+		.append(client.contract().primaryExchange)
+		.append(", (bondType) ")
+		.append(client.contractDetails().bondType)
+		.append(", (callable) ")
+		.append(boost::lexical_cast<std::string>(client.contractDetails().callable))
+		.append(", (category) ")
+		.append(client.contractDetails().category)
+		.append(", (contractMonth) ")
+		.append(client.contractDetails().contractMonth)
+		.append("..."), 1)
+
 
 		// insert into the database
 		TWS_LOG_V(													// log
@@ -147,3 +147,5 @@ void staticDataRequest(const std::string & opt) {
 			.append(" seconds"), 0)
 
 };
+
+void staticDataCallBack::operator()();

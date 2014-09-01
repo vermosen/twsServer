@@ -5,7 +5,7 @@
 
 namespace IB {
 
-	request::request(const Contract & ct)									// ctor
+	requestClient::requestClient(const Contract & ct)						// ctor
 
 		: m_pClient(new EPosixClientSocket(this)),
 		  m_state(ST_CONNECT),
@@ -16,7 +16,7 @@ namespace IB {
 	
 	};
 
-	bool request::connect(
+	bool requestClient::connect(
 		const char *host,
 		unsigned int port) {
 
@@ -25,7 +25,7 @@ namespace IB {
 
 	}
 
-	void request::reqCurrentTime() {
+	void requestClient::reqCurrentTime() {
 
 		m_sleepDeadline = time(NULL) + PING_DEADLINE;						// set ping deadline to "now + n seconds"
 		m_state = ST_PING_ACK;
@@ -33,20 +33,13 @@ namespace IB {
 
 	}
 
-	//bool request::IsEndOfData(const IBString& Date) {						// check if static request has been achieve
-
-	//	endOfData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);	// todo: check for request achivement
-	//	return endOfData_;
-
-	//}
-
-	void request::nextValidId(OrderId orderId) {
+	void requestClient::nextValidId(OrderId orderId) {
 
 		m_state = ST_REQUEST;
 
 	}
 
-	void request::currentTime(long time) {
+	void requestClient::currentTime(long time) {
 
 		if (m_state == ST_PING_ACK) {
 
@@ -59,7 +52,7 @@ namespace IB {
 		}
 	}
 
-	void request::error(													// error management
+	void requestClient::error(												// error management
 		const int id,														// todo: create exceptions and throw
 		const int errorCode,
 		const IBString errorString) {
@@ -72,7 +65,7 @@ namespace IB {
 				.append(boost::lexical_cast<std::string>(id_))
 				.append("lost the connection with IB server"), 0)
 
-				disconnect();
+			disconnect();
 
 		} else if (errorCode == 200) {										// contract has no match
 
@@ -82,7 +75,7 @@ namespace IB {
 				.append(boost::lexical_cast<std::string>(id_))
 				.append("contract has no match"), 0)
 
-				disconnect();
+			disconnect();
 
 		} else {
 
@@ -96,7 +89,7 @@ namespace IB {
 		}
 	}
 
-	void request::contractDetailsEnd(int reqId) {
+	void requestClient::contractDetailsEnd(int reqId) {
 
 		// no idea of it's usage
 		std::cout << "contractDetailsEnd has been called" << std::endl;

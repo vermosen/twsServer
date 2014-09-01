@@ -167,6 +167,10 @@
     <ClCompile Include="functions\multiThreadedCsvBuilder\multiThreadedCsvBuilder.cpp" />
     <ClCompile Include="functions\multiThreadedSetting\multiThreadedSetting.cpp" />
     <ClCompile Include="functions\simpleStrategy\simpleStrategy.cpp" />
+    <ClCompile Include="functions\staticDataRequest2\staticDataRequest2.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="functions\staticDataRequest\staticDataRequest.cpp" />
     <ClCompile Include="request\historicalRequestClient\historicalRequestClient.cpp" />
     <ClCompile Include="main.cpp" />
@@ -189,6 +193,10 @@
     <ClInclude Include="functions\multiThreadedCsvBuilder\multiThreadedCsvBuilder.hpp" />
     <ClInclude Include="functions\multiThreadedSetting\multiThreadedSetting.hpp" />
     <ClInclude Include="functions\simpleStrategy\simpleStrategy.hpp" />
+    <ClInclude Include="functions\staticDataRequest2\staticDataRequest2.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="recordset\recordset.hpp" />
     <ClInclude Include="recordset\recordsetException\recordsetException.hpp" />
     <ClInclude Include="recordset\tableContractRecordset\tableContractRecordset.hpp" />

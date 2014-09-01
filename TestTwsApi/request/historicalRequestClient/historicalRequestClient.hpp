@@ -24,7 +24,7 @@ namespace IB {
 	class EPosixClientSocket;
 	struct Contract;
 
-	class historicalRequestClient : public request {
+	class historicalRequestClient : public requestClient {
 
 	private:			
 

@@ -17,7 +17,7 @@ namespace IB {
 	class EPosixClientSocket;
 	struct Contract;
 
-	class staticDataRequestClient : public request {
+	class staticDataRequestClient : public requestClient {
 
 	private:														
 		staticDataRequestClient() = delete;											// no default ctor, cc ctor 
@@ -41,12 +41,6 @@ namespace IB {
 
 		// implemented interface
 		void contractDetails(int reqId, const ContractDetails& contractDetails);
-		//bool endOfStaticData(const IBString& Date) {								// check if static request has been achieve
-
-		//	endOfStaticData_ = 1 + strncmp((const char*)Date.data(), "finished", 8);// todo: check for request achivement
-		//	return endOfStaticData_;
-
-		//}
 
 		// not implemented
 		void tickPrice(TickerId tickerId, TickType field, double price, int canAutoExecute) {};

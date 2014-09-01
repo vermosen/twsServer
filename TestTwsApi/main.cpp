@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 				.append("_")
 				.append(".csv"));
 
-		TWS_LOG(std::string("starting TwsApiTest"))					// log
+		TWS_LOG_V(std::string("starting TwsApiTest"), 0)			// log
 
 		std::string opt1, opt2;										// optional fields
 
@@ -69,8 +69,8 @@ int main(int argc, char** argv) {
 				std::string str(arg.substr(9, arg.length() - 9));	// the value
 				IB::settings::instance().verbosity(					// set the verbosity
 					boost::lexical_cast<int>(str));
-				TWS_LOG(std::string("sets verbosity to ")			// log
-					.append(str))
+				TWS_LOG_V(std::string("sets verbosity to ")			// log
+					.append(str), 1)
 
 			};
 
@@ -78,8 +78,8 @@ int main(int argc, char** argv) {
 
 				std::string str(arg.substr(6, arg.length() - 6));	// the value
 				IB::settings::instance().ibHost(str);				// set the host
-				TWS_LOG(std::string("sets host to ")				// log
-					.append(str))
+				TWS_LOG_V(std::string("sets host to ")				// log
+					.append(str), 1)
 
 			};
 
@@ -88,8 +88,8 @@ int main(int argc, char** argv) {
 				std::string str(arg.substr(6, arg.length() - 6));	// the value
 				IB::settings::instance().ibPort(					// set the port
 					boost::lexical_cast<int>(str));
-				TWS_LOG(std::string("sets port to ")				// log
-					.append(str))
+				TWS_LOG_V(std::string("sets port to ")				// log
+					.append(str), 1)
 
 			};
 
@@ -97,8 +97,8 @@ int main(int argc, char** argv) {
 
 				std::string str(arg.substr(5, arg.length() - 5));	// the value
 				IB::settings::instance().logPath(str);				// set the log path
-				TWS_LOG(std::string("sets log path to ")			// log
-					.append(str))
+				TWS_LOG_V(std::string("sets log path to ")			// log
+					.append(str), 1)
 
 			};
 
@@ -106,8 +106,8 @@ int main(int argc, char** argv) {
 			
 				std::string str(arg.substr(6, arg.length() - 6));	// the value
 				test = boost::lexical_cast<int>(str);				// runs the selected test automatically	
-				TWS_LOG(std::string("enforcing test ")				// log
-					.append(str))
+				TWS_LOG_V(std::string("enforcing test ")			// log
+					.append(str), 1)
 				end = true;											// for later use: only one attempt
 
 			}
@@ -116,8 +116,8 @@ int main(int argc, char** argv) {
 
 				std::string str(arg.substr(6, arg.length() - 6));	// the value
 				opt1 = str;											// set the opt1 value
-				TWS_LOG(std::string("sets opt1 value to ")			// log
-					.append(str))
+				TWS_LOG_V(std::string("sets opt1 value to ")		// log
+					.append(str), 1)
 
 			}
 
@@ -125,8 +125,8 @@ int main(int argc, char** argv) {
 
 				std::string str(arg.substr(6, arg.length() - 6));	// the value
 				opt2 = str;											// set the opt2 value
-				TWS_LOG(std::string("sets opt2 value to ")			// log
-					.append(str))
+				TWS_LOG_V(std::string("sets opt2 value to ")		// log
+					.append(str), 1)
 
 			}
 
@@ -145,19 +145,21 @@ int main(int argc, char** argv) {
 					<< std::endl
 					<< "2 - historical data request"
 					<< std::endl
-					<< "3 - multi-threading test"
+					<< "3 - simple strategy test"
 					<< std::endl
-					<< "4 - csv writing test"
+					<< "4 - multi-threading test"
 					<< std::endl
-					<< "5 - debug test"
+					<< "5 - csv writing test"
+					<< std::endl
+					<< "6 - debug test"
 					<< std::endl
 					<< "0 - exit"
 					<< std::endl;
 
 				std::cin >> res;									// user defined test
 			
-				TWS_LOG(std::string("manual selection ")			// log
-					.append(boost::lexical_cast<std::string>(res)))
+				TWS_LOG_V(std::string("manual selection ")			// log
+					.append(boost::lexical_cast<std::string>(res)), 0)
 
 			}
 			
@@ -165,29 +167,37 @@ int main(int argc, char** argv) {
 			
 				case 1:
 
-					TWS_LOG(										// log
-						std::string("starting staticDataRequest test"))
+					TWS_LOG_V(										// log
+						std::string("starting staticDataRequest test"), 0)
 
 					staticDataRequest(opt1);						// launches static data request process
 					break;
 
 				case 2:
 				
-					TWS_LOG(										// log
-						std::string("starting historicalRequest test"))	
+					TWS_LOG_V(										// log
+						std::string("starting historicalRequest test"), 0)	
 
 					historicalRequest(opt1, opt2);					// launches historical request process
 					break;				
-				
+
 				case 3:
 
-					TWS_LOG(										// log
-						std::string("starting multi-threaded settings test"))
+					TWS_LOG_V(										// log
+						std::string("starting simple strategy test"), 0)
+
+					simpleStrategy(opt1);							// launches simple strategy test
+					break;
+
+				case 4:
+
+					TWS_LOG_V(										// log
+						std::string("starting multi-threaded settings test"), 0)
 
 						multiThreadedSetting();						// launches multi-threading
 					break;
 
-				case 4:
+				case 5:
 
 					TWS_LOG_V(										// log
 						std::string("starting multi-threaded csv builder test"), 0)
@@ -195,7 +205,7 @@ int main(int argc, char** argv) {
 						multiThreadedCsvBuilder();					// launches csv writing test
 					break;
 
-				case 5:
+				case 6:
 
 					TWS_LOG_V(										// log
 						std::string("starting debug test"), 0)
@@ -230,13 +240,13 @@ int main(int argc, char** argv) {
 			std::string("an error occured: ")
 				.append(e.what()), 0)
 
-		TWS_LOG_V(std::string("exiting with code 1"), 0)					// log
+		TWS_LOG_V(std::string("exiting with code 1"), 0)			// log
 		return 1;
 
 	} catch (...) {													// unknown error
 	
-		TWS_LOG_V(std::string("an unknown error occured"), 0)			// log
-		TWS_LOG_V(std::string("exiting with code 1"), 0)					// log
+		TWS_LOG_V(std::string("an unknown error occured"), 0)		// log
+		TWS_LOG_V(std::string("exiting with code 1"), 0)			// log
 		return 1;
 
 	}

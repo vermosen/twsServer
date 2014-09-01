@@ -3,6 +3,7 @@
 
 #include "functions/historicalRequest/historicalRequest.hpp"
 #include "functions/staticDataRequest/staticDataRequest.hpp"
+#include "functions/simpleStrategy/simpleStrategy.hpp"
 #include "functions/multiThreadedSetting/multiThreadedSetting.hpp"
 #include "functions/multiThreadedCsvBuilder/multiThreadedCsvBuilder.hpp"
 #include "functions/debug/debug.hpp"
