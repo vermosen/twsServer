@@ -109,7 +109,6 @@ void historicalRequest(const std::string & opt1,
 
 	std::shared_ptr<thOth::dateTime> requestDate;				// the date requested
 
-	// TODO: overload the >> operator for datetime
 	bool passed = false; while (!passed) {						// try to perform lexical_cast
 	
 		try {
