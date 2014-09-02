@@ -1,7 +1,7 @@
 #include "functions/historyFileCreation/historyFileCreation.hpp"
 
-// this procedure implements a simple strategy
-// and computes a few key figures
+// this procedure aims at creating the history file of a
+// given contract
 void historyFileCreation(const std::string & opt) {
 
 	// step 1: initialization
@@ -31,7 +31,13 @@ void historyFileCreation(const std::string & opt) {
 
 	TWS_LOG_V(std::string("contract code provided: ")			// log
 		.append(contractCode), 0)
-
+	
+	std::cout													// console message
+		<< "creating history file for contract: "
+		<< contractCode
+		<< std::endl
+		<< std::endl;
+	
 	// step 2: checks if the contract is already in the table
 	MYSQL * connect = mysql_init(NULL);							// connection
 
@@ -92,8 +98,10 @@ void historyFileCreation(const std::string & opt) {
 			for (std::map<IB::dataBase::recordId, IB::dataBase::barRecord>::const_iterator It
 				= historicalRs.cbegin(); It != historicalRs.cend(); It++)
 			
-				//bars.push_back(std::move(It->second.bar()));		// insert bars, move ?
-				bars.push_back(It->second.bar());		// insert bars, move ?
+				bars.push_back(It->second.bar());				// insert bars
+
+			std::sort(bars.begin(), bars.end());				// sorting
+
 		}	
 	
 	} catch (IB::dataBase::recordsetException & ex) {
@@ -112,8 +120,10 @@ void historyFileCreation(const std::string & opt) {
 			.append(".csv"));
 
 	thOth::utilities::csvBuilder csv(csvPath);						// csv file
+	
+	csv.allocate(bars.size() + 1, 7);								// pre-allocate memory to avoid multiple resizing
 
-	csv.add(std::string("bar start"), 1, 1);						// titles
+	csv.add(std::string("bar start"), 1, 1);						// write titles
 	csv.add(std::string("bar end"  ), 1, 2);
 	csv.add(std::string("open"     ), 1, 3);
 	csv.add(std::string("close"    ), 1, 4);
@@ -136,7 +146,7 @@ void historyFileCreation(const std::string & opt) {
 	}
 	
 	TWS_LOG_V(														// log
-		std::string("simple strategy test completed in ")
+		std::string("history file created in ")
 		.append(boost::lexical_cast<std::string>(tt.elapsed()))
 		.append(" seconds"), 0)
 

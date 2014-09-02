@@ -18,7 +18,7 @@ namespace IB {
 	public:
 
 		logger(const std::string & str) : csvBuilder(str) {}; 	// specifies the file path
-		logger(const logger & o       ) : csvBuilder(o  ) {};	// copy ctor
+		logger(const logger & o       ) = delete;				// no copy ctor
 
 		inline void path(const std::string & path_) { csvBuilder::path(path_); };
 																// set the current path
