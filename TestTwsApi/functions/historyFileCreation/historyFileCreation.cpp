@@ -121,17 +121,17 @@ void historyFileCreation(const std::string & opt) {
 	csv.add(std::string("low"      ), 1, 6);
 	csv.add(std::string("volume"   ), 1, 7);
 
-	long i = 2;	for (std::vector<thOth::bar>::const_iterator It		// insert data
-		= bars.cbegin(); It != bars.cend(); It++; i++) {
+	long i = 0;	for (std::vector<thOth::bar>::const_iterator It		// insert data
+		= bars.cbegin(); It != bars.cend(); It++, i++) {
 	
-		csv.add(boost::lexical_cast<std::string>(It->barStart()), i, 1);
-		csv.add(boost::lexical_cast<std::string>(It->barEnd  ()), i, 2);
+		csv.add(boost::lexical_cast<std::string>(It->barStart()), i + 2, 1);
+		csv.add(boost::lexical_cast<std::string>(It->barEnd  ()), i + 2, 2);
 		
-		csv.add(It->open  (), i, 3);
-		csv.add(It->close (), i, 4);
-		csv.add(It->high  (), i, 5);
-		csv.add(It->low   (), i, 6);
-		csv.add(It->volume(), i, 7);
+		csv.add(It->open  (), i + 2, 3);
+		csv.add(It->close (), i + 2, 4);
+		csv.add(It->high  (), i + 2, 5);
+		csv.add(It->low   (), i + 2 ,6);
+		csv.add(It->volume(), i + 2 ,7);
 		
 	}
 	
