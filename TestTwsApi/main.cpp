@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
 
 		TWS_LOG_V(std::string("starting TwsApiTest"), 0)			// log
 
-		std::string opt1, opt2;										// optional fields
+		std::string opt1, opt2, opt3;								// optional fields
 
 		for (int i = 1; i < argc; i++) {							// deals with optional arguments
 			
@@ -130,6 +130,15 @@ int main(int argc, char** argv) {
 
 			}
 
+			if (arg.substr(1, 4) == "opt3") {						// expects -opt1=toto
+
+				std::string str(arg.substr(6, arg.length() - 6));	// the value
+				opt3 = str;											// set the opt2 value
+				TWS_LOG_V(std::string("sets opt3 value to ")		// log
+					.append(str), 1)
+
+			}
+
 		}
 																	
 		do {														// manual selection - loop over the choices
@@ -178,7 +187,7 @@ int main(int argc, char** argv) {
 					TWS_LOG_V(										// log
 						std::string("starting historical request"), 0)	
 
-					historicalRequest(opt1, opt2);					// launches historical request process
+					historicalRequest(opt1, opt2, opt3);			// launches historical request process
 					break;				
 
 				case 3:
@@ -202,7 +211,7 @@ int main(int argc, char** argv) {
 					TWS_LOG_V(										// log
 						std::string("starting multi-threaded csv builder test"), 0)
 
-						multiThreadedCsvBuilder();					// launches csv writing test
+						multiThreadedCsvBuilder();					// launches multi-threaded csv writing test
 					break;
 
 				case 6:
@@ -210,7 +219,7 @@ int main(int argc, char** argv) {
 					TWS_LOG_V(										// log
 						std::string("starting debug test"), 0)
 
-						debug();									// launches csv writing test
+						debug();									// launches debug test
 					break;
 
 				case 0:

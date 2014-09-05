@@ -114,12 +114,12 @@ void historyFileCreation(const std::string & opt) {
 	// step 4: creates a csv file containing the data
 	std::string csvPath(											// csv path
 		std::string("C://Temp/")
-			.append(opt)
+			.append(contractCode)
 			.append("_")
 			.append("bars")
 			.append(".csv"));
 
-	thOth::utilities::csvBuilder csv(csvPath);						// csv file
+	thOth::utilities::csvBuilder csv(csvPath, true);				// csv file, overwrite
 	
 	csv.allocate(bars.size() + 1, 7);								// pre-allocate memory to avoid multiple resizing
 

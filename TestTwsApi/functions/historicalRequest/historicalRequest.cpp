@@ -1,7 +1,8 @@
 #include "functions/historicalRequest/historicalRequest.hpp"
 
 void historicalRequest(const std::string & opt1,
-					   const std::string & opt2) {
+					   const std::string & opt2,
+					   const std::string & opt3) {
 
 	// step 1: initialization
 	std::cout
@@ -91,76 +92,128 @@ void historicalRequest(const std::string & opt1,
 			.append(", ")
 			.append(contract.summary.primaryExchange), 0);
 
-	// step 2: date of the request
-	std::string dtStr; if (opt2.empty()) {				// optionally provided
+	// step 2: dates of the request	
+	std::shared_ptr<thOth::dateTime>							// the dates requested
+		requestStartDate, requestEndDate;
 
-		std::cout										// message
-			<< "Please provide a request date (MM/dd/yyyy):"	
-			<< std::endl;
-
-		std::cin >> dtStr;								// user
-
-	}
-	else {
-
-		dtStr = opt2;
-
-	}
-
-	std::shared_ptr<thOth::dateTime> requestDate;				// the date requested
-
-	bool passed = false; while (!passed) {						// try to perform lexical_cast
+	bool passed = false; while (!passed) {						// start date management
 	
 		try {
-
-			thOth::dateTime::Days   ds = 
-				boost::lexical_cast<int>(
-					dtStr.substr(3, 2));
-
-			thOth::dateTime::Months mt = 
-				boost::lexical_cast<int>(
-					dtStr.substr(0, 2));
-
-			thOth::dateTime::Years  yr = 
-				boost::lexical_cast<unsigned short>(
-					dtStr.substr(6, 4));
 			
-			requestDate =										// the date requested
+			std::string dtStr; if (opt2.empty()) {				// optionally provided
+
+				std::cout										// message
+					<< "Please provide a request start date (MM/dd/yyyy):"
+					<< std::endl;
+
+				std::cin >> dtStr;								// user
+
+			} else {
+
+				dtStr = opt2;
+
+			}
+
+			requestStartDate =									// the start date requested
 				std::shared_ptr<thOth::dateTime>(
-					new thOth::dateTime(yr, mt, ds));		
+					new thOth::dateTime(
+						boost::lexical_cast<unsigned short>(dtStr.substr(6, 4)), 
+						boost::lexical_cast<int>(dtStr.substr(0, 2)), 
+						boost::lexical_cast<int>(dtStr.substr(3, 2))));
 
 			passed = true;										// no exception raised
 		
-		} catch (boost::bad_lexical_cast & ex) {
+		} catch (boost::bad_lexical_cast & ex) {				// error 
 
-			TWS_LOG_V(std::string("bad lexical cast exception")
+			TWS_LOG_V(std::string("bad lexical cast exception: ")
 				.append(ex.what()), 0)
+
+			if (!opt2.empty()) throw ex;						// function argument, no chance to recover
+
+			std::cout											// message
+				<< "Start date conversion impossible, Please try again."
+				<< std::endl;
 
 		} catch (std::exception & ex) {
 		
 			TWS_LOG_V(std::string("an error occured in historical Request function: ")
 				.append(ex.what()), 0)
 
-			throw std::exception(ex.what());
+			throw ex;	
 		
 		} catch (...) {
 
-			TWS_LOG_V(std::string("an unknown error occured in historicaRequest function"), 0)
-			throw std::exception("an unknown error occured..."); 
+			throw std::exception("an unknown error occured in historicaRequest function"); 
 		
-		};
+		}
 	
-	};
+	}
+
+	passed = false; while (!passed) {							// try to perform lexical_cast
+
+		try {
+
+			std::string dtEnd; if (opt3.empty()) {				// optionally provided
+
+				std::cout										// message
+					<< "Please provide a request start date (MM/dd/yyyy):"
+					<< std::endl;
+
+				std::cin >> dtEnd;								// user
+
+			}
+			else {
+
+				dtEnd = opt3;
+
+			}
+
+			requestEndDate =									// the start date requested
+				std::shared_ptr<thOth::dateTime>(
+				new thOth::dateTime(
+				boost::lexical_cast<unsigned short>(dtEnd.substr(6, 4)),
+				boost::lexical_cast<int>(           dtEnd.substr(0, 2)),
+				boost::lexical_cast<int>(			dtEnd.substr(3, 2))));
+
+			passed = true;										// no exception raised
+
+		} catch (boost::bad_lexical_cast & ex) {				// error 
+
+			TWS_LOG_V(std::string("bad lexical cast exception: ")
+				.append(ex.what()), 0)
+
+				if (!opt3.empty()) throw ex;					// function argument, no chance to recover
+
+			std::cout											// message
+				<< "End date conversion impossible, Please try again."
+				<< std::endl;
+
+		}
+		catch (std::exception & ex) {
+
+			TWS_LOG_V(std::string("an error occured in historical Request function: ")
+				.append(ex.what()), 0)
+
+				throw ex;
+
+		} catch (...) {
+
+			throw std::exception("an unknown error occured in historicaRequest function");
+
+		}
+
+	} 
 
 	// step 3: download data
+	// TODO: make a loop
 	TWS_LOG_V(std::string("requesting IB data for date: ")		// log
-		.append(boost::lexical_cast<std::string>(*requestDate)), 0)
+		.append(boost::lexical_cast<std::string>(*requestStartDate)), 0)
 
 	contract.summary.exchange = "SMART";						// setting exchange to SMART
 
 	IB::historicalRequestClient client(							// creates the client				
 		contract.summary,										// contract 
-		*requestDate,											// startDate of the request
+		*requestStartDate,										// startDate of the request
 		IB::barSize::thirtySeconds,								// minimum bar size
 		1, IB::dataDuration::day,								// period length and type
 		IB::dataType::trade);									// data type
