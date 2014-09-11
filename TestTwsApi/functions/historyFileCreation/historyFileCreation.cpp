@@ -2,7 +2,9 @@
 
 // this procedure aims at creating the history file of a
 // given contract
-void historyFileCreation(const std::string & opt) {
+void historyFileCreation(const std::string & opt1,
+						 const std::string & opt2,
+						 const std::string & opt3) {
 
 	// step 1: initialization
 	std::cout
@@ -14,7 +16,7 @@ void historyFileCreation(const std::string & opt) {
 
 	boost::timer tt;											// set a timer
 
-	std::string contractCode; if (opt.empty()) {				// optionally provided
+	std::string contractCode; if (opt1.empty()) {				// optionally provided
 
 		std::cout
 			<< "please provide some contract code : "
@@ -22,10 +24,9 @@ void historyFileCreation(const std::string & opt) {
 
 		std::cin >> contractCode;								// user
 
-	}
-	else {
+	} else {
 
-		contractCode = opt;
+		contractCode = opt1;
 
 	}
 

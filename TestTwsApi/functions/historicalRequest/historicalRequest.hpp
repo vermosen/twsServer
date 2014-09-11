@@ -2,10 +2,12 @@
 #define tws_function_historical_request
 
 #include <functional>
+#include <thread>
+#include <chrono>
 
+// boost components
 #include <boost/lexical_cast.hpp>
 #include <boost/timer.hpp>
-#include <boost/thread.hpp>
 
 // thOth components
 #include <thOth/time/DateTime.hpp>
@@ -26,6 +28,6 @@
 // opt2: date string
 void historicalRequest(const std::string & opt1 = std::string(""),
 					   const std::string & opt2 = std::string(""),
-					   const std::string & opt2 = std::string(""));
+					   const std::string & opt3 = std::string(""));
 
 #endif

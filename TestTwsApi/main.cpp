@@ -37,7 +37,8 @@ int main(int argc, char** argv) {
 		
 		IB::utilities::registerAllFactories();						// register the factories
 		
-		bool end = false; int test = 0;
+		bool end = false; int test = 0;								// indicators
+		std::string opt1, opt2, opt3;								// optional arguments
 
 		IB::settings::instance().verbosity(0       );				// default settings
 		IB::settings::instance().server   (SERVER  );
@@ -57,8 +58,6 @@ int main(int argc, char** argv) {
 				.append(".csv"));
 
 		TWS_LOG_V(std::string("starting TwsApiTest"), 0)			// log
-
-		std::string opt1, opt2, opt3;								// optional fields
 
 		for (int i = 1; i < argc; i++) {							// deals with optional arguments
 			
@@ -148,6 +147,7 @@ int main(int argc, char** argv) {
 			if (test == 0) {
 			
 				std::cout											// message
+					<< std::endl
 					<< "Please select an activity: "
 					<< std::endl
 					<< "1 - static data request"

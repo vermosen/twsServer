@@ -17,6 +17,9 @@
 
 // this procedure implements a simple strategy
 // opt1: name of the contract to study
-void historyFileCreation(const std::string & opt = std::string(""));
+// TODO: enable opt2 and opt3 for time boundaries
+void historyFileCreation(const std::string & opt1 = std::string(""),
+						 const std::string & opt2 = std::string(""),
+						 const std::string & opt3 = std::string(""));
 
 #endif

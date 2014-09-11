@@ -43,8 +43,12 @@ namespace IB {
 
 		~historicalRequestClient() {};										// destructor
 
-		// accessors	
-		std::vector<thOth::bar> bars() const { return bars_; };				// the set of bars
+		// const iterators
+		std::vector<thOth::bar>::const_iterator cbegin () const { return bars_.cbegin(); };
+		std::vector<thOth::bar>::const_iterator cend   () const { return bars_.cend  (); };
+
+		std::vector<thOth::bar>::const_reverse_iterator crbegin () const { return bars_.crbegin(); };
+		std::vector<thOth::bar>::const_reverse_iterator crend   () const { return bars_.crend  (); };
 
 		void processMessages();
 

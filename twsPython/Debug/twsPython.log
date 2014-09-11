@@ -1,14 +1,4 @@
-﻿Build started 04/09/2014 18:30:23.
-     1>Project "C:\Users\vermosen\Documents\GitHub\twsapi\twsPython\twsPython.vcxproj" on node 3 (Build target(s)).
+﻿Build started 10/09/2014 17:18:33.
+     1>Project "C:\Users\vermosen\Documents\GitHub\twsapi\twsPython\twsPython.vcxproj" on node 2 (Build target(s)).
      1>InitializeBuildStatus:
          Touching "Debug\twsPython.tlog\unsuccessfulbuild".
-       CustomBuild:
-         Performing Custom Build Tools
-       FinalizeBuildStatus:
-         Deleting file "Debug\twsPython.tlog\unsuccessfulbuild".
-         Touching "Debug\twsPython.tlog\twsPython.lastbuildstate".
-     1>Done Building Project "C:\Users\vermosen\Documents\GitHub\twsapi\twsPython\twsPython.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:00.77
