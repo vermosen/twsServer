@@ -39,6 +39,7 @@ int main(int argc, char** argv) {
 		
 		bool end = false; int test = 0;								// indicators
 		std::string opt1, opt2, opt3;								// optional arguments
+		bool erase = false;											// deletion policy
 
 		IB::settings::instance().verbosity(0       );				// default settings
 		IB::settings::instance().server   (SERVER  );
@@ -111,6 +112,16 @@ int main(int argc, char** argv) {
 
 			}
 
+			if (arg.substr(1, 5) == "erase") {						// expects -erase=true
+
+				std::string str(arg.substr(7, arg.length() - 7));	// the value
+				if (str == "true") erase = true;					// set erase to true
+				TWS_LOG_V(std::string("set erase policy to ")		// log
+					.append(str), 1)
+
+
+			}
+
 			if (arg.substr(1, 4) == "opt1") {						// expects -opt1=toto
 
 				std::string str(arg.substr(6, arg.length() - 6));	// the value
@@ -154,13 +165,15 @@ int main(int argc, char** argv) {
 					<< std::endl
 					<< "2 - historical data request"
 					<< std::endl
-					<< "3 - history file creation"
+					<< "3 - historical bulk request"
 					<< std::endl
-					<< "4 - multi-threading test"
+					<< "4 - history file creation"
 					<< std::endl
-					<< "5 - csv writing test"
+					<< "5 - multi-threading test"
 					<< std::endl
-					<< "6 - debug test"
+					<< "6 - csv writing test"
+					<< std::endl
+					<< "7 - debug test"
 					<< std::endl
 					<< "0 - exit"
 					<< std::endl;
@@ -179,7 +192,7 @@ int main(int argc, char** argv) {
 					TWS_LOG_V(										// log
 						std::string("starting static data request"), 0)
 
-					staticDataRequest(opt1);						// launches static data request process
+						staticDataRequest(erase, opt1);				// launches static data request process
 					break;
 
 				case 2:
@@ -187,10 +200,19 @@ int main(int argc, char** argv) {
 					TWS_LOG_V(										// log
 						std::string("starting historical request"), 0)	
 
-					historicalRequest(opt1, opt2, opt3);			// launches historical request process
+						historicalRequest(erase, opt1, opt2, opt3);	// launches historical request process
 					break;				
 
 				case 3:
+
+					TWS_LOG_V(										// log
+						std::string("starting historical bulk request"), 0)
+
+						bulkImport(erase, opt2, opt3);				// launches bulk request process (Ignore opt1)
+
+					break;
+
+				case 4:
 
 					TWS_LOG_V(										// log
 						std::string("starting history file creation"), 0)
@@ -198,7 +220,7 @@ int main(int argc, char** argv) {
 					historyFileCreation(opt1);						// launches history file creation process
 					break;
 
-				case 4:
+				case 5:
 
 					TWS_LOG_V(										// log
 						std::string("starting multi-threaded settings test"), 0)
@@ -206,7 +228,7 @@ int main(int argc, char** argv) {
 						multiThreadedSetting();						// launches multi-threading
 					break;
 
-				case 5:
+				case 6:
 
 					TWS_LOG_V(										// log
 						std::string("starting multi-threaded csv builder test"), 0)
@@ -214,7 +236,7 @@ int main(int argc, char** argv) {
 						multiThreadedCsvBuilder();					// launches multi-threaded csv writing test
 					break;
 
-				case 6:
+				case 7:
 
 					TWS_LOG_V(										// log
 						std::string("starting debug test"), 0)

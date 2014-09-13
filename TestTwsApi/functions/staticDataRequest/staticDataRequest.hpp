@@ -17,6 +17,7 @@
 // this procedure is meant to request 
 // missing static data about a given contract
 // opt1
-void staticDataRequest(const std::string & = std::string(""));
+void staticDataRequest(bool deletionPolicy, 
+					   const std::string & = std::string(""));
 
 #endif

@@ -50,7 +50,17 @@ namespace IB {
 		case ST_REQUEST:
 			requestHistoricalData();
 
-		case ST_REQUEST_ACK:
+		case ST_REQUEST_ACK: // in case of pacing violation, stalled on ST_REQUEST_HACK -> need to be fixed
+			//if (m_sleepDeadline < now) {
+
+			//	std::cout 
+			//		<< "request took too long to response"
+			//		<< std::endl;
+			//	disconnect();
+			//	return;
+
+			//}
+
 			break;
 
 		case ST_PING:

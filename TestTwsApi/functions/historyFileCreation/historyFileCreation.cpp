@@ -135,8 +135,8 @@ void historyFileCreation(const std::string & opt1,
 	long i = 0;	for (std::vector<thOth::bar>::const_iterator It		// insert data
 		= bars.cbegin(); It != bars.cend(); It++, i++) {
 	
-		csv.add(boost::lexical_cast<std::string>(It->barStart()), i + 2, 1);
-		csv.add(boost::lexical_cast<std::string>(It->barEnd  ()), i + 2, 2);
+		csv.add(boost::lexical_cast<std::string>(It->barStart().ExcelDate()), i + 2, 1);
+		csv.add(boost::lexical_cast<std::string>(It->barEnd().ExcelDate()), i + 2, 2);
 		
 		csv.add(It->open  (), i + 2, 3);
 		csv.add(It->close (), i + 2, 4);

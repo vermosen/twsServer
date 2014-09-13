@@ -78,6 +78,9 @@
     <ClCompile Include="functions\historyFileCreation\historyFileCreation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="utilities\functions\singleHistoricalRequest\singleHistoricalRequest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\factory\barSizeFactory\barSizeFactory.hpp">
@@ -174,6 +177,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="functions\historyFileCreation\historyFileCreation.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\functions\singleHistoricalRequest\singleHistoricalRequest.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

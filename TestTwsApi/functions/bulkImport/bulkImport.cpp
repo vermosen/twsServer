@@ -1,264 +1,207 @@
 #include "functions/bulkImport/bulkImport.hpp"
 
-void bulkImport(const std::string & opt1) {
+void bulkImport(bool deletionPolicy,
+				const std::string & opt1,
+				const std::string & opt2) {
+
+	// step 0: variable intialization
+	boost::timer tt;											// set a timer
 
 	// step 1: initialization
 	std::cout
-		<< "bulk import Test"
+		<< "bulk Import Test"
 		<< std::endl
 		<< "----------------"
 		<< std::endl
 		<< std::endl;
-		
-	boost::timer tt;											// set a timer
 
-	unsigned int attempt = 0;									// request Id	
+	std::vector<std::string> contractCodes;
 
 	MYSQL * connect = mysql_init(NULL);							// initialize mySQL connection
 
-	TWS_LOG_V(std::string("requesting contracts data"), 0) 		// log
-	
 	if (!connect)												// fails to initialize mySQL
 		throw std::exception("mySQL initialization failed");
 
 	connect = mysql_real_connect(								// mySQL real connection
 		connect,
-		IB::settings::instance().server  ().c_str(),
-		IB::settings::instance().user    ().c_str(),
+		IB::settings::instance().server().c_str(),
+		IB::settings::instance().user().c_str(),
 		IB::settings::instance().password().c_str(),
 		IB::settings::instance().dataBase().c_str(),
-		IB::settings::instance().port    (),
+		IB::settings::instance().port(),
 		NULL, 0);
 
-	if (!connect)
+	if (!connect)												// fails to initialize the connection
 		throw std::exception("unable to reach mySQL database");
 
 	// recordset`& query
 	IB::dataBase::tableContractRecordset contractRs(connect);	// table contract recordset
 
-	std::string selectQuery(									// bulk query
+	std::string selectQuery(									// query to run
 		"SELECT * FROM table_contract");
 
 	TWS_LOG_V(std::string("running query: ")					// log
 		.append(selectQuery), 0)
 
 	if (!contractRs.selectQ(selectQuery))						// query succeeded ?
-		throw std::exception("instrument request failed");	
-		
-	selectQuery = "";											// reset for later usage
+		throw std::exception("instrument request failed");
 
 	if (contractRs.size() == 0)									// symbol found ?
-		throw std::exception("symbol not found");
-	
-	TWS_LOG_V(boost::lexical_cast<std::string>(contractRs.size())													// log
-		.append("contracts found in the database"), 0);
+		throw std::exception("no symbol found");
 
-	// step 2: date of the request
-	std::string dtStr; if (opt1.empty()) {				// optionally provided
+	TWS_LOG_V(													// log
+		std::string("")
+		.append(boost::lexical_cast<std::string>(contractRs.size()))
+		.append(" contracts found"), 0);
 
-		std::cout										// message
-			<< "Please provide a request date (MM/dd/yyyy):"	
-			<< std::endl;
+	// step 2: dates of the request	
+	std::shared_ptr<thOth::dateTime>							// the dates requested
+		requestStartDate, requestEndDate;
 
-		std::cin >> dtStr;								// user
+	bool passed = false; while (!passed) {						// start date management
 
-	}
-	else {
-
-		dtStr = opt1;
-
-	}
-
-	std::shared_ptr<thOth::dateTime> requestDate;				// the date requested
-
-	// TODO: overload the >> operator for datetime
-	bool passed = false; while (!passed) {						// try to perform lexical_cast
-	
 		try {
 
-			thOth::dateTime::Days   ds = 
-				boost::lexical_cast<int>(
-					dtStr.substr(3, 2));
+			std::string dtStr; if (opt1.empty()) {				// optionally provided
 
-			thOth::dateTime::Months mt = 
-				boost::lexical_cast<int>(
-					dtStr.substr(0, 2));
+				std::cout										// message
+					<< "Please provide a request start date (MM/dd/yyyy):"
+					<< std::endl;
 
-			thOth::dateTime::Years  yr = 
-				boost::lexical_cast<unsigned short>(
-					dtStr.substr(6, 4));
-			
-			requestDate =										// the date requested
+				std::cin >> dtStr;								// user
+
+			}
+			else {
+
+				dtStr = opt1;
+
+			}
+
+			requestStartDate =									// the start date requested
 				std::shared_ptr<thOth::dateTime>(
-					new thOth::dateTime(yr, mt, ds));		
+				new thOth::dateTime(
+				boost::lexical_cast<unsigned short>(dtStr.substr(6, 4)),
+				boost::lexical_cast<int>(dtStr.substr(0, 2)),
+				boost::lexical_cast<int>(dtStr.substr(3, 2))));
 
 			passed = true;										// no exception raised
-		
-		} catch (boost::bad_lexical_cast & ex) {
 
-			TWS_LOG_V(std::string("bad lexical cast exception")
+		}
+		catch (boost::bad_lexical_cast & ex) {				// error 
+
+			TWS_LOG_V(std::string("bad lexical cast exception: ")
 				.append(ex.what()), 0)
 
-		} catch (std::exception & ex) {
-		
+				if (!opt1.empty()) throw ex;						// function argument, no chance to recover
+
+			std::cout											// message
+				<< "Start date conversion impossible, Please try again."
+				<< std::endl;
+
+		}
+		catch (std::exception & ex) {
+
 			TWS_LOG_V(std::string("an error occured in historical Request function: ")
 				.append(ex.what()), 0)
 
-			throw std::exception(ex.what());
-		
-		} catch (...) {
+				throw ex;
 
-			TWS_LOG_V(std::string("an unknown error occured in historicaRequest function"), 0)
-			throw std::exception("an unknown error occured..."); 
-		
-		};
-	
-	};
+		}
+		catch (...) {
 
-	// step 3: download data
-	TWS_LOG_V(std::string("requesting IB data for date: ")		// log
-		.append(boost::lexical_cast<std::string>(*requestDate)), 0)
+			throw std::exception("an unknown error occured in historicaRequest function");
 
-	std::vector<std::vector<thOth::bar> > bars;					// the bars
+		}
 
-	for (std::map<IB::dataBase::recordId, IB::ContractDetails>::const_iterator It
-		= contractRs.cbegin(); It != contractRs.cend(); It++) {
-
-		//It->second.summary.exchange = IB::IBString("SMART");		// setting exchange to SMART
-
-		IB::historicalRequestClient client(						// creates the client				
-			It->second.summary,									// contract 
-			*requestDate,										// startDate of the request
-			IB::barSize::thirtySeconds,							// minimum bar size
-			1, IB::dataDuration::day,							// period length and type
-			IB::dataType::trade);								// data type
-	
 	}
 
-	TWS_LOG_V("connecting to the server", 2)					// log
+	passed = false; while (!passed) {							// try to perform lexical_cast
 
-	//for (;;) {													// loop over attemps
+		try {
 
-	//	++attempt;
+			std::string dtEnd; if (opt2.empty()) {				// optionally provided
 
-	//	TWS_LOG_V(std::string("attempt number ")				// log
-	//		.append(boost::lexical_cast<std::string>(attempt))
-	//		.append(" out of ")
-	//		.append(boost::lexical_cast<std::string>(MAX_ATTEMPT)), 0)
+				std::cout										// message
+					<< "Please provide a request end date (MM/dd/yyyy):"
+					<< std::endl;
 
-	//	client.connect(											// client is connecting
-	//		IB::settings::instance().ibHost().c_str(),
-	//		IB::settings::instance().ibPort(), 
-	//      IB::settings::instance().idGen().next());
+				std::cin >> dtEnd;								// user
 
-	//	while (client.isConnected()) client.processMessages();	// TODO: turn into asynchronous
+			}
+			else {
 
-	//	if (attempt > MAX_ATTEMPT)								// max attemps reached
-	//		throw std::exception("failed to connect after max attempts");
+				dtEnd = opt2;
 
-	//	if (client.endOfHistoricalData()) {						// download succedded
+			}
 
-	//		TWS_LOG_V(std::string("attempt number ")			// log
-	//			.append(boost::lexical_cast<std::string>(attempt))
-	//			.append("download successful. \
-	//				Trying to store data in the database"), 0)
-	//				
-	//		bars = client.bars();
+			requestEndDate =									// the start date requested
+				std::shared_ptr<thOth::dateTime>(
+				new thOth::dateTime(
+				boost::lexical_cast<unsigned short>(dtEnd.substr(6, 4)),
+				boost::lexical_cast<int>(dtEnd.substr(0, 2)),
+				boost::lexical_cast<int>(dtEnd.substr(3, 2))));
 
-	//		break;
+			passed = true;										// no exception raised
 
-	//	} else {
+		}
+		catch (boost::bad_lexical_cast & ex) {					// error 
 
-	//		TWS_LOG_V(std::string("sleeping ")					// log
-	//			.append(boost::lexical_cast<std::string>(SLEEP_TIME))
-	//			.append(" milli-seconds before next attempt "), 2)
+			TWS_LOG_V(std::string("bad lexical cast exception: ")
+				.append(ex.what()), 0)
 
-	//		boost::this_thread::sleep_for(						// sleep for 100 ms
-	//			boost::chrono::milliseconds(SLEEP_TIME));
+				if (!opt2.empty()) throw ex;					// function argument, no chance to recover
 
-	//	}
+			std::cout											// message
+				<< "End date conversion impossible, Please try again."
+				<< std::endl;
 
-	//}
+		}
+		catch (std::exception & ex) {
 
-	//// step 4: check for previous import: contract Id * dateframe * exchange
-	//IB::dataBase::tableHistoricalBarRecordset barRs(connect);	// table contract recordset
+			TWS_LOG_V(std::string("an error occured in historical Request function: ")
+				.append(ex.what()), 0)
 
-	//selectQuery.append("SELECT * FROM table_historical_bar WHERE (contract_ID = ");
-	//	INSERT_SQL_NUM(selectQuery, id)
-	//	selectQuery.append(" AND exchange = ");
-	//	INSERT_SQL_STR(selectQuery, contract.summary.exchange)
-	//	selectQuery.append(" AND bar_start >= ");
-	//	INSERT_SQL_DATE(selectQuery, bars.begin()->barStart())
-	//	selectQuery.append(" AND bar_end <= ");
-	//	INSERT_SQL_DATE(selectQuery, bars.rbegin()->barEnd())
-	//	selectQuery.append(")");
+				throw ex;
 
-	//TWS_LOG_V(std::string("query to launch: ")					// log
-	//	.append(selectQuery), 0)
+		}
+		catch (...) {
 
-	//try {
+			throw std::exception("an unknown error occured in historicaRequest function");
 
-	//	if (barRs.selectQ(selectQuery) == true) {				// if succedded, there are item to delete
-	//	
-	//		TWS_LOG_V("previous import found, deleting data", 0)// deletion phase
+		}
+	}
 
-	//		std::string deleteQuery;						// delete query
-	//			deleteQuery.append("DELETE FROM TABLE_HISTORICAL_BAR WHERE (CONTRACT_ID = ");
-	//			INSERT_SQL_NUM(deleteQuery, id)
-	//			deleteQuery.append(" AND EXCHANGE = ");
-	//			INSERT_SQL_STR(deleteQuery, contract.summary.exchange)
-	//			deleteQuery.append(" AND BAR_START >= ");
-	//			INSERT_SQL_DATE(deleteQuery, bars.begin()->barStart())
-	//			deleteQuery.append(" AND BAR_END <= ");
-	//			INSERT_SQL_DATE(deleteQuery, bars.rbegin()->barEnd())
-	//			deleteQuery.append(")");
+	IB::dataBase::tableHistoricalBarRecordset barRs(connect);	// bar recordset
 
-	//		barRs.deleteQ(deleteQuery);							// run the delete statement
-	//	
-	//	}
-	//	
-	//} catch (IB::dataBase::selectQueryExceptionNoSelection & ex) {
-	//				
-	//	// nothing to erase, go to the next step
+	// loop over the contracts
+	for (std::map<IB::dataBase::recordId, IB::ContractDetails>::iterator It
+		= contractRs.begin(); It != contractRs.end(); It++) {
+	
+		It->second.summary.exchange = "SMART";					// sets exchange to SMART
+	
+		thOth::dateTime dt = *requestStartDate;					// temporary date
 
-	//} catch (IB::dataBase::selectQueryExceptionUnknownField & ex) {
+		// loop over the dates
+		do {
 
-	//	// problem with a field
+			singleHistoricalRequest(
+				It->first, 
+				barRs,											// insert single contract, do not throw
+				It->second,
+				dt,
+				deletionPolicy);
 
-	//} catch (std::exception & ex) {								// any other mistake -> throw
-	//
-	//	throw ex;				
-	//
-	//}
+			std::this_thread::sleep_for(						// sleep time necessary between two requests
+				std::chrono::milliseconds(SLEEP_TIME_H));
 
-	//// step 5: insert new data to the table
-	//TWS_LOG_V(std::string("writing database"), 0)
+			dt += boost::gregorian::days(1);					// add 1 day 
 
-	//for (std::vector<thOth::bar>::const_iterator 
-	//	It = bars.cbegin(); It != bars.cend(); It++) {
+		} while (dt <= *requestEndDate);
+	}
 
-	//	barRs.insert(
-	//		IB::dataBase::barRecord(
-	//			id,
-	//			*It,
-	//			contract.summary.exchange));
-	//	
-	//	TWS_LOG_V(std::string("new data: d: ")
-	//		.append(boost::lexical_cast<std::string>(It->barStart()))
-	//		.append(", p: ")
-	//		.append(boost::lexical_cast<std::string>(It->close()))
-	//		.append(", h: ")
-	//		.append(boost::lexical_cast<std::string>(It->high()))
-	//		.append(", l: ")
-	//		.append(boost::lexical_cast<std::string>(It->low()))
-	//		.append(", v: ")
-	//		.append(boost::lexical_cast<std::string>(It->volume())), 1)
-
-	//}
-
-	//TWS_LOG_V(												// log
-	//	std::string("historical data download test completed in ")
-	//		.append(boost::lexical_cast<std::string>(tt.elapsed()))
-	//		.append(" seconds"), 0)
+	TWS_LOG_V(													// log
+		std::string("bulk data download completed in ")
+		.append(boost::lexical_cast<std::string>(tt.elapsed()))
+		.append(" seconds."), 0)
 
 };

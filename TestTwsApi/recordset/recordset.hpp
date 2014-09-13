@@ -38,6 +38,7 @@ namespace IB {
 		class recordset {
 
 			typedef typename std::map<recordId, T>::const_iterator const_iterator;
+			typedef typename std::map<recordId, T>::iterator iterator;
 
 			public:
 
@@ -57,8 +58,9 @@ namespace IB {
 				// iterators
 				typename const_iterator cbegin() const;
 				typename const_iterator cend  () const;
-				typename const_iterator begin () const { return cbegin(); };
-				typename const_iterator end   () const { return cend  (); };
+
+				typename iterator begin ();
+				typename iterator end   ();
 
 				recordId size() const;
 
@@ -122,13 +124,29 @@ namespace IB {
 		inline typename recordset<T>::const_iterator
 			recordset<T>::cbegin() const {
 
-			return records_.begin();
+			return records_.cbegin();
 
 		}
 
 		template <class T>
 		inline typename recordset<T>::const_iterator
 			recordset<T>::cend() const {
+
+			return records_.cend();
+
+		}
+
+		template <typename T>
+		inline typename recordset<T>::iterator
+			recordset<T>::begin() {
+
+			return records_.begin();
+
+		}
+
+		template <class T>
+		inline typename recordset<T>::iterator
+			recordset<T>::end() {
 
 			return records_.end();
 

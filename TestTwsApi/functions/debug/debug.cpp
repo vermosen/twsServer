@@ -16,15 +16,8 @@ void debug() {
 		// dateTime conversion into excel format
 		thOth::dateTime test(2014, 1, 1, boost::posix_time::time_duration(0, 0, 15, 0));
 
-		std::cout << test << std::endl;
-
-		thOth::dateTime excelOne(1901, 1, 1);
-
-		thOth::dateTime::t_duration td = test - excelOne;
-	
-		std::cout << td << std::endl;
-		//
-		
+		// print the excel float representation
+		std::cout << boost::lexical_cast<std::string>(test.ExcelDate()) << std::endl;
 
 	}
 

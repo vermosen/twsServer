@@ -52,6 +52,9 @@ namespace IB {
 
 		void processMessages();
 
+		// accessors
+		inline void clear() { bars_.clear(); };
+
 	protected:
 
 		void requestHistoricalData();										// request data

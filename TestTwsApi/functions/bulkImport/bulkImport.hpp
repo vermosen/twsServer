@@ -1,9 +1,12 @@
 #ifndef tws_bulk_import
 #define tws_bulk_import
 
+#include <thread>
+#include <memory>
+
 #include <boost/lexical_cast.hpp>
 #include <boost/timer.hpp>
-#include <boost/thread.hpp>
+
 
 // thOth components
 #include <thOth/time/DateTime.hpp>
@@ -15,10 +18,14 @@
 #include "request/historicalRequestClient/historicalRequestClient.hpp"
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 #include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
+#include "utilities/functions/singleHistoricalRequest/singleHistoricalRequest.hpp"
 
 // this procedure is meant to request 
 // historical data for all the contracts in the database
-// opt1: date string
-void bulkImport(const std::string & opt1 = std::string(""));
+// opt1: start date string
+// opt2: end date string
+void bulkImport(bool deletionPolicy, 
+				const std::string & opt1 = std::string(""),
+				const std::string & opt2 = std::string(""));
 
 #endif

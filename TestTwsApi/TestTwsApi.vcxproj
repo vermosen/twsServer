@@ -182,6 +182,7 @@
     <ClCompile Include="utilities\factory\barSizeFactory\barSizeFactory.cpp" />
     <ClCompile Include="utilities\factory\dataDurationFactory\dataDurationFactory.cpp" />
     <ClCompile Include="utilities\factory\dataTypeFactory\dataTypeFactory.cpp" />
+    <ClCompile Include="utilities\functions\singleHistoricalRequest\singleHistoricalRequest.cpp" />
     <ClCompile Include="utilities\idGenerator\idGenerator.cpp" />
     <ClCompile Include="utilities\logger\logger.cpp" />
     <ClCompile Include="utilities\settings\settings.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="utilities\factory\dataTypeFactory\dataTypeFactory.hpp" />
     <ClInclude Include="utilities\factory\dataTypeFactory\register_dataType.hpp" />
     <ClInclude Include="utilities\factory\all.hpp" />
+    <ClInclude Include="utilities\functions\singleHistoricalRequest\singleHistoricalRequest.hpp" />
     <ClInclude Include="utilities\idGenerator\idGenerator.hpp" />
     <ClInclude Include="utilities\logger\logger.hpp" />
     <ClInclude Include="utilities\settings\settings.hpp" />

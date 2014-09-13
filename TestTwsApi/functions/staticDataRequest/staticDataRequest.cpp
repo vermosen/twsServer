@@ -1,6 +1,7 @@
 #include "functions/staticDataRequest/staticDataRequest.hpp"
 
-void staticDataRequest(const std::string & opt) {
+void staticDataRequest(bool deletionPolicy, 
+					   const std::string & opt) {
 
 	// step 1: initialization
 	std::string contractCode; if (opt.empty()) {				// optionally provided

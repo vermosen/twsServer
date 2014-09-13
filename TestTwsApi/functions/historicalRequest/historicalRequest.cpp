@@ -1,9 +1,13 @@
 #include "functions/historicalRequest/historicalRequest.hpp"
 
-void historicalRequest(const std::string & opt1,
+void historicalRequest(bool deletionPolicy, 
+					   const std::string & opt1,
 					   const std::string & opt2,
 					   const std::string & opt3) {
 
+	// step 0: variable intialization
+	boost::timer tt;											// set a timer
+	
 	// step 1: initialization
 	std::cout
 		<< "historical Request Test"
@@ -11,11 +15,7 @@ void historicalRequest(const std::string & opt1,
 		<< "-----------------------"
 		<< std::endl
 		<< std::endl;
-		
-	boost::timer tt;											// set a timer
-
-	unsigned int attempt = 0;									// number of attempts
-
+	
 	std::string contractCode; if (opt1.empty()) {				// optionally provided
 
 		std::cout
@@ -68,8 +68,6 @@ void historicalRequest(const std::string & opt1,
 
 	if (!contractRs.selectQ(selectQuery))						// query succeeded ?
 		throw std::exception("instrument request failed");	
-		
-	selectQuery = "";											// for later usage
 
 	if (contractRs.size() == 0)									// symbol found ?
 		throw std::exception("symbol not found");
@@ -170,10 +168,10 @@ void historicalRequest(const std::string & opt1,
 
 			requestEndDate =									// the start date requested
 				std::shared_ptr<thOth::dateTime>(
-				new thOth::dateTime(
-				boost::lexical_cast<unsigned short>(dtEnd.substr(6, 4)),
-				boost::lexical_cast<int>(           dtEnd.substr(0, 2)),
-				boost::lexical_cast<int>(			dtEnd.substr(3, 2))));
+					new thOth::dateTime(
+						boost::lexical_cast<unsigned short>(dtEnd.substr(6, 4)),
+						boost::lexical_cast<int>(           dtEnd.substr(0, 2)),
+						boost::lexical_cast<int>(			dtEnd.substr(3, 2))));
 
 			passed = true;										// no exception raised
 
@@ -188,8 +186,7 @@ void historicalRequest(const std::string & opt1,
 				<< "End date conversion impossible, Please try again."
 				<< std::endl;
 
-		}
-		catch (std::exception & ex) {
+		} catch (std::exception & ex) {
 
 			TWS_LOG_V(std::string("an error occured in historical Request function: ")
 				.append(ex.what()), 0)
@@ -201,173 +198,30 @@ void historicalRequest(const std::string & opt1,
 			throw std::exception("an unknown error occured in historicaRequest function");
 
 		}
-
 	} 
 
 	IB::dataBase::tableHistoricalBarRecordset barRs(connect);	// bar recordset
-
-	std::vector<thOth::bar> bars;								// the bars to insert
 
 	contract.summary.exchange = "SMART";						// setting exchange to SMART
 
 	// step 3: loop over the dates
 	do {
 	
+		singleHistoricalRequest(id, barRs,						// insert single contract, do not throw
+								contract, 
+								*requestStartDate, 
+								deletionPolicy);
+
 		std::this_thread::sleep_for(							// sleep time necessary between two requests
-			std::chrono::milliseconds(SLEEP_TIME));
-
-		TWS_LOG_V(std::string("requesting IB data for date: ")	// log
-			.append(boost::lexical_cast<std::string>(*requestStartDate)), 0)
-
-		IB::historicalRequestClient client(						// creates a new client 
-			contract.summary,									// contract 
-				*requestStartDate + boost::gregorian::days(1),	// end of day
-				IB::barSize::thirtySeconds,						// minimum bar size
-				1, IB::dataDuration::day,						// period length and type
-				IB::dataType::trade);							// data type
-
-		TWS_LOG_V("connecting to the server", 1)				// log
-
-			// step 3.1: data request
-			for (attempt = 0;;attempt++) {						// loop over attempts
-		
-			if (attempt > MAX_ATTEMPT)							// max attemps reached
-				throw std::exception("failed to connect after max attempts");
-		
-			TWS_LOG_V(std::string("connection attempt number ")	// log
-				.append(boost::lexical_cast<std::string>(attempt))
-				.append(" out of ")
-				.append(boost::lexical_cast<std::string>(MAX_ATTEMPT)), 0)
-
-			client.connect(										// client is connecting
-				IB::settings::instance().ibHost().c_str(),
-				IB::settings::instance().ibPort());
-		
-			while (client.isConnected())						// TODO: turn into asynchronous mode
-				client.processMessages();	
-
-			if (client.endOfData()) {							// download succedded
-
-				// log
-				TWS_LOG_V(std::string("download successful on attempt number ")
-					.append(boost::lexical_cast<std::string>(attempt))
-					.append(". Trying to store data in the database"), 0)
-
-				std::cout										// information
-					<< "successfully dowloaded data for "
-					<< boost::lexical_cast<std::string>(requestStartDate->date())
-					<< std::endl;
-
-				break;
-			
-			} else {
-
-				int sleep = 100;
-
-				TWS_LOG_V(std::string("sleeping ")				// log
-					.append(boost::lexical_cast<std::string>(sleep))
-					.append(" milli-seconds before next attempt "), 1)
-
-				std::this_thread::sleep_for(					// sleep for some extra time
-					std::chrono::milliseconds(sleep));
-
-			}
-
-		}
-
-		// step 3.2: check for previous import: contract Id * dateframe * exchange
-		selectQuery.clear(); 
-		selectQuery.append("SELECT * FROM table_historical_bar WHERE (contract_ID = ");
-		INSERT_SQL_NUM(selectQuery, id)
-			selectQuery.append(" AND exchange = ");
-		INSERT_SQL_STR(selectQuery, contract.summary.exchange)
-			selectQuery.append(" AND bar_start >= ");
-		INSERT_SQL_DATE(selectQuery, client.cbegin()->barStart())
-			selectQuery.append(" AND bar_end <= ");
-		INSERT_SQL_DATE(selectQuery, client.crbegin()->barEnd())
-			selectQuery.append(")");
-
-		TWS_LOG_V(std::string("new query to launch: ")			// log
-			.append(selectQuery), 1)
-
-		try {
-
-			if (barRs.selectQ(selectQuery) == true) {			// if succedded, there are item to delete
-
-				TWS_LOG_V("previous import found, deleting existing data", 1)
-
-				std::string deleteQuery;						// delete query
-				deleteQuery.append("DELETE FROM TABLE_HISTORICAL_BAR WHERE (CONTRACT_ID = ");
-				INSERT_SQL_NUM(deleteQuery, id)
-					deleteQuery.append(" AND EXCHANGE = ");
-				INSERT_SQL_STR(deleteQuery, contract.summary.exchange)
-					deleteQuery.append(" AND BAR_START >= ");
-				INSERT_SQL_DATE(deleteQuery, client.cbegin()->barStart())
-					deleteQuery.append(" AND BAR_END <= ");
-				INSERT_SQL_DATE(deleteQuery, client.crbegin()->barEnd())
-					deleteQuery.append(")");
-
-				barRs.deleteQ(deleteQuery);						// run the delete statement
-
-			}
-
-		} catch (IB::dataBase::selectQueryExceptionNoSelection & ex) {
-			
-			// nothing to erase, go to the next step
-			TWS_LOG_V("selectQueryExceptionNoSelection raised, \
-					   continuing current procedure", 1)
-
-		} catch (IB::dataBase::selectQueryExceptionUnknownField & ex) {
-			
-			throw ex;											// problem with a field, throw again
-
-		} catch (std::exception & ex) {							
-
-			throw ex;											// any other mistake -> throw
-
-		}
-
-		// step 3.3: copy data in bars
-		for (std::vector<thOth::bar>::const_iterator It = 
-			client.cbegin(); It != client.cend(); It++)
-
-			bars.push_back(*It);
-
-		// step 3.4: finalize
+			std::chrono::milliseconds(SLEEP_TIME_H));
+	
 		*requestStartDate += boost::gregorian::days(1);			// add 1 day 
 																// TODO: increment business days instead
 	} while (*requestStartDate <= *requestEndDate);
 
-	// step 4: insert new data to the table
-	TWS_LOG_V(std::string("writing database"), 0)				// log
-
-	long count = 0;  for (std::vector<thOth::bar>::const_iterator
-		It = bars.cbegin(); It != bars.cend(); It++, count++) {
-
-		barRs.insert(
-			IB::dataBase::barRecord(
-				id,
-				*It,
-				contract.summary.exchange));
-		
-		TWS_LOG_V(std::string("new data: d: ")					// log
-			.append(boost::lexical_cast<std::string>(It->barStart()))
-			.append(", p: ")
-			.append(boost::lexical_cast<std::string>(It->close()))
-			.append(", h: ")
-			.append(boost::lexical_cast<std::string>(It->high()))
-			.append(", l: ")
-			.append(boost::lexical_cast<std::string>(It->low()))
-			.append(", v: ")
-			.append(boost::lexical_cast<std::string>(It->volume())), 2)
-
-	}
-
 	TWS_LOG_V(													// log
 		std::string("historical data download test completed in ")
 			.append(boost::lexical_cast<std::string>(tt.elapsed()))
-			.append(" seconds.")
-			.append(boost::lexical_cast<std::string>(count))
-			.append(" new elements inserted"), 0)
+			.append(" seconds."), 0)
 
 };

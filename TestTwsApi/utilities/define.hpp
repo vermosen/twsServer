@@ -28,7 +28,8 @@
 				.append(X));
 
 
-const unsigned MAX_ATTEMPT = 1;				// maximum number of connection attemps
-const unsigned SLEEP_TIME  = 2000;			// sleep time in ms between two connections
+const unsigned MAX_ATTEMPT = 2;				// maximum number of connection attemps
+const unsigned SLEEP_TIME_H  = 400;			// sleep time in ms between two historical request
+const unsigned SLEEP_TIME    = 100;			// sleep time after an unsuccessful request
 
 #endif

@@ -15,7 +15,8 @@
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 
 // second version of the staticDataRequest function with callback capacity
-void staticDataRequest(const std::string & = std::string(""));
+void staticDataRequest(bool deletionPolicy, 
+					   const std::string & = std::string(""));
 
 // callback Function
 class staticDataCallBack : public IB::requestCallBack<IB::ContractDetails> {

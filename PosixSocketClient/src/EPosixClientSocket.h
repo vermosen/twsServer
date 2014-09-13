@@ -10,8 +10,8 @@ namespace IB {
 
 class EWrapper;
 
-class EPosixClientSocket : public EClientSocketBase
-{
+class EPosixClientSocket : public EClientSocketBase {
+
 public:
 
 	explicit EPosixClientSocket( EWrapper *ptr);
