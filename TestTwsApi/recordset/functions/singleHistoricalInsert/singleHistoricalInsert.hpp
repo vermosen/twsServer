@@ -1,12 +1,12 @@
-#ifndef tws_bulk_import
-#define tws_bulk_import
+#ifndef single_historical_insert_hpp
+#define single_historical_insert_hpp
 
+#include <functional>
 #include <thread>
-#include <memory>
 
+// boost components
 #include <boost/lexical_cast.hpp>
 #include <boost/timer.hpp>
-
 
 // thOth components
 #include <thOth/time/DateTime.hpp>
@@ -14,18 +14,15 @@
 // twsapi
 #include "utilities/type/all.hpp"
 #include "utilities/define.hpp"
-#include "utilities/settings/settings.hpp"
 #include "request/historicalRequestClient/historicalRequestClient.hpp"
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 #include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
-#include "recordset/functions/singleHistoricalInsert/singleHistoricalInsert.hpp"
 
-// this procedure is meant to request 
-// historical data for all the contracts in the database
-// opt1: start date string
-// opt2: end date string
-void bulkImport(const thOth::dateTime &,
-				const thOth::dateTime &,
-				bool deletionPolicy = false);
+// single date insert function
+void singleHistoricalInsert(
+	const std::pair<IB::dataBase::recordId, IB::ContractDetails> & contract_,
+	IB::dataBase::tableHistoricalBarRecordset & barRs_,
+	thOth::dateTime dt_,
+	bool policy_);
 
 #endif

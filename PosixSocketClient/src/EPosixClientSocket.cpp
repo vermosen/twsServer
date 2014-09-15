@@ -123,18 +123,15 @@ static int timeout_connect( int fd, const struct sockaddr *serv_addr,
 
 ///////////////////////////////////////////////////////////
 // member funcs
-EPosixClientSocket::EPosixClientSocket( EWrapper *ptr) : EClientSocketBase( ptr)
-{
+EPosixClientSocket::EPosixClientSocket( EWrapper *ptr) : EClientSocketBase( ptr) {
 	m_fd = -1;
 	hnd_shk_state = HND_SHK_ST_UNK;
 }
 
-EPosixClientSocket::~EPosixClientSocket()
-{
-}
+EPosixClientSocket::~EPosixClientSocket() {}
 
-bool EPosixClientSocket::eConnect( const char *host, unsigned int port, int clientId)
-{
+bool EPosixClientSocket::eConnect( const char *host, unsigned int port, int clientId) {
+
 	/* after test period we'll change the default to AF_UNSPEC */
 	return eConnect2( host, port, clientId, AF_INET );
 }
@@ -279,19 +276,19 @@ void EPosixClientSocket::eDisconnect()
 	}
 }
 
-bool EPosixClientSocket::isSocketOK() const
-{
+bool EPosixClientSocket::isSocketOK() const {
+
 	return ( m_fd >= 0);
 }
 
-int EPosixClientSocket::fd() const
-{
+int EPosixClientSocket::fd() const {
+
 	return m_fd;
 }
 
 
-int EPosixClientSocket::prepareHandshake(int socket, int clientId)
-{
+int EPosixClientSocket::prepareHandshake(int socket, int clientId) {
+
 	if (this->m_fd > 0) {
 		/* don't matter what SOCKET is we use the one we know about */
 		;
@@ -306,8 +303,8 @@ int EPosixClientSocket::prepareHandshake(int socket, int clientId)
 	return 0;
 }
 
-int EPosixClientSocket::handshake(void)
-{
+int EPosixClientSocket::handshake(void) {
+
 /* if everything goes ok, handshake() will return 0,
  * on error -1 is returned, and
  * once the handshake is finished 1 is returned. */
@@ -351,8 +348,8 @@ int EPosixClientSocket::handshake(void)
 	return 0;
 }
 
-int EPosixClientSocket::send(const char* buf, size_t sz)
-{
+int EPosixClientSocket::send(const char* buf, size_t sz) {
+
 	assert( sz > 0 );
 
 	int nResult = ::send( m_fd, buf, sz, 0);
@@ -406,8 +403,8 @@ void EPosixClientSocket::onReceive()
 	}
 }
 
-void EPosixClientSocket::onSend()
-{
+void EPosixClientSocket::onSend() {
+
 	/* as a special service, complete the handshake here */
 	switch (this->hnd_shk_state) {
 	case HND_SHK_ST_CLEAN:

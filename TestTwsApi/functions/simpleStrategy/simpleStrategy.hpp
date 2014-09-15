@@ -1,10 +1,9 @@
-#ifndef tws_single_historical_request
-#define tws_single_historical_request
+#ifndef tws_simple_strategy
+#define tws_simple_strategy
 
-#include <functional>
 #include <thread>
+#include <memory>
 
-// boost components
 #include <boost/lexical_cast.hpp>
 #include <boost/timer.hpp>
 
@@ -14,15 +13,15 @@
 // twsapi
 #include "utilities/type/all.hpp"
 #include "utilities/define.hpp"
+#include "utilities/settings/settings.hpp"
 #include "request/historicalRequestClient/historicalRequestClient.hpp"
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 #include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
 
-// single date insert function
-void singleHistoricalRequest(IB::dataBase::recordId id_,
-							 IB::dataBase::tableHistoricalBarRecordset & barRs_,
-							 const IB::ContractDetails & contract_,
-							 thOth::dateTime dt_,
-							 bool policy_);
+// this function is meant to test a simple signal strategy over a time series
+void simpleStrategy(const std::pair<IB::dataBase::recordId,IB::ContractDetails> & contract_,
+				    const thOth::dateTime & startDate_,
+				    const thOth::dateTime & endDate_,
+					bool deletionPolicy_ = false);
 
 #endif

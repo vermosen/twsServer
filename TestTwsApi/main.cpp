@@ -20,6 +20,8 @@
 #include "utilities/type/all.hpp"
 #include "utilities/settings/settings.hpp"							// additional 
 #include "utilities/define.hpp"
+#include "utilities/functions/validateContractWithDialog/validateContractWithDialog.hpp"
+#include "utilities/functions/convertDateWithDialog/convertDateWithDialog.hpp"
 
 // This procedure can be started manually (empty argv)
 // or automatically by passing some argument through one
@@ -192,15 +194,24 @@ int main(int argc, char** argv) {
 					TWS_LOG_V(										// log
 						std::string("starting static data request"), 0)
 
-						staticDataRequest(erase, opt1);				// launches static data request process
-					break;
+						if (opt1.empty()) {
+						
+							std::cout << "Please provide some contract code:" << std::endl;
+							std::cin >> opt1;
+						
+						}
 
 				case 2:
 				
 					TWS_LOG_V(										// log
-						std::string("starting historical request"), 0)	
+						std::string("starting historical request"), 0)
 
-						historicalRequest(erase, opt1, opt2, opt3);	// launches historical request process
+					historicalRequest(								// launches historical request process
+						validateContractWithDialog(opt1),			// validate the contract name
+						convertDateWithDialog("start date", opt2),
+						convertDateWithDialog("end date", opt3),
+						erase);
+					
 					break;				
 
 				case 3:
@@ -208,7 +219,10 @@ int main(int argc, char** argv) {
 					TWS_LOG_V(										// log
 						std::string("starting historical bulk request"), 0)
 
-						bulkImport(erase, opt2, opt3);				// launches bulk request process (Ignore opt1)
+					bulkImport(										// launches bulk request process (opt1 ignored) 
+						convertDateWithDialog("start date", opt2), 
+						convertDateWithDialog("end date"  , opt3),
+						erase);
 
 					break;
 
@@ -233,7 +247,8 @@ int main(int argc, char** argv) {
 					TWS_LOG_V(										// log
 						std::string("starting multi-threaded csv builder test"), 0)
 
-						multiThreadedCsvBuilder();					// launches multi-threaded csv writing test
+					multiThreadedCsvBuilder();					// launches multi-threaded csv writing test
+					
 					break;
 
 				case 7:
@@ -241,13 +256,15 @@ int main(int argc, char** argv) {
 					TWS_LOG_V(										// log
 						std::string("starting debug test"), 0)
 
-						debug();									// launches debug test
+					debug();									// launches debug test
+					
 					break;
 
 				case 0:
 
 					TWS_LOG_V(std::string("manual exit"), 0)		// log
 					end = true;										// stop the server
+					
 					break;
 
 				default:											// unknown, invalid

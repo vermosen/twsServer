@@ -1,8 +1,8 @@
 #include "functions/bulkImport/bulkImport.hpp"
 
-void bulkImport(bool deletionPolicy,
-				const std::string & opt1,
-				const std::string & opt2) {
+void bulkImport(const thOth::dateTime & startDate,
+				const thOth::dateTime & endDate,
+				bool deletionPolicy) {
 
 	// step 0: variable intialization
 	boost::timer tt;											// set a timer
@@ -54,123 +54,6 @@ void bulkImport(bool deletionPolicy,
 		.append(boost::lexical_cast<std::string>(contractRs.size()))
 		.append(" contracts found"), 0);
 
-	// step 2: dates of the request	
-	std::shared_ptr<thOth::dateTime>							// the dates requested
-		requestStartDate, requestEndDate;
-
-	bool passed = false; while (!passed) {						// start date management
-
-		try {
-
-			std::string dtStr; if (opt1.empty()) {				// optionally provided
-
-				std::cout										// message
-					<< "Please provide a request start date (MM/dd/yyyy):"
-					<< std::endl;
-
-				std::cin >> dtStr;								// user
-
-			}
-			else {
-
-				dtStr = opt1;
-
-			}
-
-			requestStartDate =									// the start date requested
-				std::shared_ptr<thOth::dateTime>(
-				new thOth::dateTime(
-				boost::lexical_cast<unsigned short>(dtStr.substr(6, 4)),
-				boost::lexical_cast<int>(dtStr.substr(0, 2)),
-				boost::lexical_cast<int>(dtStr.substr(3, 2))));
-
-			passed = true;										// no exception raised
-
-		}
-		catch (boost::bad_lexical_cast & ex) {				// error 
-
-			TWS_LOG_V(std::string("bad lexical cast exception: ")
-				.append(ex.what()), 0)
-
-				if (!opt1.empty()) throw ex;						// function argument, no chance to recover
-
-			std::cout											// message
-				<< "Start date conversion impossible, Please try again."
-				<< std::endl;
-
-		}
-		catch (std::exception & ex) {
-
-			TWS_LOG_V(std::string("an error occured in historical Request function: ")
-				.append(ex.what()), 0)
-
-				throw ex;
-
-		}
-		catch (...) {
-
-			throw std::exception("an unknown error occured in historicaRequest function");
-
-		}
-
-	}
-
-	passed = false; while (!passed) {							// try to perform lexical_cast
-
-		try {
-
-			std::string dtEnd; if (opt2.empty()) {				// optionally provided
-
-				std::cout										// message
-					<< "Please provide a request end date (MM/dd/yyyy):"
-					<< std::endl;
-
-				std::cin >> dtEnd;								// user
-
-			}
-			else {
-
-				dtEnd = opt2;
-
-			}
-
-			requestEndDate =									// the start date requested
-				std::shared_ptr<thOth::dateTime>(
-				new thOth::dateTime(
-				boost::lexical_cast<unsigned short>(dtEnd.substr(6, 4)),
-				boost::lexical_cast<int>(dtEnd.substr(0, 2)),
-				boost::lexical_cast<int>(dtEnd.substr(3, 2))));
-
-			passed = true;										// no exception raised
-
-		}
-		catch (boost::bad_lexical_cast & ex) {					// error 
-
-			TWS_LOG_V(std::string("bad lexical cast exception: ")
-				.append(ex.what()), 0)
-
-				if (!opt2.empty()) throw ex;					// function argument, no chance to recover
-
-			std::cout											// message
-				<< "End date conversion impossible, Please try again."
-				<< std::endl;
-
-		}
-		catch (std::exception & ex) {
-
-			TWS_LOG_V(std::string("an error occured in historical Request function: ")
-				.append(ex.what()), 0)
-
-				throw ex;
-
-		}
-		catch (...) {
-
-			throw std::exception("an unknown error occured in historicaRequest function");
-
-		}
-	}
-
 	IB::dataBase::tableHistoricalBarRecordset barRs(connect);	// bar recordset
 
 	// loop over the contracts
@@ -179,16 +62,13 @@ void bulkImport(bool deletionPolicy,
 	
 		It->second.summary.exchange = "SMART";					// sets exchange to SMART
 	
-		thOth::dateTime dt = *requestStartDate;					// temporary date
+		thOth::dateTime dt = startDate;							// temporary date
 
 		// loop over the dates
 		do {
 
-			singleHistoricalRequest(
-				It->first, 
-				barRs,											// insert single contract, do not throw
-				It->second,
-				dt,
+			singleHistoricalInsert(
+				*It, barRs, dt,									// insert single contract, do not throw
 				deletionPolicy);
 
 			std::this_thread::sleep_for(						// sleep time necessary between two requests
@@ -196,7 +76,7 @@ void bulkImport(bool deletionPolicy,
 
 			dt += boost::gregorian::days(1);					// add 1 day 
 
-		} while (dt <= *requestEndDate);
+		} while (dt <= endDate);
 	}
 
 	TWS_LOG_V(													// log

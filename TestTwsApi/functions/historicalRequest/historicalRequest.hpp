@@ -19,15 +19,12 @@
 #include "request/historicalRequestClient/historicalRequestClient.hpp"
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 #include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
-#include "utilities/functions/singleHistoricalRequest/singleHistoricalRequest.hpp"
+#include "recordset/functions/singleHistoricalInsert/singleHistoricalInsert.hpp"
 
 // this procedure is meant to request 
 // missing historical data about a given contract
-// opt1: contract name
-// opt2: date string
-void historicalRequest(bool deletionPolicy,
-					   const std::string & opt1 = std::string(""),
-					   const std::string & opt2 = std::string(""),
-					   const std::string & opt3 = std::string(""));
-
+void historicalRequest(std::pair<IB::dataBase::recordId, IB::ContractDetails> contract_,
+					   const thOth::dateTime & startDate,
+					   const thOth::dateTime & endDate,
+					   bool deletionPolicy);
 #endif

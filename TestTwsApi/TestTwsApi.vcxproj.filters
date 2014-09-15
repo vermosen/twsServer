@@ -78,7 +78,19 @@
     <ClCompile Include="functions\historyFileCreation\historyFileCreation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="utilities\functions\singleHistoricalRequest\singleHistoricalRequest.cpp">
+    <ClCompile Include="functions\simpleStrategy\simpleStrategy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="recordset\functions\singleInstrumentSelect\singleInstrumentSelect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\functions\convertDateWithDialog\convertDateWithDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="recordset\functions\singleHistoricalInsert\singleHistoricalInsert.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\functions\validateContractWithDialog\validateContractWithDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -179,7 +191,19 @@
     <ClInclude Include="functions\historyFileCreation\historyFileCreation.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\functions\singleHistoricalRequest\singleHistoricalRequest.hpp">
+    <ClInclude Include="functions\simpleStrategy\simpleStrategy.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recordset\functions\singleHistoricalInsert\singleHistoricalInsert.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recordset\functions\singleInstrumentSelect\singleInstrumentSelect.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\functions\convertDateWithDialog\convertDateWithDialog.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\functions\validateContractWithDialog\validateContractWithDialog.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

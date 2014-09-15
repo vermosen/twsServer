@@ -1,17 +1,17 @@
-#include "utilities/functions/singleHistoricalRequest/singleHistoricalRequest.hpp"
+#include "recordset/functions/singleHistoricalInsert/singleHistoricalInsert.hpp"
 
-void singleHistoricalRequest(IB::dataBase::recordId id_,
-							 IB::dataBase::tableHistoricalBarRecordset & barRs_, 
-							 const IB::ContractDetails & contract_,
-							 thOth::dateTime dt_,
-							 bool policy_) {
+void singleHistoricalInsert(
+	const std::pair<IB::dataBase::recordId, IB::ContractDetails> & contract_,
+	IB::dataBase::tableHistoricalBarRecordset & barRs_,
+	thOth::dateTime dt_,
+	bool policy_) {
 
 	// step 0: set the client
 	TWS_LOG_V(std::string("requesting IB data for date: ")	// log
 		.append(boost::lexical_cast<std::string>(dt_.date())), 0)
 
 	IB::historicalRequestClient client(						// creates a new client 
-		contract_.summary,									// contract 
+		contract_.second.summary,									// contract 
 		dt_ + boost::gregorian::days(1),					// TODO: set to end of day
 		IB::barSize::thirtySeconds,							// minimum bar size TODO: turn those as function parameters
 		1, IB::dataDuration::day,							// period length and type
@@ -46,7 +46,7 @@ void singleHistoricalRequest(IB::dataBase::recordId id_,
 
 			std::cout										// information
 				<< "successfully dowloaded data for contract "
-				<< contract_.summary.symbol
+				<< contract_.second.summary.symbol
 				<< " on the date of "
 				<< boost::lexical_cast<std::string>(dt_.date())
 				<< std::endl;
@@ -70,9 +70,9 @@ void singleHistoricalRequest(IB::dataBase::recordId id_,
 	// step 2: check for previous import: contract Id * dateframe * exchange
 	std::string selectQuery;
 	selectQuery.append("SELECT * FROM table_historical_bar WHERE (contract_ID = ");
-	INSERT_SQL_NUM(selectQuery, id_)
+	INSERT_SQL_NUM(selectQuery, contract_.first)
 		selectQuery.append(" AND exchange = ");
-	INSERT_SQL_STR(selectQuery, contract_.summary.exchange)
+	INSERT_SQL_STR(selectQuery, contract_.second.summary.exchange)
 		selectQuery.append(" AND bar_start >= ");
 	INSERT_SQL_DATE(selectQuery, client.cbegin()->barStart())
 		selectQuery.append(" AND bar_end <= ");
@@ -92,9 +92,9 @@ void singleHistoricalRequest(IB::dataBase::recordId id_,
 
 				std::string deleteQuery;					// delete query
 				deleteQuery.append("DELETE FROM TABLE_HISTORICAL_BAR WHERE (CONTRACT_ID = ");
-				INSERT_SQL_NUM(deleteQuery, id_)
+				INSERT_SQL_NUM(deleteQuery, contract_.first)
 					deleteQuery.append(" AND EXCHANGE = ");
-				INSERT_SQL_STR(deleteQuery, contract_.summary.exchange)
+				INSERT_SQL_STR(deleteQuery, contract_.second.summary.exchange)
 					deleteQuery.append(" AND BAR_START >= ");
 				INSERT_SQL_DATE(deleteQuery, client.cbegin()->barStart())
 					deleteQuery.append(" AND BAR_END <= ");
@@ -127,9 +127,9 @@ void singleHistoricalRequest(IB::dataBase::recordId id_,
 		
 		barRs_.insert(
 			IB::dataBase::barRecord(
-			id_,
+			contract_.first,
 			*It,
-			contract_.summary.exchange));
+			contract_.second.summary.exchange));
 		
 		TWS_LOG_V(std::string("new data: d: ")				// log
 			.append(boost::lexical_cast<std::string>(It->barStart()))
@@ -148,7 +148,7 @@ void singleHistoricalRequest(IB::dataBase::recordId id_,
 	TWS_LOG_V(std::string("")								// log
 		.append(boost::lexical_cast<std::string>(count))
 		.append(" new data inserted for contract ")
-		.append(contract_.summary.symbol)
+		.append(contract_.second.summary.symbol)
 		.append(" and for date ")
 		.append(boost::lexical_cast<std::string>(dt_.date())), 1)
 

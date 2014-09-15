@@ -37,7 +37,7 @@
 
 namespace IB {
 
-	const int PING_DEADLINE       = 2;												// seconds
+	const int PING_DEADLINE       = 2 ;												// seconds
 	const int SLEEP_BETWEEN_PINGS = 30;												// seconds
 
 	class EPosixClientSocket;
@@ -68,7 +68,7 @@ namespace IB {
 
 		};
 
-		inline void requestId() { id_ = IB::settings::instance().idGen().next(); };	// request a new interactive broker id
+		inline void requestId() { id_ = IB::settings::instance().idGen().next(); };	// request a new interactive broker uid
 		void reqCurrentTime();														// get the current time (TODO: use stl)
 
 		virtual void processMessages() = 0;											// pure virtual method
@@ -112,7 +112,8 @@ namespace IB {
 		void currentTime(long time);
 		void nextValidId(OrderId orderId);
 
-		// not implemented
+		// not implemented here
+		/*
 		virtual void tickPrice( TickerId tickerId, TickType field, double price, int canAutoExecute) = 0;
 		virtual void tickSize( TickerId tickerId, TickType field, int size) = 0;
 		virtual void tickOptionComputation( TickerId tickerId, TickType tickType, double impliedVol, double delta,
@@ -164,7 +165,7 @@ namespace IB {
 		virtual void positionEnd() = 0;
 		virtual void accountSummary( int reqId, const IBString& account, const IBString& tag, const IBString& value, const IBString& curency) = 0;
 		virtual void accountSummaryEnd( int reqId) = 0;
-	
+	*/
 	};
 }
 #endif
