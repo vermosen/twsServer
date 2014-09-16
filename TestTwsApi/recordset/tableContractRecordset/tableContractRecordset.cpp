@@ -30,6 +30,10 @@ namespace IB {
 
 		bool tableContractRecordset::selectQ(const std::string & selectStr) {
 		
+			// log
+			TWS_LOG_V(std::string("running contract table select query: ")
+				.append(selectStr), 1)
+
 			mysql_query(												// query to run
 				connection_,
 				selectStr.c_str());

@@ -12,6 +12,28 @@ namespace IB {
 
 	namespace dataBase {
 
+		//class barHistory { //TODO: merge with time series template
+
+		//public:
+
+		//	barHistory(recordId id,
+		//		const thOth::bar & bar,
+		//		const std::string & exchange);
+		//	barHistory(const barHistory &);
+		//	~barHistory() {};
+
+		//	inline recordId instrumentId()          const { return instrumentId_; };
+		//	inline std::vector<thOth::bar> & bars() const { return bars_        ; };
+		//	inline std::string           exchange() const { return exchange_    ; };
+
+		//protected:
+
+		//	recordId instrumentId_;							// instrument db identifier
+		//	std::vector<thOth::bar> bars_;
+		//	std::string exchange_;
+
+		//};
+
 		class barRecord {
 
 		public:
@@ -22,9 +44,9 @@ namespace IB {
 			barRecord(const barRecord &);
 			~barRecord() {};
 
-			recordId instrumentIdentifier() const { return id_; };
-			thOth::bar bar() const { return bar_; };
-			std::string exchange() const { return exchange_; };
+			recordId instrumentIdentifier() const { return id_      ; };
+			thOth::bar                bar() const { return bar_     ; };
+			std::string          exchange() const { return exchange_; };
 
 		protected:
 

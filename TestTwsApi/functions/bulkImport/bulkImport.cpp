@@ -9,13 +9,11 @@ void bulkImport(const thOth::dateTime & startDate,
 
 	// step 1: initialization
 	std::cout
-		<< "bulk Import Test"
+		<< "bulk import test"
 		<< std::endl
 		<< "----------------"
 		<< std::endl
 		<< std::endl;
-
-	std::vector<std::string> contractCodes;
 
 	MYSQL * connect = mysql_init(NULL);							// initialize mySQL connection
 
@@ -61,13 +59,13 @@ void bulkImport(const thOth::dateTime & startDate,
 		= contractRs.begin(); It != contractRs.end(); It++) {
 	
 		It->second.summary.exchange = "SMART";					// sets exchange to SMART
-	
-		thOth::dateTime dt = startDate;							// temporary date
+
+		thOth::dateTime dt = startDate;							// local copy
 
 		// loop over the dates
 		do {
 
-			singleHistoricalInsert(
+			singleHistoricalBarInsert(
 				*It, barRs, dt,									// insert single contract, do not throw
 				deletionPolicy);
 

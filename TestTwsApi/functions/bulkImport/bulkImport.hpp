@@ -18,7 +18,7 @@
 #include "request/historicalRequestClient/historicalRequestClient.hpp"
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 #include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
-#include "recordset/functions/singleHistoricalInsert/singleHistoricalInsert.hpp"
+#include "recordset/functions/singleHistoricalBarInsert/singleHistoricalBarInsert.hpp"
 
 // this procedure is meant to request 
 // historical data for all the contracts in the database

@@ -87,10 +87,16 @@
     <ClCompile Include="utilities\functions\convertDateWithDialog\convertDateWithDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="recordset\functions\singleHistoricalInsert\singleHistoricalInsert.cpp">
+    <ClCompile Include="utilities\functions\validateContractWithDialog\validateContractWithDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="utilities\functions\validateContractWithDialog\validateContractWithDialog.cpp">
+    <ClCompile Include="recordset\functions\bulkInstrumentSelect\bulkInstrumentSelect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="recordset\functions\singleHistoricalBarSelect\singleHistoricalBarSelect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="recordset\functions\singleHistoricalBarInsert\singleHistoricalBarInsert.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -194,9 +200,6 @@
     <ClInclude Include="functions\simpleStrategy\simpleStrategy.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="recordset\functions\singleHistoricalInsert\singleHistoricalInsert.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="recordset\functions\singleInstrumentSelect\singleInstrumentSelect.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -204,6 +207,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utilities\functions\validateContractWithDialog\validateContractWithDialog.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recordset\functions\bulkInstrumentSelect\bulkInstrumentSelect.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recordset\functions\singleHistoricalBarSelect\singleHistoricalBarSelect.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recordset\functions\singleHistoricalBarInsert\singleHistoricalBarInsert.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

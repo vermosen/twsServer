@@ -1,8 +1,17 @@
 #include "functions/staticDataRequest/staticDataRequest.hpp"
 
-void staticDataRequest(const std::string & code) {
+void staticDataRequest(const std::string & code,
+					   bool deletionPolicy) {
 	
 	boost::timer tt;											// timer
+
+	// step 1: initialization
+	std::cout
+		<< "static data request test"
+		<< std::endl
+		<< "------------------------"
+		<< std::endl
+		<< std::endl;
 
 	TWS_LOG_V(std::string("contract code provided: ")			// log
 		.append(code), 0)

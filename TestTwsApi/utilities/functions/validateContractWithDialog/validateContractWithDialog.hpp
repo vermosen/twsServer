@@ -19,7 +19,7 @@
 
 // opens a dialog with the user and returns
 // the uniquely defined contract in the dataBase
-std::pair<IB::dataBase::recordId, IB::ContractDetails> 
+IB::dataBase::contractRecord
 validateContractWithDialog(std::string contractCode);
 
 #endif

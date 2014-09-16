@@ -12,14 +12,12 @@
 #include "utilities/type/all.hpp"
 #include "utilities/settings/settings.hpp"
 #include "utilities/define.hpp"
-#include "recordset/tableContractRecordset/tableContractRecordset.hpp"
-#include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
+#include "recordset/functions/singleHistoricalBarSelect/singleHistoricalBarSelect.hpp"
 
-// this procedure implements a simple strategy
-// opt1: name of the contract to study
-// TODO: enable opt2 and opt3 for time boundaries
-void historyFileCreation(const std::string & opt1 = std::string(""),
-						 const std::string & opt2 = std::string(""),
-						 const std::string & opt3 = std::string(""));
+// this procedure creates a csv file with the requested informations
+void historyFileCreation(
+	const IB::dataBase::contractRecord & contract_,
+	const thOth::dateTime & startDate_,
+	const thOth::dateTime & endDate_);
 
 #endif

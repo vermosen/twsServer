@@ -171,11 +171,13 @@ int main(int argc, char** argv) {
 					<< std::endl
 					<< "4 - history file creation"
 					<< std::endl
-					<< "5 - multi-threading test"
+					<< "5 - simple strategy"
 					<< std::endl
-					<< "6 - csv writing test"
+					<< "6 - multi-threading test"
 					<< std::endl
-					<< "7 - debug test"
+					<< "7 - csv writing test"
+					<< std::endl
+					<< "8 - debug test"
 					<< std::endl
 					<< "0 - exit"
 					<< std::endl;
@@ -201,40 +203,74 @@ int main(int argc, char** argv) {
 						
 						}
 
-				case 2:
-				
-					TWS_LOG_V(										// log
-						std::string("starting historical request"), 0)
-
-					historicalRequest(								// launches historical request process
-						validateContractWithDialog(opt1),			// validate the contract name
-						convertDateWithDialog("start date", opt2),
-						convertDateWithDialog("end date", opt3),
-						erase);
+					staticDataRequest(opt1, erase);
 					
+					break;
+
+				case 2:
+
+					{
+						TWS_LOG_V(									// log
+							std::string("starting historical request"), 0)
+
+						IB::dataBase::contractRecord ct_ = validateContractWithDialog(opt1);
+						thOth::dateTime start_ = convertDateWithDialog("start date", opt2);
+						thOth::dateTime end_ = convertDateWithDialog("end date", opt3);
+
+						historicalRequest(ct_, start_, end_, erase);// launches historical request process
+					
+					}
+
 					break;				
 
 				case 3:
 
-					TWS_LOG_V(										// log
-						std::string("starting historical bulk request"), 0)
+					{
+						TWS_LOG_V(									// log
+							std::string("starting historical bulk request"), 0)
 
-					bulkImport(										// launches bulk request process (opt1 ignored) 
-						convertDateWithDialog("start date", opt2), 
-						convertDateWithDialog("end date"  , opt3),
-						erase);
+						thOth::dateTime start_ = convertDateWithDialog("start date", opt2);
+						thOth::dateTime end_ = convertDateWithDialog("end date", opt3);
+
+						bulkImport(start_, end_, erase);			// launches bulk request process (opt1 ignored) 
+					
+					}
 
 					break;
 
 				case 4:
 
-					TWS_LOG_V(										// log
-						std::string("starting history file creation"), 0)
+					{
+						TWS_LOG_V(									// log
+							std::string("starting history file creation"), 0)
 
-					historyFileCreation(opt1);						// launches history file creation process
+							IB::dataBase::contractRecord ct_ = validateContractWithDialog(opt1);
+						thOth::dateTime start_ = convertDateWithDialog("start date", opt2);
+						thOth::dateTime end_ = convertDateWithDialog("end date", opt3);
+
+						historyFileCreation(ct_, start_, end_);		// launches file creation procedure
+				
+					}
+						
 					break;
 
 				case 5:
+
+					{
+						TWS_LOG_V(									// log
+							std::string("starting simple strategy computation"), 0)
+
+						IB::dataBase::contractRecord ct_ = validateContractWithDialog(opt1);
+						thOth::dateTime start_ = convertDateWithDialog("start date", opt2);
+						thOth::dateTime end_ = convertDateWithDialog("end date", opt3);
+
+						simpleStrategy(ct_, start_, end_, erase);	// launches historical request process
+
+					}
+
+					break;
+
+				case 6:
 
 					TWS_LOG_V(										// log
 						std::string("starting multi-threaded settings test"), 0)
@@ -242,21 +278,21 @@ int main(int argc, char** argv) {
 						multiThreadedSetting();						// launches multi-threading
 					break;
 
-				case 6:
+				case 7:
 
 					TWS_LOG_V(										// log
 						std::string("starting multi-threaded csv builder test"), 0)
 
-					multiThreadedCsvBuilder();					// launches multi-threaded csv writing test
+					multiThreadedCsvBuilder();						// launches multi-threaded csv writing test
 					
 					break;
 
-				case 7:
+				case 8:
 
 					TWS_LOG_V(										// log
 						std::string("starting debug test"), 0)
 
-					debug();									// launches debug test
+					debug();										// launches debug test
 					
 					break;
 
@@ -264,7 +300,6 @@ int main(int argc, char** argv) {
 
 					TWS_LOG_V(std::string("manual exit"), 0)		// log
 					end = true;										// stop the server
-					
 					break;
 
 				default:											// unknown, invalid

@@ -1,6 +1,6 @@
 #include "functions/historicalRequest/historicalRequest.hpp"
 
-void historicalRequest(std::pair<IB::dataBase::recordId,IB::ContractDetails> contract_,
+void historicalRequest(IB::dataBase::contractRecord contract_,
 					   const thOth::dateTime & startDate_,
 					   const thOth::dateTime & endDate_,
 					   bool deletionPolicy_) {
@@ -59,9 +59,10 @@ void historicalRequest(std::pair<IB::dataBase::recordId,IB::ContractDetails> con
 	// step 3: loop over the dates
 	do {
 	
-		singleHistoricalInsert(contract_, barRs,					// insert single contract_, do not throw
-							   startDate_, 
-							   deletionPolicy_);
+		singleHistoricalBarInsert(
+			contract_, barRs,					// insert single contract_, do not throw
+			startDate_, 
+			deletionPolicy_);
 
 		std::this_thread::sleep_for(							// sleep time necessary between two requests
 			std::chrono::milliseconds(SLEEP_TIME_H));

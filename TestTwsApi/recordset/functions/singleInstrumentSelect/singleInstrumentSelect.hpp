@@ -16,7 +16,7 @@
 
 // this function is performing a standard instrument
 // request in the dataBase to retrive a given instrument code
-std::pair<IB::dataBase::recordId, IB::ContractDetails> 
-singleInstrumentSelect(const std::string & contractCode);
+IB::dataBase::contractRecord singleInstrumentSelect(
+	const std::string & contractCode);
 
 #endif

@@ -11,6 +11,8 @@ namespace IB {
 
 	namespace dataBase {
 
+		typedef std::pair < IB::dataBase::recordId, IB::ContractDetails > contractRecord;
+
 		class tableContractRecordset : public recordset<ContractDetails> {
 
 			public:

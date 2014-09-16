@@ -1,6 +1,6 @@
 #include "utilities/functions/validateContractWithDialog/validateContractWithDialog.hpp"
 
-std::pair<IB::dataBase::recordId, IB::ContractDetails> 
+IB::dataBase::contractRecord 
 validateContractWithDialog(std::string contractCode) {
 
 	for (;;) {															// infinite loop

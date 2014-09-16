@@ -1,7 +1,7 @@
-#include "recordset/functions/singleHistoricalInsert/singleHistoricalInsert.hpp"
+#include "recordset/functions/singleHistoricalBarInsert/singleHistoricalBarInsert.hpp"
 
-void singleHistoricalInsert(
-	const std::pair<IB::dataBase::recordId, IB::ContractDetails> & contract_,
+void singleHistoricalBarInsert(
+	const IB::dataBase::contractRecord & contract_,
 	IB::dataBase::tableHistoricalBarRecordset & barRs_,
 	thOth::dateTime dt_,
 	bool policy_) {
@@ -109,7 +109,7 @@ void singleHistoricalInsert(
 
 			}
 		}
-	} catch (IB::dataBase::selectQueryExceptionNoSelection & ex) {
+	} catch (IB::dataBase::selectQueryExceptionNoSelection &) {
 
 		// nothing to erase, go to the next step
 		TWS_LOG_V("selectQueryExceptionNoSelection raised, \

@@ -1,7 +1,7 @@
 #include "recordset/functions/singleInstrumentSelect/singleInstrumentSelect.hpp"
 
-std::pair<IB::dataBase::recordId, IB::ContractDetails> 
-singleInstrumentSelect(const std::string & contractCode) {
+IB::dataBase::contractRecord  singleInstrumentSelect(
+	const std::string & contractCode) {
 
 	MYSQL * connect = mysql_init(NULL);							// initialize mySQL connection
 

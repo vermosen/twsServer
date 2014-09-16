@@ -1,5 +1,5 @@
-#ifndef single_historical_insert_hpp
-#define single_historical_insert_hpp
+#ifndef single_historical_bar_insert_hpp
+#define single_historical_bar_insert_hpp
 
 #include <functional>
 #include <thread>
@@ -19,8 +19,8 @@
 #include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
 
 // single date insert function
-void singleHistoricalInsert(
-	const std::pair<IB::dataBase::recordId, IB::ContractDetails> & contract_,
+void singleHistoricalBarInsert(
+	const IB::dataBase::contractRecord & contract_,
 	IB::dataBase::tableHistoricalBarRecordset & barRs_,
 	thOth::dateTime dt_,
 	bool policy_);

@@ -11,6 +11,7 @@
 #include <thOth/time/DateTime.hpp>
 
 #include "recordset/recordsetException/recordsetException.hpp"
+#include "utilities/define.hpp"
 
 // insert a string value
 #define INSERT_SQL_STR(X,Y) \
@@ -37,8 +38,10 @@ namespace IB {
 		template <class T>
 		class recordset {
 
-			typedef typename std::map<recordId, T>::const_iterator const_iterator;
-			typedef typename std::map<recordId, T>::iterator iterator;
+			public:
+
+				typedef typename std::map<recordId, T>::const_iterator const_iterator;
+				typedef typename std::map<recordId, T>::iterator iterator;
 
 			public:
 

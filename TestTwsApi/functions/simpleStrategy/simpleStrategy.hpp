@@ -15,11 +15,10 @@
 #include "utilities/define.hpp"
 #include "utilities/settings/settings.hpp"
 #include "request/historicalRequestClient/historicalRequestClient.hpp"
-#include "recordset/tableContractRecordset/tableContractRecordset.hpp"
-#include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
+#include "recordset/functions/singleHistoricalBarSelect/singleHistoricalBarSelect.hpp"
 
 // this function is meant to test a simple signal strategy over a time series
-void simpleStrategy(const std::pair<IB::dataBase::recordId,IB::ContractDetails> & contract_,
+void simpleStrategy(const IB::dataBase::contractRecord & contract_,
 				    const thOth::dateTime & startDate_,
 				    const thOth::dateTime & endDate_,
 					bool deletionPolicy_ = false);
