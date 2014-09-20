@@ -1,34 +1,70 @@
-#include "functions/staticDataRequest/staticDataRequest.hpp"
+#include "functions/bulkStaticDataRequest/bulkStaticDataRequest.hpp"
 
-void staticDataRequest(const std::string & code,
-					   bool deletionPolicy) {
+void bulkStaticDataRequest(const std::string & code,
+					       bool deletionPolicy) {
 	
 	boost::timer tt;											// timer
 
 	// step 1: initialization
 	std::cout
-		<< "static data request test"
+		<< "bulk static data request"
 		<< std::endl
 		<< "------------------------"
 		<< std::endl
 		<< std::endl;
 
-	TWS_LOG_V(std::string("contract code provided: ")			// log
-		.append(code), 0)
+	// step 2: import csv file
 
-	// step 2: prepare the contract
-	IB::Contract ct;											// contract to request
 
-	ct.symbol          = code   ;
-	ct.exchange        = "SMART";
-	ct.primaryExchange = "NYSE" ;
-	ct.secType         = "STK"  ;
+	// step 3: check for previous insert
+	std::vector<IB::Contract> contracts;
 
-	IB::staticDataRequestClient client(ct);						// request the contract 
+	while (true) {													// iterate on the strings
+	
+		std::string code("toto");
 
-	TWS_LOG_V(std::string("connecting to tws server"), 0)		// log
+		// check wether the contract is in the database
+		// TODO: replace with bulkInstrumentSelect function
+		try {
+		
+			IB::dataBase::contractRecord rs = singleInstrumentSelect(code);
+		
+			if (deletionPolicy = true) {							// insert only if deletion policy is set to true
+			
+				IB::Contract ct;
 
-	// step 3: connection attempt
+				ct.symbol = code;
+				ct.exchange = "SMART";
+				ct.primaryExchange = "NYSE";
+				ct.secType = "STK";
+
+				contracts.push_back(ct);
+			
+			}
+
+		} catch (IB::dataBase::selectQueryExceptionNoSelection) {		// no contract, insert in any case
+		
+			IB::Contract ct;
+
+			ct.symbol = code;
+			ct.exchange = "SMART";
+			ct.primaryExchange = "NYSE";
+			ct.secType = "STK";
+
+			contracts.push_back(ct);
+		
+		} catch (std::exception & ex) {					// other exception, throw
+		
+			throw ex;
+		
+		}
+	}
+
+	
+
+	
+
+	// step 2: connection attempt
 	for (unsigned int attempt = 1;; attempt++) {				// loop over attemps
 
 		if (IB::settings::instance().verbosity() > 0)
@@ -39,8 +75,8 @@ void staticDataRequest(const std::string & code,
 				.append(boost::lexical_cast<std::string>(MAX_ATTEMPT)), 0)
 
 			client.connect(
-				IB::settings::instance().ibHost().c_str(),
-				IB::settings::instance().ibPort());				// TODO: test if we have to provide connection id here
+			IB::settings::instance().ibHost().c_str(),
+			IB::settings::instance().ibPort());					// TODO: test if we have to provide connection id here
 
 		while (client.isConnected()) client.processMessages();
 
@@ -84,13 +120,15 @@ void staticDataRequest(const std::string & code,
 		.append(client.contractDetails().contractMonth)
 		.append("..."), 1)
 
-	// step 4: insert into the database
+		// step 3: insert into the database
 	TWS_LOG_V(													// log
 		std::string("attempt to insert contract details"), 0)
 
+	MYSQL * connect =
+		IB::settings::instance().connection();
+
 	// recordset`& query
-	IB::dataBase::tableContractRecordset rs(					// table contract recordset
-		IB::settings::instance().connection());			
+	IB::dataBase::tableContractRecordset rs(connect);			// table contract recordset
 
 	if (!rs.insert(client.contractDetails()))					// tries to insert 
 		TWS_LOG_V(std::string("insert failed"), 0)

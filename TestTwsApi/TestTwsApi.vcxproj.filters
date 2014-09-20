@@ -99,6 +99,9 @@
     <ClCompile Include="recordset\functions\singleHistoricalBarInsert\singleHistoricalBarInsert.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="functions\bulkStaticDataRequest\bulkStaticDataRequest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\factory\barSizeFactory\barSizeFactory.hpp">
@@ -216,6 +219,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="recordset\functions\singleHistoricalBarInsert\singleHistoricalBarInsert.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="functions\bulkStaticDataRequest\bulkStaticDataRequest.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

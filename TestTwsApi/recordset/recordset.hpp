@@ -71,7 +71,7 @@ namespace IB {
 
 				recordset() {};									// protected default ctor
 
-				MYSQL     * connection_;						// connection objects
+				MYSQL * connection_;			// connection objects
 				MYSQL_RES * reception_ ;
 
 				std::map<recordId, T> records_;					// a pile of records for data management, 

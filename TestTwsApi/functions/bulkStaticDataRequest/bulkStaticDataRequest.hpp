@@ -1,6 +1,10 @@
-#ifndef tws_function_static_data_request
-#define tws_function_static_data_request
+#ifndef tws_function_bulk_static_data_request
+#define tws_function_bulk_static_data_request
 
+// string components
+#include <string>
+
+// boost components
 #include <boost/lexical_cast.hpp>
 #include <boost/timer.hpp>
 #include <boost/thread.hpp>
@@ -8,6 +12,7 @@
 // thOth components
 #include <thOth/time/DateTime.hpp>
 
+#include "recorset/functions/singleInstrumentSelect/singleInstrumentSelect.hpp"
 #include "request/staticDataRequestClient/staticDataRequestClient.hpp"
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 

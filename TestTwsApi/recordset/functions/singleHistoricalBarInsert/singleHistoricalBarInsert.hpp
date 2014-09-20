@@ -1,7 +1,7 @@
 #ifndef single_historical_bar_insert_hpp
 #define single_historical_bar_insert_hpp
 
-#include <functional>
+//#include <functional>
 #include <thread>
 
 // boost components
@@ -12,8 +12,6 @@
 #include <thOth/time/DateTime.hpp>
 
 // twsapi
-#include "utilities/type/all.hpp"
-#include "utilities/define.hpp"
 #include "request/historicalRequestClient/historicalRequestClient.hpp"
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
 #include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"

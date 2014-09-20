@@ -31,41 +31,24 @@ void historicalRequest(IB::dataBase::contractRecord contract_,
 			.append(", ")
 			.append(contract_.second.summary.primaryExchange), 0);
 
-	MYSQL * connect = mysql_init(NULL);							// initialize mySQL connection
-
-	TWS_LOG_V(													// log
-		std::string("requesting contract details for: ")
-		.append(contract_.second.summary.symbol), 0)
-
-		if (!connect)											// fails to initialize mySQL
-			throw std::exception("mySQL initialization failed");
-
-	connect = mysql_real_connect(								// mySQL real connection
-		connect,
-		IB::settings::instance().server().c_str(),
-		IB::settings::instance().user().c_str(),
-		IB::settings::instance().password().c_str(),
-		IB::settings::instance().dataBase().c_str(),
-		IB::settings::instance().port(),
-		NULL, 0);
-
-	if (!connect) throw std::exception("unable to reach mySQL database");
+	MYSQL * connect =											// use the default connection
+		IB::settings::instance().connection();
 
 	IB::dataBase::tableHistoricalBarRecordset barRs(connect);	// bar recordset
-	IB::ContractDetails ct = contract_.second;					// copy the contract_
-	contract_.second.summary.exchange = "SMART";						// setting exchange to SMART
-	thOth::dateTime dt = startDate_;								// date copy
+	IB::ContractDetails ct = contract_.second;					// copy the contract
+	contract_.second.summary.exchange = "SMART";				// setting exchange to SMART
+	thOth::dateTime dt = startDate_;							// date copy
 
 	// step 3: loop over the dates
 	do {
 	
 		singleHistoricalBarInsert(
-			contract_, barRs,					// insert single contract_, do not throw
+			contract_, barRs,									// insert single contract_, do not throw
 			startDate_, 
 			deletionPolicy_);
 
-		std::this_thread::sleep_for(							// sleep time necessary between two requests
-			std::chrono::milliseconds(SLEEP_TIME_H));
+		boost::this_thread::sleep_for(							// sleep time necessary between two requests
+			boost::chrono::milliseconds(SLEEP_TIME_H));
 	
 		dt += boost::gregorian::days(1);						// add 1 day 
 																// TODO: increment business days instead

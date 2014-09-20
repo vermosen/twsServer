@@ -14,26 +14,10 @@ void bulkImport(const thOth::dateTime & startDate,
 		<< "----------------"
 		<< std::endl
 		<< std::endl;
-
-	MYSQL * connect = mysql_init(NULL);							// initialize mySQL connection
-
-	if (!connect)												// fails to initialize mySQL
-		throw std::exception("mySQL initialization failed");
-
-	connect = mysql_real_connect(								// mySQL real connection
-		connect,
-		IB::settings::instance().server().c_str(),
-		IB::settings::instance().user().c_str(),
-		IB::settings::instance().password().c_str(),
-		IB::settings::instance().dataBase().c_str(),
-		IB::settings::instance().port(),
-		NULL, 0);
-
-	if (!connect)												// fails to initialize the connection
-		throw std::exception("unable to reach mySQL database");
-
+	
 	// recordset`& query
-	IB::dataBase::tableContractRecordset contractRs(connect);	// table contract recordset
+	IB::dataBase::tableContractRecordset contractRs(
+		IB::settings::instance().connection());					// table contract recordset
 
 	std::string selectQuery(									// query to run
 		"SELECT * FROM table_contract");
@@ -52,7 +36,8 @@ void bulkImport(const thOth::dateTime & startDate,
 		.append(boost::lexical_cast<std::string>(contractRs.size()))
 		.append(" contracts found"), 0);
 
-	IB::dataBase::tableHistoricalBarRecordset barRs(connect);	// bar recordset
+	IB::dataBase::tableHistoricalBarRecordset barRs(
+		IB::settings::instance().connection());					// bar recordset
 
 	// loop over the contracts
 	for (std::map<IB::dataBase::recordId, IB::ContractDetails>::iterator It

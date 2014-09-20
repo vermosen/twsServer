@@ -5,22 +5,31 @@
  *
  */
 
-#ifndef settings_hpp
-#define settings_hpp
+#ifndef tws_settings_hpp
+#define tws_settings_hpp
 
 #include <string>
 
+#include <boost/shared_ptr.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/lock_guard.hpp>
 
 #include <thOth/pattern/singleton.hpp>
+
+#include <mysql.h>
 
 #include <commonDefs.h>
 
 #include "utilities/idGenerator/idGenerator.hpp"
 #include "utilities/logger/logger.hpp"
 
-#define DEFAULTPATH "C:/Temp/"
+// default setup
+#define SERVER   "macbookwin"										
+#define USER     "test_user"
+#define PASSWORD "test01"
+#define DATABASE "tws_server"
+#define PORT     3308
+#define LOGPATH  "C://Temp/"
 
 namespace IB {
 
@@ -31,13 +40,12 @@ namespace IB {
 
 		private:
 
-			settings()						// default values
-				: verbosity_(0),
-				  port_(0),
-				  log_(DEFAULTPATH) {};
+			settings  ();								// private ctor, delete ?
+			
+			void updateConnection();					// update connection object
 
 		public: 
-			
+
 			//accessors
 			void verbosity (const unsigned int  v);
 			void port      (const unsigned int  v);
@@ -60,14 +68,16 @@ namespace IB {
 			std::string dataBase   () const;
 
 			inline idGenerator & idGen () { return generator_; };
-			inline logger      & log   () { return log_      ; };
+			inline logger & log        () { return log_      ; };
+			inline MYSQL * connection()   { return connect_  ; };
 
 		private: 
 
 			// members
-			unsigned int verbosity_;				// verbosity settings				
-			idGenerator  generator_;				// unique id generator
-			logger             log_;				// log file
+			unsigned int             verbosity_;	// verbosity settings				
+			idGenerator              generator_;	// unique id generator
+			logger                   log_      ;	// log file
+			MYSQL *                  connect_  ;	// mysql connection object
 
 			// dataBase settings
 			unsigned int port_     ;     			// db server port
@@ -81,14 +91,15 @@ namespace IB {
 			unsigned int ibPort_   ;				// interactive broker server port
 
 			// mutexes
-			mutable boost::mutex verbosityMutex_;	// locks/unlocks the verbosity variable
-			mutable boost::mutex portMutex_;		// locks/unlocks the port variable
-			mutable boost::mutex ibPortMutex_;		// locks/unlocks the ib port variable
-			mutable boost::mutex ibHostMutex_;		// locks/unlocks the ib host variable
-			mutable boost::mutex serverMutex_;		// locks/unlocks the server variable
-			mutable boost::mutex userMutex_;		// locks/unlocks the user variable
-			mutable boost::mutex passwordMutex_;	// locks/unlocks the password variable
-			mutable boost::mutex dataBaseMutex_;	// locks/unlocks the database variable
+			mutable boost::mutex verbosityMutex_ ;	// locks/unlocks the verbosity variable
+			mutable boost::mutex portMutex_      ;	// locks/unlocks the port variable
+			mutable boost::mutex ibPortMutex_    ;	// locks/unlocks the ib port variable
+			mutable boost::mutex ibHostMutex_    ;	// locks/unlocks the ib host variable
+			mutable boost::mutex serverMutex_    ;	// locks/unlocks the server variable
+			mutable boost::mutex userMutex_      ;	// locks/unlocks the user variable
+			mutable boost::mutex passwordMutex_  ;	// locks/unlocks the password variable
+			mutable boost::mutex dataBaseMutex_  ;	// locks/unlocks the database variable
+			mutable boost::mutex connectionMutex_;	// locks/unlocks the database variable
 	};
 
 }

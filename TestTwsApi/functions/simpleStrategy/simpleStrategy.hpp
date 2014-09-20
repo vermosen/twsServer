@@ -11,9 +11,6 @@
 #include <thOth/time/DateTime.hpp>
 
 // twsapi
-#include "utilities/type/all.hpp"
-#include "utilities/define.hpp"
-#include "utilities/settings/settings.hpp"
 #include "request/historicalRequestClient/historicalRequestClient.hpp"
 #include "recordset/functions/singleHistoricalBarSelect/singleHistoricalBarSelect.hpp"
 

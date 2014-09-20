@@ -5,13 +5,6 @@
  *
  */
 
-#define SERVER   "macbookwin"										// database setup
-#define USER     "test_user"
-#define PASSWORD "test01"
-#define DATABASE "tws_server"
-#define PORT     3308
-#define LOGPATH  "C://Temp/"
-
 #include <thOth/time/DateTime.hpp>									// thOth components
 #include <utilities/factory/all.hpp>
 
@@ -43,15 +36,7 @@ int main(int argc, char** argv) {
 		std::string opt1, opt2, opt3;								// optional arguments
 		bool erase = false;											// deletion policy
 
-		IB::settings::instance().verbosity(0       );				// default settings
-		IB::settings::instance().server   (SERVER  );
-		IB::settings::instance().user     (USER    );
-		IB::settings::instance().password (PASSWORD);
-		IB::settings::instance().dataBase (DATABASE);
-		IB::settings::instance().port     (PORT    );
-		IB::settings::instance().ibPort   (7496    );
-
-		IB::settings::instance().logPath(							// log path
+		IB::settings::instance().logPath(							// set the log path
 			std::string(LOGPATH)
 				.append("TwsApiServerTest")
 				.append("_")

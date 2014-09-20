@@ -60,7 +60,7 @@ namespace IB {
 
 			public:
 
-				 tableHistoricalBarRecordset(MYSQL *                            );
+				 tableHistoricalBarRecordset(MYSQL *);
 				 tableHistoricalBarRecordset(const tableHistoricalBarRecordset &);
 				~tableHistoricalBarRecordset();
 

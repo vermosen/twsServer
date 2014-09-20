@@ -34,7 +34,7 @@ void multiThreadedSetting() {
 		boost::thread::hardware_concurrency();
 
 	threadNum =													// define number of threads
-		std::min(std::max(threadNum, min_number), max_number);
+		min(max(threadNum, min_number), max_number);
 
 	threadNum = 20;												// enforce number of threads to max
 
