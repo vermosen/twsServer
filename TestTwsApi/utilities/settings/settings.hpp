@@ -29,6 +29,7 @@
 #define PASSWORD "test01"
 #define DATABASE "tws_server"
 #define PORT     3308
+#define IBPORT   7496
 #define LOGPATH  "C://Temp/"
 
 namespace IB {

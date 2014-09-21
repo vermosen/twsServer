@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 		static ObjectHandler::EnumTypeRegistry enumTypeRegistry;	// registry
 		
 		IB::utilities::registerAllFactories();						// register the factories
-		
+
 		bool end = false; int test = 0;								// indicators
 		std::string opt1, opt2, opt3;								// optional arguments
 		bool erase = false;											// deletion policy

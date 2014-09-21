@@ -11,7 +11,7 @@ void singleHistoricalBarInsert(
 		.append(boost::lexical_cast<std::string>(dt_.date())), 0)
 
 	IB::historicalRequestClient client(						// creates a new client 
-		contract_.second.summary,									// contract 
+		contract_.second.summary,							// contract 
 		dt_ + boost::gregorian::days(1),					// TODO: set to end of day
 		IB::barSize::thirtySeconds,							// minimum bar size TODO: turn those as function parameters
 		1, IB::dataDuration::day,							// period length and type

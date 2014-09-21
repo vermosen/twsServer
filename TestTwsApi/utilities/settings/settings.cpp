@@ -11,12 +11,13 @@ namespace IB {
 
 	settings::settings()						// default values
 		: verbosity_(0),
-		port_(PORT),
-		server_(SERVER), 
-		user_(USER),
+		port_    (PORT    ),
+		server_  (SERVER  ), 
+		user_    (USER    ),
 		password_(PASSWORD),
 		dataBase_(DATABASE),
-		log_(LOGPATH) {
+		log_     (LOGPATH ),
+		ibPort_  (IBPORT  ) {
 
 			connect_ = mysql_init(NULL);		// initialize null connection
 
@@ -94,6 +95,7 @@ namespace IB {
 	}
 
 	unsigned int settings::port() const {
+
 
 		boost::lock_guard<boost::mutex> guard(portMutex_);
 

@@ -3,12 +3,12 @@
 thOth::dateTime convertDateTime(const IB::IBString & dtStr) {
 
 	return thOth::dateTime(								// smallest increments is second
-		thOth::dateTime::Years  (boost::lexical_cast<int>(dtStr.substr(0 , 4))) ,
-		thOth::dateTime::Months (boost::lexical_cast<int>(dtStr.substr(4 , 2))) ,
-		thOth::dateTime::Days   (boost::lexical_cast<int>(dtStr.substr(6 , 2))) ,
-		thOth::dateTime::Hours  (boost::lexical_cast<int>(dtStr.substr(10, 2))) ,
-		thOth::dateTime::Minutes(boost::lexical_cast<int>(dtStr.substr(13, 2))) ,
-		thOth::dateTime::Seconds(boost::lexical_cast<int>(dtStr.substr(16, 2))));
+		thOth::dateTime::years  (boost::lexical_cast<int>(dtStr.substr(0 , 4))) ,
+		thOth::dateTime::months (boost::lexical_cast<int>(dtStr.substr(4 , 2))) ,
+		thOth::dateTime::days   (boost::lexical_cast<int>(dtStr.substr(6 , 2))) ,
+		thOth::dateTime::hours  (boost::lexical_cast<int>(dtStr.substr(10, 2))) ,
+		thOth::dateTime::minutes(boost::lexical_cast<int>(dtStr.substr(13, 2))) ,
+		thOth::dateTime::seconds(boost::lexical_cast<int>(dtStr.substr(16, 2))));
 
 };
 
@@ -50,12 +50,12 @@ IB::IBString convertDateTime(const thOth::dateTime & date) {
 thOth::dateTime convertDateTime_sql(const std::string & dtStr) {
 
 	return thOth::dateTime(								// smallest increments is second
-		thOth::dateTime::Years(boost::lexical_cast<int>(dtStr.substr(0, 4))),
-		thOth::dateTime::Months(boost::lexical_cast<int>(dtStr.substr(5, 2))),
-		thOth::dateTime::Days(boost::lexical_cast<int>(dtStr.substr(8, 2))),
-		thOth::dateTime::Hours(boost::lexical_cast<int>(dtStr.substr(11, 2))),
-		thOth::dateTime::Minutes(boost::lexical_cast<int>(dtStr.substr(14, 2))),
-		thOth::dateTime::Seconds(boost::lexical_cast<int>(dtStr.substr(17, 2))));
+		thOth::dateTime::years  (boost::lexical_cast<int>(dtStr.substr(0, 4))),
+		thOth::dateTime::months (boost::lexical_cast<int>(dtStr.substr(5, 2))),
+		thOth::dateTime::days   (boost::lexical_cast<int>(dtStr.substr(8, 2))),
+		thOth::dateTime::hours  (boost::lexical_cast<int>(dtStr.substr(11, 2))),
+		thOth::dateTime::minutes(boost::lexical_cast<int>(dtStr.substr(14, 2))),
+		thOth::dateTime::seconds(boost::lexical_cast<int>(dtStr.substr(17, 2))));
 
 }
 

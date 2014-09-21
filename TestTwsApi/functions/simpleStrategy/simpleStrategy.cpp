@@ -17,7 +17,7 @@ void simpleStrategy(
 		<< std::endl;
 
 	// step 2: call request function
-	std::shared_ptr<std::vector<thOth::bar> > barData			// the data, assuming there is no hole
+	boost::shared_ptr<std::vector<thOth::bar> > barData			// the data, assuming there is no hole
 		= singleHistoricalBarSelect(contract_, startDate_, endDate_);
 
 	TWS_LOG_V(													// log

@@ -25,7 +25,7 @@ void historyFileCreation(
 		<< std::endl;
 
 	// step 2: call request function
-	std::shared_ptr<std::vector<thOth::bar> > data 
+	boost::shared_ptr<std::vector<thOth::bar> > data 
 		= singleHistoricalBarSelect(contract_, startDate_, endDate_);
 
 	// step 3: creates a csv file containing the data

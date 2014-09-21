@@ -1,11 +1,11 @@
 #include "recordset/functions/singleHistoricalBarSelect/singleHistoricalBarSelect.hpp"
 
-std::shared_ptr<std::vector<thOth::bar> > singleHistoricalBarSelect(
+boost::shared_ptr<std::vector<thOth::bar> > singleHistoricalBarSelect(
 	const IB::dataBase::contractRecord & contract_,
 	const thOth::dateTime & startDate_,
 	const thOth::dateTime & endDate_) {
 
-	std::shared_ptr<std::vector<thOth::bar> > returnVec (new std::vector < thOth::bar >());
+	boost::shared_ptr<std::vector<thOth::bar> > returnVec (new std::vector < thOth::bar >());
 
 	// step 1: initialize connection
 	IB::dataBase::tableHistoricalBarRecordset rs(

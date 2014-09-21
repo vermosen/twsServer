@@ -60,81 +60,82 @@ void bulkStaticDataRequest(const std::string & code,
 		}
 	}
 
+	// step 4: request static data
+	for (std::vector<IB::Contract>::const_iterator It = contracts.cbegin(); It != contract.cend(); It++) {
 	
+		for (unsigned int attempt = 1;; attempt++) {				// loop over attemps
 
-	
+			if (IB::settings::instance().verbosity() > 0)
 
-	// step 2: connection attempt
-	for (unsigned int attempt = 1;; attempt++) {				// loop over attemps
-
-		if (IB::settings::instance().verbosity() > 0)
-
-			TWS_LOG_V(std::string("attempt number ")			// log
+				TWS_LOG_V(std::string("attempt number ")			// log
 				.append(boost::lexical_cast<std::string>(attempt))
 				.append(" out of ")
 				.append(boost::lexical_cast<std::string>(MAX_ATTEMPT)), 0)
 
-			client.connect(
-			IB::settings::instance().ibHost().c_str(),
-			IB::settings::instance().ibPort());					// TODO: test if we have to provide connection id here
+				client.connect(
+				IB::settings::instance().ibHost().c_str(),
+				IB::settings::instance().ibPort());					// TODO: test if we have to provide connection id here
 
-		while (client.isConnected()) client.processMessages();
+			while (client.isConnected()) client.processMessages();
 
-		if (attempt > MAX_ATTEMPT)								// max attemps reached
-			throw std::exception("failed to connect after max attempts");
+			if (attempt > MAX_ATTEMPT)								// max attemps reached
+				throw std::exception("failed to connect after max attempts");
 
-		if (client.endOfData()) {								// download succedded
+			if (client.endOfData()) {								// download succedded
 
-			TWS_LOG_V(std::string("download successful"), 0)	// log	
-			break;
+				TWS_LOG_V(std::string("download successful"), 0)	// log	
+					break;
 
-		} else {
+			}
+			else {
 
-			TWS_LOG_V(std::string("sleeping ")					// log
-				.append(boost::lexical_cast<std::string>(SLEEP_TIME))
-				.append(" seconds before next attempt"), 0)
+				TWS_LOG_V(std::string("sleeping ")					// log
+					.append(boost::lexical_cast<std::string>(SLEEP_TIME))
+					.append(" seconds before next attempt"), 0)
 
-			boost::this_thread::sleep_for(						// sleep for 100 ms
-				boost::chrono::milliseconds(SLEEP_TIME));
+					boost::this_thread::sleep_for(						// sleep for 100 ms
+					boost::chrono::milliseconds(SLEEP_TIME));
 
-		}
+			}
 
-	}															// end of for loop
+		}															// end of for loop
 
-	TWS_LOG_V(													// partially log the contract details
-		std::string("contract details: (symbol) ")
-		.append(client.contract().symbol)
-		.append(", (secType) ")
-		.append(client.contract().secType)
-		.append(", (currency) ")
-		.append(client.contract().currency)
-		.append(", (primary exchange) ")
-		.append(client.contract().primaryExchange)
-		.append(", (bondType) ")
-		.append(client.contractDetails().bondType)
-		.append(", (callable) ")
-		.append(boost::lexical_cast<std::string>(client.contractDetails().callable))
-		.append(", (category) ")
-		.append(client.contractDetails().category)
-		.append(", (contractMonth) ")
-		.append(client.contractDetails().contractMonth)
-		.append("..."), 1)
+		TWS_LOG_V(													// partially log the contract details
+			std::string("contract details: (symbol) ")
+			.append(client.contract().symbol)
+			.append(", (secType) ")
+			.append(client.contract().secType)
+			.append(", (currency) ")
+			.append(client.contract().currency)
+			.append(", (primary exchange) ")
+			.append(client.contract().primaryExchange)
+			.append(", (bondType) ")
+			.append(client.contractDetails().bondType)
+			.append(", (callable) ")
+			.append(boost::lexical_cast<std::string>(client.contractDetails().callable))
+			.append(", (category) ")
+			.append(client.contractDetails().category)
+			.append(", (contractMonth) ")
+			.append(client.contractDetails().contractMonth)
+			.append("..."), 1)
 
-		// step 3: insert into the database
+			// step 3: insert into the database
+			TWS_LOG_V(													// log
+			std::string("attempt to insert contract details"), 0)
+
+			MYSQL * connect =
+			IB::settings::instance().connection();
+
+		// recordset`& query
+		IB::dataBase::tableContractRecordset rs(connect);			// table contract recordset
+
+		if (!rs.insert(client.contractDetails()))					// tries to insert 
+			TWS_LOG_V(std::string("insert failed"), 0)
+		
+	}
+	
 	TWS_LOG_V(													// log
-		std::string("attempt to insert contract details"), 0)
-
-	MYSQL * connect =
-		IB::settings::instance().connection();
-
-	// recordset`& query
-	IB::dataBase::tableContractRecordset rs(connect);			// table contract recordset
-
-	if (!rs.insert(client.contractDetails()))					// tries to insert 
-		TWS_LOG_V(std::string("insert failed"), 0)
-
-	TWS_LOG_V(													// log
-		std::string("static data download test completed in ")
+		std::string("bulk static data request completed in ")
 			.append(boost::lexical_cast<std::string>(tt.elapsed()))
 			.append(" seconds"), 0)
 

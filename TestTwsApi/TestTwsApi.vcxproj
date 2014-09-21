@@ -131,6 +131,7 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <DisableSpecificWarnings>4800;4005</DisableSpecificWarnings>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -162,7 +163,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="functions\bulkImport\bulkImport.cpp" />
-    <ClCompile Include="functions\bulkStaticDataRequest\bulkStaticDataRequest.cpp" />
+    <ClCompile Include="functions\bulkStaticDataRequest\bulkStaticDataRequest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="functions\debug\debug.cpp" />
     <ClCompile Include="functions\historicalRequest\historicalRequest.cpp" />
     <ClCompile Include="functions\multiThreadedCsvBuilder\multiThreadedCsvBuilder.cpp" />
@@ -200,7 +204,10 @@
   <ItemGroup>
     <ClInclude Include="functions\all.hpp" />
     <ClInclude Include="functions\bulkImport\bulkImport.hpp" />
-    <ClInclude Include="functions\bulkStaticDataRequest\bulkStaticDataRequest.hpp" />
+    <ClInclude Include="functions\bulkStaticDataRequest\bulkStaticDataRequest.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="functions\debug\debug.hpp" />
     <ClInclude Include="functions\multiThreadedCsvBuilder\multiThreadedCsvBuilder.hpp" />
     <ClInclude Include="functions\multiThreadedSetting\multiThreadedSetting.hpp" />
