@@ -13,11 +13,9 @@ void debug() {
 
 	{
 	
-		// dateTime conversion into excel format
-		thOth::dateTime test(2014, 1, 1, boost::posix_time::time_duration(0, 0, 15, 0));
+		MYSQL * conn = IB::settings::instance().connection();
 
-		// print the excel float representation
-		std::cout << boost::lexical_cast<std::string>(test.ExcelDate()) << std::endl;
+		IB::dataBase::tableContractRecordset2 rs(conn);
 
 	}
 

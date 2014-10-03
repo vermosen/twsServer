@@ -34,7 +34,7 @@ void historicalRequest(IB::dataBase::contractRecord contract_,
 	MYSQL * connect =											// use the default connection
 		IB::settings::instance().connection();
 
-	IB::dataBase::tableHistoricalBarRecordset barRs(connect);	// bar recordset
+	IB::dataBase::tableHistoricalBarRecordset2 barRs(connect);	// bar recordset
 	IB::ContractDetails ct = contract_.second;					// copy the contract
 	contract_.second.summary.exchange = "SMART";				// setting exchange to SMART
 	thOth::dateTime dt = startDate_;							// date copy

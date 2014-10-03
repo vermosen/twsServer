@@ -21,8 +21,8 @@ namespace IB {
 
 			barSizeFactory & operator =(const barSizeFactory &);
 
-			IB::barSize  operator()(const IB::IBString &);
-			IB::IBString operator()(const IB::barSize  &);
+			IB::barSize  operator () (const IB::IBString &);
+			IB::IBString operator () (const IB::barSize  &);
 
 			void registerType(const std::string &, void *);
 

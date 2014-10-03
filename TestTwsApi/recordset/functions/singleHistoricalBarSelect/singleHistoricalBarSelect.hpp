@@ -9,14 +9,14 @@
 #include "utilities/type/all.hpp"
 #include "utilities/define.hpp"
 #include "utilities/settings/settings.hpp"
-#include "recordset/tableContractRecordSet/tableContractRecordSet.hpp"
-#include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
+#include "recordset/tableContractRecordSet2/tableContractRecordSet2.hpp"
+#include "recordset/tableHistoricalBarRecordset2/tableHistoricalBarRecordset2.hpp"
 
 // this function is performing a standard instrument
 // request in the dataBase to retrive the time series for a 
 // given instrument between two dates
 // the function returns a pointer to avoid unnecessary copy of the time series
-boost::shared_ptr<std::vector<thOth::bar> > singleHistoricalBarSelect(
+thOth::timeSeries<thOth::bar> singleHistoricalBarSelect(
 	const IB::dataBase::contractRecord & contract_,
 	const thOth::dateTime & startDate_,
 	const thOth::dateTime & endDate_);

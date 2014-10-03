@@ -1,12 +1,10 @@
 #ifndef table_historical_bar_recordset_hpp
 #define table_historical_bar_recordset_hpp
 
-#include <boost/lexical_cast.hpp>
-
 #include <thOth/bar/bar.hpp>
 
 #include "recordset/recordset.hpp"
-#include "utilities/conversion/convertDatetime/convertDatetime.hpp"
+//#include "utilities/conversion/convertDatetime/convertDatetime.hpp"
 
 namespace IB {
 
@@ -17,20 +15,20 @@ namespace IB {
 		public:
 
 			barRecord(recordId instrumentId,
-				      const thOth::bar & bar,
+				      const thOth::timeSeries<thOth::bar> & bars,
 				      const std::string & exchange);
 			barRecord(const barRecord &);
 			~barRecord() {};
 
-			recordId instrumentIdentifier() const { return id_      ; };
-			thOth::bar                bar() const { return bar_     ; };
-			std::string          exchange() const { return exchange_; };
+			recordId        instrumentIdentifier () const { return id_      ; };
+			thOth::timeSeries<thOth::bar> & bars ()       { return bars_    ; };
+			std::string                 exchange () const { return exchange_; };
 
 		protected:
 
-			recordId    id_;											// instrument db identifier
-			thOth::bar  bar_;
-			std::string exchange_;
+			recordId                      id_      ;					// instrument db identifier
+			thOth::timeSeries<thOth::bar> bars_    ;
+			std::string                   exchange_;
 
 		};
 

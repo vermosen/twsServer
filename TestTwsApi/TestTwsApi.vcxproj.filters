@@ -102,6 +102,12 @@
     <ClCompile Include="functions\bulkStaticDataRequest\bulkStaticDataRequest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="recordset\tableContractRecordset2\tableContractRecordset2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="recordset\tableHistoricalBarRecordset2\tableHistoricalBarRecordset2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\factory\barSizeFactory\barSizeFactory.hpp">
@@ -182,9 +188,6 @@
     <ClInclude Include="request\request.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="recordset\recordset.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="recordset\recordsetException\recordsetException.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -222,6 +225,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="functions\bulkStaticDataRequest\bulkStaticDataRequest.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recordset\recordset.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recordset\tableContractRecordset2\tableContractRecordset2.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recordset\recordset2.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recordset\tableHistoricalBarRecordset2\tableHistoricalBarRecordset2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

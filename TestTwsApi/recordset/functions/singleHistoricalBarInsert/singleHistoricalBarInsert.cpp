@@ -2,7 +2,7 @@
 
 void singleHistoricalBarInsert(
 	const IB::dataBase::contractRecord & contract_,
-	IB::dataBase::tableHistoricalBarRecordset & barRs_,
+	IB::dataBase::tableHistoricalBarRecordset2 & barRs_,
 	thOth::dateTime dt_,
 	bool policy_) {
 
@@ -74,9 +74,10 @@ void singleHistoricalBarInsert(
 		selectQuery.append(" AND exchange = ");
 	INSERT_SQL_STR(selectQuery, contract_.second.summary.exchange)
 		selectQuery.append(" AND bar_start >= ");
-	INSERT_SQL_DATE(selectQuery, client.cbegin()->barStart())
+	INSERT_SQL_DATE(selectQuery, client.cbegin()->first)
 		selectQuery.append(" AND bar_end <= ");
-	INSERT_SQL_DATE(selectQuery, client.crbegin()->barEnd())
+	INSERT_SQL_DATE(selectQuery, thOth::dateTime::advance(
+		client.crbegin()->first, client.crbegin()->second.length()))
 		selectQuery.append(")");
 
 	TWS_LOG_V(std::string("new query to launch: ")			// log
@@ -84,7 +85,7 @@ void singleHistoricalBarInsert(
 
 	try {
 
-		if (barRs_.selectQ(selectQuery) == true) {			// if it doens't throw, there are item to delete
+		if (barRs_.selectStr(selectQuery) == true) {			// if it doens't throw, there are item to delete
 
 			if (policy_ == true) {
 
@@ -96,12 +97,13 @@ void singleHistoricalBarInsert(
 					deleteQuery.append(" AND EXCHANGE = ");
 				INSERT_SQL_STR(deleteQuery, contract_.second.summary.exchange)
 					deleteQuery.append(" AND BAR_START >= ");
-				INSERT_SQL_DATE(deleteQuery, client.cbegin()->barStart())
+				INSERT_SQL_DATE(deleteQuery, client.cbegin()->first)
 					deleteQuery.append(" AND BAR_END <= ");
-				INSERT_SQL_DATE(deleteQuery, client.crbegin()->barEnd())
+				INSERT_SQL_DATE(deleteQuery, thOth::dateTime::advance(
+					client.crbegin()->first, client.crbegin()->second.length()))
 					deleteQuery.append(")");
 
-				barRs_.deleteQ(deleteQuery);				// run the delete statement
+				barRs_.deleteStr(deleteQuery);				// run the delete statement
 
 			} else {
 
@@ -122,31 +124,11 @@ void singleHistoricalBarInsert(
 	}
 
 	// step 3: copy data into the recordset
-	long count = 0;  for (std::vector<thOth::bar>::const_iterator
-		It = client.cbegin(); It != client.cend(); It++, count++) {
-		
-		barRs_.insert(
-			IB::dataBase::barRecord(
-			contract_.first,
-			*It,
-			contract_.second.summary.exchange));
-		
-		TWS_LOG_V(std::string("new data: d: ")				// log
-			.append(boost::lexical_cast<std::string>(It->barStart()))
-			.append(", p: ")
-			.append(boost::lexical_cast<std::string>(It->close()))
-			.append(", h: ")
-			.append(boost::lexical_cast<std::string>(It->high()))
-			.append(", l: ")
-			.append(boost::lexical_cast<std::string>(It->low()))
-			.append(", v: ")
-			.append(boost::lexical_cast<std::string>(It->volume())), 2)
-
-	}
+	barRs_.insert(contract_, thOth::timeSeries<thOth::bar>(client.cbegin(), client.cend()));
 
 	// data summary
 	TWS_LOG_V(std::string("")								// log
-		.append(boost::lexical_cast<std::string>(count))
+		.append(boost::lexical_cast<std::string>(barRs_.size()))
 		.append(" new data inserted for contract ")
 		.append(contract_.second.summary.symbol)
 		.append(" and for date ")

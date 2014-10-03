@@ -5,9 +5,7 @@
 #include <boost/timer.hpp>
 
 // twsapi
-#include "request/historicalRequestClient/historicalRequestClient.hpp"
-#include "recordset/tableContractRecordset/tableContractRecordset.hpp"
-#include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
+#include "recordset/tableContractRecordset2/tableContractRecordset2.hpp"
 
 // a debug function
 void debug();

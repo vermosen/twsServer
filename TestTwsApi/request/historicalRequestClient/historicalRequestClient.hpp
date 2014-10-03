@@ -9,7 +9,6 @@
 #include <stdio.h>																		// printf()
 #include <time.h>
 
-#include <thOth/time/DateTime.hpp>
 #include <thOth/time/timeseries.hpp>
 #include <thOth/bar/bar.hpp>
 
@@ -44,11 +43,11 @@ namespace IB {
 		~historicalRequestClient() {};										// destructor
 
 		// const iterators
-		std::vector<thOth::bar>::const_iterator cbegin () const { return bars_.cbegin(); };
-		std::vector<thOth::bar>::const_iterator cend   () const { return bars_.cend  (); };
+		thOth::timeSeries<thOth::bar>::const_iterator cbegin () const { return bars_.cbegin(); };
+		thOth::timeSeries<thOth::bar>::const_iterator cend   () const { return bars_.cend()  ; };
 
-		std::vector<thOth::bar>::const_reverse_iterator crbegin () const { return bars_.crbegin(); };
-		std::vector<thOth::bar>::const_reverse_iterator crend   () const { return bars_.crend  (); };
+		thOth::timeSeries<thOth::bar>::const_reverse_iterator crbegin () const { return bars_.crbegin (); };
+		thOth::timeSeries<thOth::bar>::const_reverse_iterator crend   () const { return bars_.crend   (); };
 
 		void processMessages();
 
@@ -67,7 +66,7 @@ namespace IB {
 		dataDuration dataDuration_;											// data duration
 		dataType dataType_		  ;											// data Type
 
-		std::vector<thOth::bar> bars_;										// bars
+		thOth::timeSeries<thOth::bar> bars_;         						// bars
 
 		// implemented interface
 		void historicalData(TickerId reqId, const IBString& date, double open, double high,

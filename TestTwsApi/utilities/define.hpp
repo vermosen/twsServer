@@ -7,7 +7,7 @@
 #ifndef tws_define_hpp
 #define tws_define_hpp
 
-#include <thOth/time/DateTime.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "utilities/settings/settings.hpp"
 

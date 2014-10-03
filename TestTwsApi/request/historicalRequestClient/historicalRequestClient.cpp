@@ -136,22 +136,21 @@ namespace IB {
 		
 		if (isEndOfHistoricalData(date)) {									// control for EoF
 
-			std::sort(bars_.begin(), bars_.end());							// finally sorting the bars
 			notifyObservers();
 			disconnect();
 			return;
 
 		}
 
-		bars_.push_back(
+		bars_.insert(std::pair<thOth::dateTime, thOth::bar>(
+			convertDateTime(date),
 			thOth::bar(
-				convertDateTime(date),
-				convertDateTime(date) + ToTimeDuration(barSize_),
 				open,
 				close,
 				high,
 				low,
-				volume));
+				IB::ToPeriod(barSize_),										// we need a factory
+				volume)));
 
 	}
 }

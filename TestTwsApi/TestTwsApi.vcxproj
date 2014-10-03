@@ -184,17 +184,25 @@
     </ClCompile>
     <ClCompile Include="recordset\functions\singleHistoricalBarSelect\singleHistoricalBarSelect.cpp" />
     <ClCompile Include="recordset\functions\singleInstrumentSelect\singleInstrumentSelect.cpp" />
+    <ClCompile Include="recordset\tableContractRecordset2\tableContractRecordset2.cpp" />
+    <ClCompile Include="recordset\tableHistoricalBarRecordset2\tableHistoricalBarRecordset2.cpp" />
     <ClCompile Include="request\historicalRequestClient\historicalRequestClient.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="recordset\tableContractRecordset\tableContractRecordset.cpp" />
-    <ClCompile Include="recordset\tableHistoricalBarRecordset\tableHistoricalBarRecordset.cpp" />
+    <ClCompile Include="recordset\tableHistoricalBarRecordset\tableHistoricalBarRecordset.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="request\request.cpp" />
     <ClCompile Include="request\staticDataRequestClient\staticDataRequestClient.cpp" />
     <ClCompile Include="utilities\conversion\convertDateTime\convertDateTime.cpp" />
     <ClCompile Include="utilities\factory\barSizeFactory\barSizeFactory.cpp" />
     <ClCompile Include="utilities\factory\dataDurationFactory\dataDurationFactory.cpp" />
     <ClCompile Include="utilities\factory\dataTypeFactory\dataTypeFactory.cpp" />
-    <ClCompile Include="recordset\functions\singleHistoricalBarInsert\singleHistoricalBarInsert.cpp" />
+    <ClCompile Include="recordset\functions\singleHistoricalBarInsert\singleHistoricalBarInsert.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="utilities\functions\validateContractWithDialog\validateContractWithDialog.cpp" />
     <ClCompile Include="utilities\functions\convertDateWithDialog\convertDateWithDialog.cpp" />
     <ClCompile Include="utilities\idGenerator\idGenerator.cpp" />
@@ -224,9 +232,15 @@
     <ClInclude Include="recordset\functions\singleHistoricalBarSelect\singleHistoricalBarSelect.hpp" />
     <ClInclude Include="recordset\functions\singleInstrumentSelect\singleInstrumentSelect.hpp" />
     <ClInclude Include="recordset\recordset.hpp" />
+    <ClInclude Include="recordset\recordset2.hpp" />
     <ClInclude Include="recordset\recordsetException\recordsetException.hpp" />
+    <ClInclude Include="recordset\tableContractRecordset2\tableContractRecordset2.hpp" />
     <ClInclude Include="recordset\tableContractRecordset\tableContractRecordset.hpp" />
-    <ClInclude Include="recordset\tableHistoricalBarRecordset\tableHistoricalBarRecordset.hpp" />
+    <ClInclude Include="recordset\tableHistoricalBarRecordset\tableHistoricalBarRecordset.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="recordset\tableHistoricalBarRecordset2\tableHistoricalBarRecordset2.hpp" />
     <ClInclude Include="request\request.hpp" />
     <ClInclude Include="utilities\conversion\convertDateTime\convertDateTime.hpp" />
     <ClInclude Include="utilities\define.hpp" />
@@ -241,7 +255,10 @@
     <ClInclude Include="utilities\factory\dataTypeFactory\dataTypeFactory.hpp" />
     <ClInclude Include="utilities\factory\dataTypeFactory\register_dataType.hpp" />
     <ClInclude Include="utilities\factory\all.hpp" />
-    <ClInclude Include="recordset\functions\singleHistoricalBarInsert\singleHistoricalBarInsert.hpp" />
+    <ClInclude Include="recordset\functions\singleHistoricalBarInsert\singleHistoricalBarInsert.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="utilities\functions\validateContractWithDialog\validateContractWithDialog.hpp" />
     <ClInclude Include="utilities\functions\convertDateWithDialog\convertDateWithDialog.hpp" />
     <ClInclude Include="utilities\idGenerator\idGenerator.hpp" />

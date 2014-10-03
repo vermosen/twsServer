@@ -14,8 +14,7 @@
 
 // twsapi
 #include "request/historicalRequestClient/historicalRequestClient.hpp"
-#include "recordset/tableContractRecordset/tableContractRecordset.hpp"
-#include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
+#include "recordset/tableHistoricalBarRecordset2/tableHistoricalBarRecordset2.hpp"
 #include "recordset/functions/singleHistoricalBarInsert/singleHistoricalBarInsert.hpp"
 
 // this procedure is meant to request 

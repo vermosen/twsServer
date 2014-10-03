@@ -36,7 +36,7 @@ void bulkImport(const thOth::dateTime & startDate,
 		.append(boost::lexical_cast<std::string>(contractRs.size()))
 		.append(" contracts found"), 0);
 
-	IB::dataBase::tableHistoricalBarRecordset barRs(
+	IB::dataBase::tableHistoricalBarRecordset2 barRs(
 		IB::settings::instance().connection());					// bar recordset
 
 	// loop over the contracts

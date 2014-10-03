@@ -8,11 +8,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "twsapi", "twsapi.vcxproj", 
 		{7653D38D-8F71-457F-BDE5-B8AF7B8A69BA} = {7653D38D-8F71-457F-BDE5-B8AF7B8A69BA}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestPosixSocketClient", "TestPosixSocketClient\TestPosixSocketClient.vcxproj", "{718E0918-3BD7-4A8D-AA2D-E9D1B73AF1E2}"
-	ProjectSection(ProjectDependencies) = postProject
-		{29B4D0B3-FDAB-49AB-ABBD-1BA6D08FE63A} = {29B4D0B3-FDAB-49AB-ABBD-1BA6D08FE63A}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestTwsApi", "TestTwsApi\TestTwsApi.vcxproj", "{74267155-2065-45E3-A3AA-3FC28A940193}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7653D38D-8F71-457F-BDE5-B8AF7B8A69BA} = {7653D38D-8F71-457F-BDE5-B8AF7B8A69BA}
@@ -51,20 +46,6 @@ Global
 		{29B4D0B3-FDAB-49AB-ABBD-1BA6D08FE63A}.Release|Win32.Build.0 = Release|Win32
 		{29B4D0B3-FDAB-49AB-ABBD-1BA6D08FE63A}.Release|x64.ActiveCfg = Release|x64
 		{29B4D0B3-FDAB-49AB-ABBD-1BA6D08FE63A}.Release|x64.Build.0 = Release|x64
-		{718E0918-3BD7-4A8D-AA2D-E9D1B73AF1E2}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{718E0918-3BD7-4A8D-AA2D-E9D1B73AF1E2}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{718E0918-3BD7-4A8D-AA2D-E9D1B73AF1E2}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{718E0918-3BD7-4A8D-AA2D-E9D1B73AF1E2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{718E0918-3BD7-4A8D-AA2D-E9D1B73AF1E2}.Debug|Win32.Build.0 = Debug|Win32
-		{718E0918-3BD7-4A8D-AA2D-E9D1B73AF1E2}.Debug|x64.ActiveCfg = Debug|x64
-		{718E0918-3BD7-4A8D-AA2D-E9D1B73AF1E2}.Debug|x64.Build.0 = Debug|x64
-		{718E0918-3BD7-4A8D-AA2D-E9D1B73AF1E2}.Release|Any CPU.ActiveCfg = Release|Win32
-		{718E0918-3BD7-4A8D-AA2D-E9D1B73AF1E2}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{718E0918-3BD7-4A8D-AA2D-E9D1B73AF1E2}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{718E0918-3BD7-4A8D-AA2D-E9D1B73AF1E2}.Release|Win32.ActiveCfg = Release|Win32
-		{718E0918-3BD7-4A8D-AA2D-E9D1B73AF1E2}.Release|Win32.Build.0 = Release|Win32
-		{718E0918-3BD7-4A8D-AA2D-E9D1B73AF1E2}.Release|x64.ActiveCfg = Release|x64
-		{718E0918-3BD7-4A8D-AA2D-E9D1B73AF1E2}.Release|x64.Build.0 = Release|x64
 		{74267155-2065-45E3-A3AA-3FC28A940193}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{74267155-2065-45E3-A3AA-3FC28A940193}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{74267155-2065-45E3-A3AA-3FC28A940193}.Debug|Mixed Platforms.Build.0 = Debug|Win32

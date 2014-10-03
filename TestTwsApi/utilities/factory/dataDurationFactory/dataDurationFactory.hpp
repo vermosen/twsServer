@@ -29,9 +29,7 @@ namespace IB {
 			void registerType(const std::string &, void *);
 
 		};	
-	
 	}
-
 }
 
 #endif

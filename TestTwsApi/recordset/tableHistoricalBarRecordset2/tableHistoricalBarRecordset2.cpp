@@ -1,35 +1,26 @@
-#include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
+#include "recordset/tableHistoricalBarRecordset2/tableHistoricalBarRecordset2.hpp"
 
 namespace IB {
 
 	namespace dataBase {
 	
-		barRecord::barRecord(
-			recordId id,
-			const thOth::timeSeries<thOth::bar> & bars,
-			const std::string & exchange) 
-			: id_(id), bars_(bars), exchange_(exchange) {};
-		
-		barRecord::barRecord(const barRecord & rec)
-			: id_(rec.id_), bars_(rec.bars_), exchange_(rec.exchange_) {};
+		//barRecord::barRecord(
+		//	recordId id,
+		//	const thOth::timeSeries<thOth::bar> & bars,
+		//	const std::string & exchange) 
+		//	: id_(id), bars_(bars), exchange_(exchange) {};
+		//
+		//barRecord::barRecord(const barRecord & rec)
+		//	: id_(rec.id_), bars_(rec.bars_), exchange_(rec.exchange_) {};
 
-		tableHistoricalBarRecordset::tableHistoricalBarRecordset(MYSQL * connection) 
-			: recordset(connection) {};
+		tableHistoricalBarRecordset2::tableHistoricalBarRecordset2(MYSQL * connection) 
+			: recordset2(connection) {};
 
-		tableHistoricalBarRecordset::tableHistoricalBarRecordset(
-			const tableHistoricalBarRecordset & o) {
-		
-			records_ = o.records_;
-		
-		};
-
-		tableHistoricalBarRecordset::~tableHistoricalBarRecordset() {};
-
-		tableHistoricalBarRecordset & tableHistoricalBarRecordset::operator=(const tableHistoricalBarRecordset & o) {
+		tableHistoricalBarRecordset2 & tableHistoricalBarRecordset2::operator=(const tableHistoricalBarRecordset2 & o) {
 
 			if (this != &o) {
 			
-				recordset::operator=(o);						// call the parent class =
+				recordset2::operator=(o);						// call the parent class =
 				records_ = o.records_  ;						// copy local stuff
 
 			}
@@ -38,7 +29,7 @@ namespace IB {
 		
 		}
 
-		bool tableHistoricalBarRecordset::selectQ(const std::string & selectStr) {
+		bool tableHistoricalBarRecordset2::selectStr(const std::string & selectStr) {
 		
 			mysql_query(												// query to run
 				connection_,
@@ -77,11 +68,6 @@ namespace IB {
 						== "CONTRACT_ID" && row[i] != NULL)
 						instrumentId = boost::lexical_cast<recordId>(row[i]);
 
-					// the bar id is not relevant here
-					//else if (std::string(reception_->fields[i].name)
-					//	== "BAR_ID" && row[i] != NULL)
-					//	barId = boost::lexical_cast<recordId>(row[i]);
-
 					else if (std::string(reception_->fields[i].name)
 						== "BAR_START" && row[i] != NULL)
 						startDate = convertDateTime_sql(std::string(row[i]));
@@ -108,7 +94,7 @@ namespace IB {
 					
 					else if (std::string(reception_->fields[i].name)
 						== "VOLUME" && row[i] != NULL)
-						volume = boost::lexical_cast<thOth::real>(row[i]);
+						volume = boost::lexical_cast<thOth::size>(row[i]);
 
 					else if (std::string(reception_->fields[i].name)
 						== "EXCHANGE" && row[i] != NULL)
@@ -127,78 +113,77 @@ namespace IB {
 							low, thOth::period(
 								thOth::second, 30), volume)));
 
-				//barId++;
-
 			}
-
-			records_.insert(									// finally insert the contract details in the map
-				std::pair<recordId, barRecord>(
-				1,												// dummy
-				barRecord(
-				instrumentId,
-				ts, exchange)));
 
 			return true;
 
 		};
 
-		bool tableHistoricalBarRecordset::insert(const barRecord & rec) {
-
-			// TODO: need to iterate over the ts
+		bool tableHistoricalBarRecordset2::insert(
+			const std::pair<recordId, ContractDetails> & ct, 
+			const thOth::timeSeries<thOth::bar> & recs) {
 
 			std::string fieldStr, valueStr;								// the two fields to build together
 
-			fieldStr.append("CONTRACT_ID,");							// contract id
-			INSERT_SQL_NUM(valueStr,rec.instrumentIdentifier())
-			valueStr.append(",");
+			// TODO: need to iterate over the ts
+			for (thOth::timeSeries<thOth::bar>::const_iterator It = recs.cbegin(); It != recs.cend(); It++) {
 
-			fieldStr.append("BAR_START,");								// barStart
-			INSERT_SQL_DATE(valueStr, rec.bar().barStart())
-			valueStr.append(",");
+				fieldStr.append("CONTRACT_ID,");						// contract id
+				INSERT_SQL_NUM(valueStr, ct.first)
+					valueStr.append(",");
+
+				fieldStr.append("BAR_START,");							// barStart
+				INSERT_SQL_DATE(valueStr, It->first)
+					valueStr.append(",");
+
+				fieldStr.append("BAR_END,");							// barEnd
+				INSERT_SQL_DATE(valueStr, thOth::dateTime::advance(It->first, It->second.length()))
+					valueStr.append(",");
+
+				fieldStr.append("OPEN,");								// open
+				INSERT_SQL_NUM(valueStr, It->second.open())
+					valueStr.append(",");
+
+				fieldStr.append("CLOSE,");								// close
+				INSERT_SQL_NUM(valueStr, It->second.close())
+					valueStr.append(",");
+
+				fieldStr.append("HIGH,");								// close
+				INSERT_SQL_NUM(valueStr, It->second.high())
+					valueStr.append(",");
+
+				fieldStr.append("LOW,");								// close
+				INSERT_SQL_NUM(valueStr, It->second.low())
+					valueStr.append(",");
+
+				fieldStr.append("VOLUME,");								// volume
+				INSERT_SQL_NUM(valueStr, It->second.volume())
+					valueStr.append(",");
+
+				fieldStr.append("EXCHANGE");							// exchange
+				INSERT_SQL_STR(valueStr, ct.second.summary.exchange)
+
+					std::string insertStatement("INSERT INTO table_historical_bar (");
+
+				insertStatement
+					.append(fieldStr)
+					.append(") VALUES (")
+					.append(valueStr)
+					.append(")");
+
+				if (mysql_query(connection_, insertStatement.c_str()) != 0)	// throw on an error
+					throw std::exception(mysql_error(connection_));
+
+				fieldStr.clear(), valueStr.clear();							
+
+			}
 			
-			fieldStr.append("BAR_END,");								// barEnd
-			INSERT_SQL_DATE(valueStr, rec.bar().barEnd())
-			valueStr.append(",");
-			
-			fieldStr.append("OPEN,");									// open
-			INSERT_SQL_NUM(valueStr, rec.bar().open())
-			valueStr.append(",");
-			
-			fieldStr.append("CLOSE,");									// close
-			INSERT_SQL_NUM(valueStr, rec.bar().close())
-			valueStr.append(",");
-
-			fieldStr.append("HIGH,");									// close
-			INSERT_SQL_NUM(valueStr, rec.bar().high())
-			valueStr.append(",");
-
-			fieldStr.append("LOW,");									// close
-			INSERT_SQL_NUM(valueStr, rec.bar().low())
-			valueStr.append(",");
-
-			fieldStr.append("VOLUME,");									// volume
-			INSERT_SQL_NUM(valueStr, rec.bar().volume())
-			valueStr.append(",");
-
-			fieldStr.append("EXCHANGE");								// exchange
-			INSERT_SQL_STR(valueStr,rec.exchange())
-
-			std::string insertStatement("INSERT INTO table_historical_bar (");
-			
-			insertStatement
-				.append(fieldStr)
-				.append(") VALUES (")
-				.append(valueStr)
-				.append(")");
-
-			if (mysql_query(connection_, insertStatement.c_str()) != 0)	// throw on an error
-				throw std::exception(mysql_error(connection_));
 
 			return true;												// return true otherwise
 
 		}
 
-		bool tableHistoricalBarRecordset::deleteQ(const std::string & deleteStr) {
+		bool tableHistoricalBarRecordset2::deleteStr(const std::string & deleteStr) {
 		
 			if (mysql_query(connection_, deleteStr.c_str()) != 0) {		// throw on an error
 
@@ -206,6 +191,7 @@ namespace IB {
 				throw std::exception(mysql_error(connection_));
 
 			}
+
 			// todo: error management
 			return true;
 		

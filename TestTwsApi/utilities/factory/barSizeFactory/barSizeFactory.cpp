@@ -3,18 +3,6 @@
 namespace IB {
 
 	namespace utilities {
-
-		barSizeFactory & barSizeFactory::operator = (const barSizeFactory & o) {
-		
-			if (&o != this) {
-				
-				// members copy
-			
-			}
-
-			return *this;
-		
-		}
 		
 		IB::barSize barSizeFactory::operator()(const IB::IBString & str) {
 		
@@ -22,13 +10,11 @@ namespace IB {
 
 				return *(static_cast<IB::barSize *>(this->getType(str)));
 
-			}
-			else {
+			} else {
 
 				return IB::unknownSize;
 
 			}
-		
 		}
 
 		IB::IBString barSizeFactory::operator()(const IB::barSize & bar) {
@@ -43,8 +29,5 @@ namespace IB {
 			ObjectHandler::RegistryManager<IB::barSize, ObjectHandler::EnumTypeRegistry>::registerType(str, o);
 		
 		}
-
-
 	}
-
 }

@@ -1,9 +1,6 @@
 #ifndef tws_function_bulk_import
 #define tws_function_bulk_import
 
-#include <thread>
-
-#include <boost/lexical_cast.hpp>
 #include <boost/timer.hpp>
 
 // thOth components
@@ -11,7 +8,7 @@
 
 // twsapi
 #include "request/historicalRequestClient/historicalRequestClient.hpp"
-#include "recordset/tableContractRecordset/tableContractRecordset.hpp"
+#include "recordset/tableContractRecordset2/tableContractRecordset2.hpp"
 #include "recordset/functions/singleHistoricalBarInsert/singleHistoricalBarInsert.hpp"
 
 // this procedure is meant to request 

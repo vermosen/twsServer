@@ -3,18 +3,6 @@
 namespace IB {
 
 	namespace utilities {
-
-		dataDurationFactory & dataDurationFactory::operator = (const dataDurationFactory & o) {
-		
-			if (&o != this) {
-				
-				// members copy
-			
-			}
-
-			return *this;
-		
-		}
 		
 		IB::dataDuration dataDurationFactory::operator()(const IB::IBString & str) {
 		
@@ -22,13 +10,11 @@ namespace IB {
 
 				return *(static_cast<IB::dataDuration *>(this->getType(str.substr(3, 1))));
 
-			}
-			else {
+			} else {
 
 				return IB::unknownDuration;
 
 			}
-		
 		}
 
 		IB::IBString dataDurationFactory::operator()(const IB::dataDuration & bar, const int n) {
@@ -48,8 +34,5 @@ namespace IB {
 			ObjectHandler::RegistryManager<IB::dataDuration, ObjectHandler::EnumTypeRegistry>::registerType(str, o);
 		
 		}
-
-
 	}
-
 }

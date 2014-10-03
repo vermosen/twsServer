@@ -10,16 +10,17 @@
 
 // thOth components
 #include <thOth/time/DateTime.hpp>
+#include <thOth/bar/bar.hpp>
 
 // twsapi
 #include "request/historicalRequestClient/historicalRequestClient.hpp"
 #include "recordset/tableContractRecordset/tableContractRecordset.hpp"
-#include "recordset/tableHistoricalBarRecordset/tableHistoricalBarRecordset.hpp"
+#include "recordset/tableHistoricalBarRecordset2/tableHistoricalBarRecordset2.hpp"
 
 // single date insert function
 void singleHistoricalBarInsert(
 	const IB::dataBase::contractRecord & contract_,
-	IB::dataBase::tableHistoricalBarRecordset & barRs_,
+	IB::dataBase::tableHistoricalBarRecordset2 & barRs_,
 	thOth::dateTime dt_,
 	bool policy_);
 
