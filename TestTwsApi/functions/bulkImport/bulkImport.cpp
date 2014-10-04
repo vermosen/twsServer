@@ -16,7 +16,7 @@ void bulkImport(const thOth::dateTime & startDate,
 		<< std::endl;
 	
 	// recordset`& query
-	IB::dataBase::tableContractRecordset contractRs(
+	IB::dataBase::tableContractRecordset2 contractRs(
 		IB::settings::instance().connection());					// table contract recordset
 
 	std::string selectQuery(									// query to run
@@ -25,7 +25,7 @@ void bulkImport(const thOth::dateTime & startDate,
 	TWS_LOG_V(std::string("running query: ")					// log
 		.append(selectQuery), 0)
 
-	if (!contractRs.selectQ(selectQuery))						// query succeeded ?
+	if (!contractRs.selectStr(selectQuery))						// query succeeded ?
 		throw std::exception("instrument request failed");
 
 	if (contractRs.size() == 0)									// symbol found ?
@@ -57,7 +57,7 @@ void bulkImport(const thOth::dateTime & startDate,
 			std::this_thread::sleep_for(						// sleep time necessary between two requests
 				std::chrono::milliseconds(SLEEP_TIME_H));
 
-			dt += boost::gregorian::days(1);					// add 1 day 
+			dt += boost::gregorian::days(1);					// add 1 day
 
 		} while (dt <= endDate);
 	}

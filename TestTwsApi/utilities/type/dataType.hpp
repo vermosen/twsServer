@@ -12,7 +12,7 @@
 
 namespace IB {
 
-	enum dataType : unsigned int{
+	enum dataType : unsigned char {
 
 		trade                   = 0,
 		midPoint                = 1,

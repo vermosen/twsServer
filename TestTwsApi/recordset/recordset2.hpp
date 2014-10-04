@@ -35,6 +35,14 @@ namespace IB {
 
 	namespace dataBase {
 
+		enum deletionPolicy : unsigned char {					// defines deletion policy
+
+			authorizeCopy      = 0,
+			preserveFormerData = 1,
+			EraseFormerData    = 2
+
+		};
+
 		typedef uint64_t recordId;								// equivalent of a big int
 
 		template<

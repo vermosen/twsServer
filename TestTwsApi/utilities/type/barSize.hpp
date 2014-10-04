@@ -15,7 +15,7 @@
 
 namespace IB {
 	
-	enum barSize : unsigned int{
+	enum barSize : unsigned char {
 
 		oneSecond      = 0,
 		fiveSeconds    = 1,
